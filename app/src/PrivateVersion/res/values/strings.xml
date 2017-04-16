@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">OMGSoundboard (P)</string>
+    <string name="fav_desc">Icon mit ausgefüllten Herz</string>
+    <string name="banner_ad_unit_id">ca-app-pub-3236113960873301/3198443641</string>
+    <string name="not_fav_desc">Icon with empty heart</string>
+    <string name="donate_button">Spenden</string>
+    <string name="moreinfo_button">Mehr Infos</string>
+    <string name="about_STFU">STFU</string>
+    <string name="only_faves">Favoriten  </string>
+    <string name="about_dialog_content">OMGSoundboard ist ein kostenlose App, ein sogenanntes Geräuschebrett.
+
+    Sie dient dazu all euren Mitmenschen, egal ob liebsam oder unliebsam, so lange auf die Nerven zu gehen bis diese euch verlassen, verachten und meiden. Durch diese neu gewonnene Freiheit, ist es euch möglich voll konzentriert auf die wichtigen Dinge im Leben zu achten. LionT Konzerte und Beauty Videos.
+
+    Also einfach die App installieren, den Sound aufdrehen und einfach mal schön die nervigen Kinder der halbwegs attraktiven Nachbarin mit Schokodrinks und Kranplätzen, die für immer sind und verdichtet sein müssen, beschallen. Dann klappts auch mit den Nachbarn. Oder halt auch nicht und man kann in Ruhe gammeln und NebelNiek schauen. Nice.</string>
+    <string name="about_dialog_title">Über diese App - Private Edition</string>
+</resources>
