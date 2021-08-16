@@ -1,4 +1,6 @@
-# omgsoundboard
+[![Codemagic build status](https://api.codemagic.io/apps/611ab5e386db0d3a2eb400ac/611ab5e386db0d3a2eb400ab/status_badge.svg)](https://codemagic.io/apps/611ab5e386db0d3a2eb400ac/611ab5e386db0d3a2eb400ab/latest_build)
+
+# OMGSoundboard
 
 OMGSoundboard
 
