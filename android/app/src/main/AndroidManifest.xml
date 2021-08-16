@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="audio.omgsoundboard.omgsoundboard">
+    package="audio.omgsoundboard">
    <application
         android:label="omgsoundboard"
         android:icon="@mipmap/ic_launcher">
