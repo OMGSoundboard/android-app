@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="all">
+        <item>Drumroll</item>
+        <item>Fail</item>
+        <item>Whip</item>
+    </string-array>
+
+    <array name="all_ids">
+        <item>@raw/drumroll</item>
+        <item>@raw/fail</item>
+        <item>@raw/whip</item>
+    </array>
+
+    <string-array name="funny">
+    </string-array>
+
+    <array name="funny_ids">
+    </array>
+
+    <string-array name="games">
+    </string-array>
+
+    <array name="games_ids">
+    </array>
+
+    <string-array name="movies">
+    </string-array>
+
+    <array name="movies_ids">
+    </array>
+
+    <string-array name="music">
+    </string-array>
+
+    <array name="music_ids">
+    </array>
+
+</resources>
