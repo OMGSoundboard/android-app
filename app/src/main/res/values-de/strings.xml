@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="add_tune">Eine Melodie hinzufügen</string>
+    <string name="contact">Kontakt</string>
+    <string name="helpdesk">Hilfe</string>
+    <string name="dmca">DMCA</string>
+    <string name="license">Lizenz</string>
+    <string name="drop_menu_share">Ton teilen</string>
+    <string name="no_sounds_here_yet">Hier gibt es noch keine Töne</string>
+    <string name="remove_from_fav">Ton aus Ihren Favoriten entfernt</string>
+    <string name="options_about">Über</string>
+    <string name="disclaimer">Haftungsausschluss</string>
+    <string name="options_theme_picker">Farbschemaauswahl</string>
+    <string name="report_problem">Ein Problem melden</string>
+    <string name="website">Website</string>
+    <string name="email">E-Mail</string>
+    <string name="privacy_policy">Datenschutzrichtlinie</string>
+    <string name="added_to_fav">Ton zu Ihren Favoriten hinzugefügt</string>
+    <string name="view_source">Quelle anzeigen</string>
+</resources>
