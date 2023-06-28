@@ -40,6 +40,8 @@
     <string name="license">License</string>
     <string name="open_source">Open-source licenses</string>
 
+    <string name="can_not_handle">You do not have any application capable of handling this action</string>
+
     <string name="no_sounds_here_yet">There are not sounds here yet</string>
     <string name="added_to_fav">Sound added to your favorites</string>
     <string name="remove_from_fav">Sound removed from your favorites</string>
