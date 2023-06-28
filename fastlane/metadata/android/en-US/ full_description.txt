@@ -1,7 +1,9 @@
-Having the right meme or sound at the right time can make a joke work! Sounds are so much fun and this is why you need to download OMG Soundboard.
-OMG Soundboard allows you to create your own unique soundboards. What's exciting about this app is that it allows you to be only limited by your imagination. You are free to use whatever sounds you want. You can also record directly from your phone's microphone or import from a sound file. The software is simple and straightforward to use. You can also layer the sounds by adding effects and playing several sound effects at once.
+Having the right meme or sound at the right time can make a joke work! Sounds are so much fun and this is why you need to download OMGSoundboard.
+OMGSoundboard allows you to create your own unique soundboards. What's exciting about this app is that it allows you to be only limited by your imagination. You are free to use whatever sounds you want. You can also record directly from your phone's microphone or import from a sound file. The software is simple and straightforward to use. You can also layer the sounds by adding effects and playing several sound effects at once.
 
-OMG Soundboard also has an offline mode, a good search function, and the ability to set sounds as ringtones.
+OMGSoundboard also has an offline mode, a good search function, and the ability to set sounds as ringtones.
+
+Please note that OMGSoundboard has just a very limited amount of sounds available because of copyright reasons.
 
 The following are some of the app's main features:
 	You have the option of making as many soundboards as you want.
@@ -19,3 +21,7 @@ The following are some of the app's main features:
 	You can turn off sounds you don't like.
 	We've created a new sound player (you can now play and pause the sounds)
 	Allows for word-filtering for a more useful and fast search inside a large number of sounds.
+
+Webpage: <a href="https://omgsoundboard.audio/">https://omgsoundboard.audio/</a>
+Translate it on Hosted Weblate: <a href="https://hosted.weblate.org/engage/omgsoundboard/">https://hosted.weblate.org/engage/omgsoundboard/</a>
+Libre software on GitHub: <a href="https://github.com/OMGSoundboard/android-app/">https://github.com/OMGSoundboard/android-app/</a>
