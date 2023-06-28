@@ -74,9 +74,6 @@ fun AboutScreen(mainViewModel: MainViewModel){
                     AboutItem(icon = R.drawable.report_a_problem, title = R.string.report_problem) {
                         launchUrl(context, "https://github.com/OMGSoundboard/android-app/issues/")
                     }
-                    AboutItem(icon = R.drawable.add_a_tune, title = R.string.add_tune) {
-                        //
-                    }
                     AboutItem(icon = R.drawable.view_source, title =  R.string.view_source) {
                         launchUrl(context, "https://github.com/OMGSoundboard/android-app/")
                     }

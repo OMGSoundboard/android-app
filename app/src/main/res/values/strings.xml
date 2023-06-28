@@ -9,6 +9,10 @@
     <string name="category_music">Music</string>
     <string name="category_custom">Custom</string>
 
+    <string name="theme_dark">Dark</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_follow_system">Follow System</string>
+
     <string name="options_header">Options</string>
     <string name="options_particles">Particles</string>
     <string name="options_theme_picker">Theme Picker</string>
