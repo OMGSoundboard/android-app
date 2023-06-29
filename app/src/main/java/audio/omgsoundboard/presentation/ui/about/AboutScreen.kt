@@ -26,11 +26,12 @@ import audio.omgsoundboard.presentation.ui.MainViewModel
 @Composable
 fun AboutScreen(mainViewModel: MainViewModel){
 
+    val context = LocalContext.current
+
     LaunchedEffect(Unit){
-        mainViewModel.setCurrentScreenValue(Screens.AboutScreen)
+        mainViewModel.setCurrentScreenValue(Screens.AboutScreen, context.getString(R.string.about_title))
     }
 
-    val context = LocalContext.current
     var showLicenses by remember{ mutableStateOf(false)}
 
     Box(

@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">OMGSoundboard</string>
 
+    <string name="favorites_title">Favorites</string>
+    <string name="about_title">About</string>
+    <string name="custom_title">Custom</string>
+
     <string name="categories_header">Categories</string>
     <string name="category_all">All</string>
     <string name="category_funny">Funny</string>
