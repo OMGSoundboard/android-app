@@ -41,4 +41,20 @@
     <string name="category_custom">Eigene</string>
     <string name="translate">Übersetzen</string>
     <string name="can_not_handle">Du hast keine Anwendung, die diese Aktion ausführen kann</string>
+    <string name="custom_sound_add_placeholder">Name des Tons</string>
+    <string name="custom_title">Eigene</string>
+    <string name="alarm_set">Ton als Alarmton eingestellt</string>
+    <string name="about_title">Über</string>
+    <string name="permission">Wir brauchen ein paar Berechtigungen</string>
+    <string name="permission_granted">Jetzt kannst du deine Sounds als Klingeltöne, Alarme und Benachrichtigungen einstellen</string>
+    <string name="permission_not_granted">Du hast die Erlaubnis nicht erteilt</string>
+    <string name="custom_sound_add">Hinzufügen</string>
+    <string name="export_backup">Backup exportieren</string>
+    <string name="restore_backup">Backup importieren</string>
+    <string name="favorites_title">Favoriten</string>
+    <string name="ringtone_set">Ton als Klingelton eingestellt</string>
+    <string name="notification_set">Ton als Benachrichtigungston eingestellt</string>
+    <string name="custom_sound_add_title">Ton hinzufügen</string>
+    <string name="permission_description">Erlaube OMGSoundboard, die Systemeinstellungen zu ändern, um deine Sounds als Klingeltöne, Alarme und Benachrichtigungen einzustellen</string>
+    <string name="permission_allow">Erlauben</string>
 </resources>
