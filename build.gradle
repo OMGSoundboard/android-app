@@ -1,14 +1,14 @@
 buildscript {
     ext {
-        compose_version = '1.2.0'
+        compose_version = '1.4.0'
     }
     dependencies {
         classpath 'com.jaredsburrows:gradle-license-plugin:0.9.3'
-        classpath "com.google.dagger:hilt-android-gradle-plugin:2.44"
+        classpath "com.google.dagger:hilt-android-gradle-plugin:2.46.1"
     }
 }
 plugins {
     id 'com.android.application' version '7.4.2' apply false
     id 'com.android.library' version '7.4.2' apply false
-    id 'org.jetbrains.kotlin.android' version '1.8.0' apply false
+    id 'org.jetbrains.kotlin.android' version '1.8.22' apply false
 }
