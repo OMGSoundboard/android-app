@@ -28,7 +28,6 @@ import audio.omgsoundboard.presentation.composables.PermissionDialog
 import audio.omgsoundboard.presentation.navigation.Screens
 import audio.omgsoundboard.presentation.ui.MainViewModel
 import audio.omgsoundboard.presentation.ui.sounds.SoundItem
-import audio.omgsoundboard.utils.Constants.CATEGORY_CUSTOM
 
 @Composable
 fun CustomScreen(mainViewModel: MainViewModel) {
@@ -38,7 +37,7 @@ fun CustomScreen(mainViewModel: MainViewModel) {
     var showPermissionDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        mainViewModel.setCurrentScreenValue(Screens.CustomScreen, CATEGORY_CUSTOM)
+        mainViewModel.setCurrentScreenValue(Screens.CustomScreen, context.getString(R.string.custom_title))
         mainViewModel.getCustomSounds()
     }
 
