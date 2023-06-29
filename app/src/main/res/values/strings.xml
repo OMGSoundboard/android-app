@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">OMGSoundboard</string>
 
+    <string name="favorites_title">Favorites</string>
+    <string name="about_title">About</string>
+    <string name="custom_title">Custom</string>
+
     <string name="categories_header">Categories</string>
     <string name="category_all">All</string>
     <string name="category_funny">Funny</string>
@@ -8,6 +12,10 @@
     <string name="category_movies">Movies</string>
     <string name="category_music">Music</string>
     <string name="category_custom">Custom</string>
+
+    <string name="theme_dark">Dark</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_follow_system">Follow System</string>
 
     <string name="options_header">Options</string>
     <string name="options_particles">Particles</string>
@@ -35,6 +43,8 @@
     <string name="dmca">DMCA</string>
     <string name="license">License</string>
     <string name="open_source">Open-source licenses</string>
+
+    <string name="can_not_handle">You do not have any application capable of handling this action</string>
 
     <string name="no_sounds_here_yet">There are not sounds here yet</string>
     <string name="added_to_fav">Sound added to your favorites</string>

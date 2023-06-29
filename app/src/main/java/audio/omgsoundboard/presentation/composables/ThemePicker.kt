@@ -4,15 +4,15 @@ import android.os.Build
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
+import audio.omgsoundboard.R
 import audio.omgsoundboard.presentation.theme.ThemeType
 
 @Composable
@@ -42,17 +42,18 @@ fun ThemePicker(
                 verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.Start
             ) {
-                Radio(text = ThemeType.DARK.toString(), isSelected = selected == ThemeType.DARK) {
+                Radio(text = stringResource(id = R.string.theme_dark), isSelected = selected == ThemeType.DARK) {
                     selected = ThemeType.DARK
                     pickTheme(ThemeType.DARK)
                 }
-                Radio(text = ThemeType.LIGHT.toString(), isSelected = selected == ThemeType.LIGHT) {
+                Radio(text = stringResource(id = R.string.theme_light), isSelected = selected == ThemeType.LIGHT) {
                     selected = ThemeType.LIGHT
                     pickTheme(ThemeType.LIGHT)
                 }
+                // If android version is >= 12 follow system option will enable material 3 dynamic theming
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                     Radio(
-                        text = ThemeType.DYNAMIC.toString(),
+                        text = stringResource(id = R.string.theme_follow_system),
                         isSelected = selected == ThemeType.DYNAMIC
                     ) {
                         selected = ThemeType.DYNAMIC
@@ -60,14 +61,13 @@ fun ThemePicker(
                     }
                 } else {
                     Radio(
-                        text = ThemeType.SYSTEM.toString(),
+                        text = stringResource(id = R.string.theme_follow_system),
                         isSelected = selected == ThemeType.SYSTEM
                     ) {
                         selected = ThemeType.SYSTEM
                         pickTheme(ThemeType.SYSTEM)
                     }
                 }
-
             }
         }
     }

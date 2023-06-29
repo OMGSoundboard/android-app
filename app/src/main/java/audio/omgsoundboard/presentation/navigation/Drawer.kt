@@ -211,7 +211,7 @@ object DrawerParams {
             CATEGORY_CUSTOM,
             true,
             R.string.category_custom,
-            R.drawable.music,
+            R.drawable.tune,
         )
     )
     val drawerOptions = arrayListOf(

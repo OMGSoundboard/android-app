@@ -10,8 +10,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -19,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import audio.omgsoundboard.R
 import audio.omgsoundboard.presentation.composables.AboutItem
+import audio.omgsoundboard.presentation.composables.Licenses
 import audio.omgsoundboard.presentation.composables.Particles
 import audio.omgsoundboard.presentation.navigation.Screens
 import audio.omgsoundboard.presentation.ui.MainViewModel
@@ -26,11 +26,13 @@ import audio.omgsoundboard.presentation.ui.MainViewModel
 @Composable
 fun AboutScreen(mainViewModel: MainViewModel){
 
+    val context = LocalContext.current
+
     LaunchedEffect(Unit){
-        mainViewModel.setCurrentScreenValue(Screens.AboutScreen)
+        mainViewModel.setCurrentScreenValue(Screens.AboutScreen, context.getString(R.string.about_title))
     }
 
-    val context = LocalContext.current
+    var showLicenses by remember{ mutableStateOf(false)}
 
     Box(
         modifier = Modifier.fillMaxWidth(),
@@ -73,9 +75,6 @@ fun AboutScreen(mainViewModel: MainViewModel){
                     }
                     AboutItem(icon = R.drawable.report_a_problem, title = R.string.report_problem) {
                         launchUrl(context, "https://github.com/OMGSoundboard/android-app/issues/")
-                    }
-                    AboutItem(icon = R.drawable.add_a_tune, title = R.string.add_tune) {
-                        //
                     }
                     AboutItem(icon = R.drawable.view_source, title =  R.string.view_source) {
                         launchUrl(context, "https://github.com/OMGSoundboard/android-app/")
@@ -121,12 +120,19 @@ fun AboutScreen(mainViewModel: MainViewModel){
                         launchUrl(context, "https://github.com/OMGSoundboard/android-app/blob/trunk/LICENSE/")
                     }
                     AboutItem(icon = R.drawable.open_source_licenses, title =  R.string.open_source) {
-                        launchUrl(context, "https://github.com/jaredsburrows/gradle-license-plugin")
+                        showLicenses = true
                     }
                 }
             }
         }
     }
+
+    if (showLicenses){
+        Licenses {
+            showLicenses = false
+        }
+    }
+
 }
 
 private fun launchUrl(context: Context, url: String){
@@ -134,6 +140,6 @@ private fun launchUrl(context: Context, url: String){
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         context.startActivity(intent)
     } catch (e: ActivityNotFoundException){
-        Toast.makeText(context, "You do not have any application capable of handling this action", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, context.getString(R.string.can_not_handle), Toast.LENGTH_SHORT).show()
     }
 }

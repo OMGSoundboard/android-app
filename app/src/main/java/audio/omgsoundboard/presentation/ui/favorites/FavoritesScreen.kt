@@ -35,7 +35,7 @@ fun FavoritesScreen(
     var showPermissionDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit){
-        mainViewModel.setCurrentScreenValue(Screens.FavoritesScreen)
+        mainViewModel.setCurrentScreenValue(Screens.FavoritesScreen, context.getString(R.string.favorites_title))
     }
 
     var touchPoint: Offset by remember { mutableStateOf(Offset.Zero) }

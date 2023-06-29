@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="category_all">Tutto</string>
+    <string name="add_tune">Aggiungi un brano</string>
+    <string name="contact">Contatto</string>
+    <string name="website">Sito web</string>
+    <string name="email">E-mail</string>
+    <string name="telegram">Telegram</string>
+    <string name="helpdesk">Aiuto</string>
+    <string name="privacy_policy">Informativa sulla riservatezza</string>
+    <string name="disclaimer">Dichiarazione di non responsabilità</string>
+    <string name="open_source">Licenza da codice aperto</string>
+    <string name="added_to_fav">Suono aggiunto ai preferiti</string>
+    <string name="categories_header">Categorie</string>
+    <string name="license">Licenza</string>
+    <string name="dmca">DMCA</string>
+    <string name="no_sounds_here_yet">Non ci sono ancora suoni qui</string>
+    <string name="report_problem">Segnala un problema</string>
+    <string name="view_source">Visualizza la fonte</string>
+    <string name="app_name">OMGSoundboard</string>
+    <string name="terms_of_service">Termini di servizio</string>
+</resources>
