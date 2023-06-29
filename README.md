@@ -14,7 +14,7 @@
 
 # OMGSoundboard
 
-OMGSoundboard is a full soundboard app that will make your day a little brighter. It compiles a large number of humorous sounds, memes, and noises into one convenient location. You can also make your own recordings. It's simple to create amusing sounds and assign them to buttons. The app's interface is simple and has a modernc look to it.
+OMGSoundboard is a full soundboard app that will make your day a little brighter. You may add your own tunes. The app's interface is simple and has a modern look to it.
 
 🎵 Note: The soundboard ships with just a __very limited amount of tunes due to copyright reasons__. If you want to add your own sounds, please open a PR. We only accept self-made tunes though without copyright restrictions. 🎵 
 
