@@ -1,0 +1,106 @@
+name: CI
+on:
+  push:
+    branches:
+      - 'development'
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  ktlint:
+    runs-on: 'ubuntu-latest'
+    env:
+      GRADLE_OPTS: -Dorg.gradle.daemon=false
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Run ktlint
+        run: ./gradlew ktlintCheck
+
+  detekt:
+    runs-on: 'ubuntu-latest'
+    env:
+      GRADLE_OPTS: -Dorg.gradle.daemon=false
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Run detekt
+        run: ./gradlew detekt
+
+  lint:
+    runs-on: 'ubuntu-latest'
+    env:
+      GRADLE_OPTS: -Dorg.gradle.daemon=false
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Run lint
+        run: ./gradlew lint
+
+  test:
+    runs-on: 'ubuntu-latest'
+    env:
+      GRADLE_OPTS: -Dorg.gradle.daemon=false
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Run all the tests
+        run: ./gradlew test
+
+  build-debug-apk:
+    runs-on: 'ubuntu-latest'
+    name: Build Debug APK
+    env:
+      GRADLE_OPTS: -Dorg.gradle.daemon=false
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Build the Debug APK
+        run: ./gradlew assembleDebug
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: OMGSoundboard-debug-${{ matrix.name }}.apk
+          path: example/build/outputs/apk/debug/example-debug.apk

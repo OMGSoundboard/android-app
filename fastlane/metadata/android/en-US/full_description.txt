@@ -1,0 +1,22 @@
+Having the right meme or sound at the right time can make a joke work! Sounds are so much fun and this is why you need to download OMGSoundboard.
+OMGSoundboard allows you to create your own unique soundboards. What's exciting about this app is that it allows you to be only limited by your imagination. You are free to use whatever sounds you want because it is possible to import sounds you love. A backup is also integrated of course so that you can keep your collection forever. The software is simple and straightforward to use. You can also layer the sounds by adding effects and playing several sound effects at once.
+
+OMGSoundboard works offline, offers a good search function, and the ability to set sounds as ringtones and/or alarms.
+
+Please note that OMGSoundboard has just a very limited amount of sounds available by default because of copyright reasons.
+
+The following are some of the app's main features:
+✔️	You have the option of making as many soundboards as you want.
+✔️	Your personal tunes can be imported
+✔️	You have complete control over when the sound starts and stops.
+✔️	Sounds can be played back at the same time, allowing you to layer them if desired.
+✔️	OMGSoundboard will back up your sounds so they don't get lost.
+✔️	All apps that allow sharing can be used to share the sounds. (Bluetooh, Wifi, NFC, Social Networks, and so on.)
+✔️	You get to select Ringtone, Alarm, and Notification sounds.
+✔️	You can save your favorite sounds as bookmarks.
+✔️	Allows for word-filtering for a more useful and fast search inside a large number of sounds.
+✔️	No ads and no trackers.
+
+Webpage: <a href="https://omgsoundboard.audio/">https://omgsoundboard.audio/</a>
+Translate it on Hosted Weblate: <a href="https://hosted.weblate.org/engage/omgsoundboard/">https://hosted.weblate.org/engage/omgsoundboard/</a>
+Libre software on GitHub: <a href="https://github.com/OMGSoundboard/android-app/">https://github.com/OMGSoundboard/android-app/</a>
