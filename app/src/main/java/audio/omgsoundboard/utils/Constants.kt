@@ -2,6 +2,7 @@ package audio.omgsoundboard.utils
 
 object Constants {
 
+    const val ONBOARDING_SHOWN = "OnboardingShown"
     const val PARTICLES_STATUS = "ParticlesStatus"
     const val THEME_TYPE = "ThemeType"
 

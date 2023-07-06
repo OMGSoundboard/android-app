@@ -58,6 +58,7 @@ class MainActivity : ComponentActivity() {
 
                 ModalNavigationDrawer(
                     drawerState = drawerState,
+                    gesturesEnabled = mainViewModel.currentScreen != Screens.OnboardingScreen,
                     drawerContent = {
                         DrawerContent(
                             drawerState = drawerState,

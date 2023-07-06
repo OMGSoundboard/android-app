@@ -1,6 +1,17 @@
 <resources>
     <string name="app_name">OMGSoundboard</string>
 
+    <string name="onboarding_skip">Skip</string>
+    <string name="onboarding_back">Back</string>
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_finish">Finish</string>
+
+    <string name="onboarding_text_1">Tap on the sounds to play/stop them, tap on more than one to overlap the sounds</string>
+    <string name="onboarding_text_2">Set as favorites the sounds you like the most</string>
+    <string name="onboarding_text_3">Hold on a sound to share it, set it as ringtone, notification or alarm</string>
+    <string name="onboarding_text_4">You can add your custom sounds to the soundboard</string>
+    <string name="onboarding_text_5">Export a backup of your custom sounds and restore them in any device</string>
+
     <string name="favorites_title">Favorites</string>
     <string name="about_title">About</string>
     <string name="custom_title">Custom</string>
