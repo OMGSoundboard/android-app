@@ -16,3 +16,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "OMGSoundboard"
 include ':app'
+include ':wear'
+include ':core'

@@ -1,5 +1,7 @@
 package audio.omgsoundboard.presentation.theme
 
+import android.os.Build
+
 enum class ThemeType {
     DARK,
     LIGHT,
@@ -13,6 +15,6 @@ fun toThemeType(type: String): ThemeType{
         "LIGHT" -> ThemeType.LIGHT
         "DYNAMIC" -> ThemeType.DYNAMIC
         "SYSTEM" -> ThemeType.SYSTEM
-        else -> ThemeType.SYSTEM
+        else -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {ThemeType.DYNAMIC} else {ThemeType.SYSTEM}
     }
 }

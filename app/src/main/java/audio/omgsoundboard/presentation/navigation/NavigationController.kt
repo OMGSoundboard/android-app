@@ -13,7 +13,7 @@ import audio.omgsoundboard.presentation.ui.custom.CustomScreen
 import audio.omgsoundboard.presentation.ui.favorites.FavoritesScreen
 import audio.omgsoundboard.presentation.ui.onboarding.OnboardingScreen
 import audio.omgsoundboard.presentation.ui.sounds.SoundsScreen
-import audio.omgsoundboard.utils.Constants.CATEGORY_ALL
+import audio.omgsoundboard.core.utils.Constants.CATEGORY_ALL
 
 @Composable
 fun NavigationController(

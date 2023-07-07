@@ -18,7 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import audio.omgsoundboard.R
+import audio.omgsoundboard.core.R
 import audio.omgsoundboard.presentation.composables.PermissionDialog
 import audio.omgsoundboard.presentation.navigation.Screens
 import audio.omgsoundboard.presentation.ui.MainViewModel
@@ -197,24 +197,32 @@ object OnboardingElements {
     val elements = arrayListOf(
         OnboardingModel(
             description = R.string.onboarding_text_1,
-            drawableId = R.drawable.onboarding_img_1,
+            drawableId = audio.omgsoundboard.R.drawable.onboarding_img_1,
         ),
         OnboardingModel(
             description = R.string.onboarding_text_2,
-            drawableId = R.drawable.onboarding_img_2
+            drawableId = audio.omgsoundboard.R.drawable.onboarding_img_2
         ),
         OnboardingModel(
             description = R.string.onboarding_text_3,
-            drawableId = R.drawable.onboarding_img_3,
+            drawableId = audio.omgsoundboard.R.drawable.onboarding_img_3,
             showPermissionButton = true
         ),
         OnboardingModel(
             description = R.string.onboarding_text_4,
-            drawableId = R.drawable.onboarding_img_4
+            drawableId = audio.omgsoundboard.R.drawable.onboarding_img_4
         ),
         OnboardingModel(
             description = R.string.onboarding_text_5,
-            drawableId = R.drawable.onboarding_img_5
+            drawableId = audio.omgsoundboard.R.drawable.onboarding_img_5
         ),
+        OnboardingModel(
+            description = R.string.onboarding_text_6,
+            drawableId = audio.omgsoundboard.R.drawable.onboarding_img_6
+        ),
+        OnboardingModel(
+            description = R.string.onboarding_text_7,
+            drawableId = audio.omgsoundboard.R.drawable.onboarding_img_7
+        )
     )
 }

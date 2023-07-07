@@ -11,7 +11,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
-import audio.omgsoundboard.R
+import audio.omgsoundboard.core.R
 import audio.omgsoundboard.presentation.ui.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

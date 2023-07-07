@@ -18,10 +18,10 @@ import audio.omgsoundboard.presentation.composables.ThemePicker
 import audio.omgsoundboard.presentation.navigation.*
 import audio.omgsoundboard.presentation.theme.OMGSoundboardTheme
 import audio.omgsoundboard.presentation.theme.ThemeType
-import audio.omgsoundboard.utils.Constants.CATEGORY_CUSTOM
-import audio.omgsoundboard.utils.Constants.OPTIONS_ABOUT
-import audio.omgsoundboard.utils.Constants.OPTIONS_PARTICLES
-import audio.omgsoundboard.utils.Constants.OPTIONS_THEME_PICKER
+import audio.omgsoundboard.core.utils.Constants.CATEGORY_CUSTOM
+import audio.omgsoundboard.core.utils.Constants.OPTIONS_ABOUT
+import audio.omgsoundboard.core.utils.Constants.OPTIONS_PARTICLES
+import audio.omgsoundboard.core.utils.Constants.OPTIONS_THEME_PICKER
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

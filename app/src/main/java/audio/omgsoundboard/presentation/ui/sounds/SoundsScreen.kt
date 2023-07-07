@@ -22,18 +22,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import audio.omgsoundboard.R
-import audio.omgsoundboard.domain.models.PlayableSound
+import audio.omgsoundboard.core.R
+import audio.omgsoundboard.core.domain.models.PlayableSound
 import audio.omgsoundboard.presentation.composables.DropMenu
 import audio.omgsoundboard.presentation.composables.Particles
 import audio.omgsoundboard.presentation.composables.PermissionDialog
 import audio.omgsoundboard.presentation.navigation.Screens
 import audio.omgsoundboard.presentation.ui.MainViewModel
-import audio.omgsoundboard.utils.Constants.CATEGORY_ALL
-import audio.omgsoundboard.utils.Constants.CATEGORY_FUNNY
-import audio.omgsoundboard.utils.Constants.CATEGORY_GAMES
-import audio.omgsoundboard.utils.Constants.CATEGORY_MOVIES
-import audio.omgsoundboard.utils.Constants.CATEGORY_MUSIC
+import audio.omgsoundboard.core.utils.Constants.CATEGORY_ALL
+import audio.omgsoundboard.core.utils.Constants.CATEGORY_FUNNY
+import audio.omgsoundboard.core.utils.Constants.CATEGORY_GAMES
+import audio.omgsoundboard.core.utils.Constants.CATEGORY_MOVIES
+import audio.omgsoundboard.core.utils.Constants.CATEGORY_MUSIC
 import kotlinx.coroutines.launch
 
 

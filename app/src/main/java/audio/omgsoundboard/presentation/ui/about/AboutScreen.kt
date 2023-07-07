@@ -16,7 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import audio.omgsoundboard.R
+import audio.omgsoundboard.core.R
+import audio.omgsoundboard.core.utils.Data
 import audio.omgsoundboard.presentation.composables.AboutItem
 import audio.omgsoundboard.presentation.composables.Licenses
 import audio.omgsoundboard.presentation.composables.Particles
@@ -70,33 +71,21 @@ fun AboutScreen(mainViewModel: MainViewModel){
                         text = stringResource(id = R.string.contribute)
                     )
 
-                    AboutItem(icon = R.drawable.translate, title = R.string.translate) {
-                        launchUrl(context, "https://hosted.weblate.org/engage/omgsoundboard/")
+                    Data.contribute.forEach {
+                        AboutItem(icon = it.icon, title = it.title) {
+                            launchUrl(context, it.url)
+                        }
                     }
-                    AboutItem(icon = R.drawable.report_a_problem, title = R.string.report_problem) {
-                        launchUrl(context, "https://github.com/OMGSoundboard/android-app/issues/")
-                    }
-                    AboutItem(icon = R.drawable.view_source, title =  R.string.view_source) {
-                        launchUrl(context, "https://github.com/OMGSoundboard/android-app/")
-                    }
-
 
                     Text(
                         modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 16.dp),
                         text = stringResource(id = R.string.contact)
                     )
 
-                    AboutItem(icon = R.drawable.website, title = R.string.website) {
-                        launchUrl(context, "https://omgsoundboard.audio/")
-                    }
-                    AboutItem(icon = R.drawable.e_mail, title = R.string.email) {
-                        launchUrl(context, "mailto:marvin@omgsoundboard.audio")
-                    }
-                    AboutItem(icon = R.drawable.telegram, title = R.string.telegram) {
-                        launchUrl(context, "https://t.me/omgsoundboard/")
-                    }
-                    AboutItem(icon = R.drawable.helpdesk, title =  R.string.helpdesk) {
-                        launchUrl(context, "https://help.omgsoundboard.audio/")
+                    Data.contact.forEach {
+                        AboutItem(icon = it.icon, title = it.title) {
+                            launchUrl(context, it.url)
+                        }
                     }
 
                     Text(
@@ -104,20 +93,10 @@ fun AboutScreen(mainViewModel: MainViewModel){
                         text = stringResource(id = R.string.legal)
                     )
 
-                    AboutItem(icon = R.drawable.terms_of_service, title = R.string.terms_of_service) {
-                        launchUrl(context, "https://omgsoundboard.audio/assets/legal/OMGSoundboard_ToS.pdf")
-                    }
-                    AboutItem(icon = R.drawable.privacy_policy, title = R.string.privacy_policy) {
-                        launchUrl(context, "https://omgsoundboard.audio/assets/legal/OMGSoundboard_PrivacyPolicy.pdf")
-                    }
-                    AboutItem(icon = R.drawable.disclaimer, title = R.string.disclaimer) {
-                        launchUrl(context, "https://omgsoundboard.audio/assets/legal/OMGSoundboard_Disclaimer.pdf")
-                    }
-                    AboutItem(icon = R.drawable.disclaimer, title = R.string.dmca) {
-                        launchUrl(context, "mailto:marvin@omgsoundboard.audio?subject=DMCA")
-                    }
-                    AboutItem(icon = R.drawable.license, title =  R.string.license) {
-                        launchUrl(context, "https://github.com/OMGSoundboard/android-app/blob/trunk/LICENSE/")
+                    Data.legal.forEach {
+                        AboutItem(icon = it.icon, title = it.title) {
+                            launchUrl(context, it.url)
+                        }
                     }
                     AboutItem(icon = R.drawable.open_source_licenses, title =  R.string.open_source) {
                         showLicenses = true
