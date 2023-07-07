@@ -11,7 +11,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
-import audio.omgsoundboard.R
+import audio.omgsoundboard.core.R
 import audio.omgsoundboard.presentation.ui.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,65 +61,67 @@ fun AppBar(
             focusRequester.requestFocus()
         }
     } else {
-        TopAppBar(title = {
-            Text(
-                text = viewModel.currentScreen.title,
-            )
-        }, navigationIcon = {
-            if (viewModel.currentScreen == Screens.FavoritesScreen) {
-                IconButton(onClick = {
-                    navController.navigateUp()
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = null,
-                    )
+        if (viewModel.currentScreen != Screens.OnboardingScreen){
+            TopAppBar(title = {
+                Text(
+                    text = viewModel.currentScreen.title,
+                )
+            }, navigationIcon = {
+                if (viewModel.currentScreen == Screens.FavoritesScreen) {
+                    IconButton(onClick = {
+                        navController.navigateUp()
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = null,
+                        )
+                    }
+                } else {
+                    IconButton(onClick = openDrawer) {
+                        Icon(
+                            imageVector = Icons.Default.Menu,
+                            contentDescription = null,
+                        )
+                    }
                 }
-            } else {
-                IconButton(onClick = openDrawer) {
-                    Icon(
-                        imageVector = Icons.Default.Menu,
-                        contentDescription = null,
-                    )
+            }, actions = {
+                if (viewModel.currentScreen.showFav) {
+                    IconButton(onClick = {
+                        navController.navigate(Screens.FavoritesScreen.route)
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.Favorite,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 }
-            }
-        }, actions = {
-            if (viewModel.currentScreen.showFav) {
-                IconButton(onClick = {
-                    navController.navigate(Screens.FavoritesScreen.route)
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.Favorite,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
-                    )
+                if (viewModel.currentScreen.searchable) {
+                    IconButton(onClick = {
+                        showSearchBar = true
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = null,
+                        )
+                    }
                 }
-            }
-            if (viewModel.currentScreen.searchable) {
-                IconButton(onClick = {
-                    showSearchBar = true
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = null,
-                    )
+                if (viewModel.currentScreen == Screens.CustomScreen) {
+                    OverflowMenu {
+                        DropdownMenuItem(text = {
+                            Text(text = stringResource(id = R.string.export_backup))
+                        }, onClick = {
+                            viewModel.backupPress(export = true, restore = null)
+                        })
+                        DropdownMenuItem(text = {
+                            Text(text = stringResource(id = R.string.restore_backup))
+                        }, onClick = {
+                            viewModel.backupPress(export = null, restore = true)
+                        })
+                    }
                 }
-            }
-            if (viewModel.currentScreen == Screens.CustomScreen) {
-                OverflowMenu {
-                    DropdownMenuItem(text = {
-                        Text(text = stringResource(id = R.string.export_backup))
-                    }, onClick = {
-                        viewModel.backupPress(export = true, restore = null)
-                    })
-                    DropdownMenuItem(text = {
-                        Text(text = stringResource(id = R.string.restore_backup))
-                    }, onClick = {
-                        viewModel.backupPress(export = null, restore = true)
-                    })
-                }
-            }
-        })
+            })
+        }
     }
 }
 

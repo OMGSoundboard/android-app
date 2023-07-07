@@ -19,8 +19,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import audio.omgsoundboard.R
-import audio.omgsoundboard.domain.models.PlayableSound
+import audio.omgsoundboard.core.R
+import audio.omgsoundboard.core.domain.models.PlayableSound
 import audio.omgsoundboard.presentation.composables.DropMenu
 import audio.omgsoundboard.presentation.composables.NewCustomSoundDialog
 import audio.omgsoundboard.presentation.composables.Particles

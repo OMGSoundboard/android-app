@@ -13,9 +13,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpOffset
-import audio.omgsoundboard.R
-import audio.omgsoundboard.domain.models.PlayableSound
-import audio.omgsoundboard.domain.repository.MediaManager
+import audio.omgsoundboard.core.R
+import audio.omgsoundboard.core.domain.models.PlayableSound
+import audio.omgsoundboard.core.domain.repository.MediaManager
 import audio.omgsoundboard.presentation.ui.MainViewModel
 
 

@@ -4,16 +4,17 @@ import android.net.Uri
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import audio.omgsoundboard.domain.models.PlayableSound
-import audio.omgsoundboard.domain.repository.MediaManager
-import audio.omgsoundboard.domain.repository.PlayerRepository
-import audio.omgsoundboard.domain.repository.StorageRepository
+import audio.omgsoundboard.core.domain.models.PlayableSound
+import audio.omgsoundboard.core.domain.repository.MediaManager
+import audio.omgsoundboard.core.domain.repository.PlayerRepository
+import audio.omgsoundboard.core.domain.repository.StorageRepository
 import audio.omgsoundboard.domain.repository.UserPreferences
 import audio.omgsoundboard.presentation.navigation.Screens
 import audio.omgsoundboard.presentation.theme.ThemeType
 import audio.omgsoundboard.presentation.theme.toThemeType
-import audio.omgsoundboard.utils.Constants.PARTICLES_STATUS
-import audio.omgsoundboard.utils.Constants.THEME_TYPE
+import audio.omgsoundboard.core.utils.Constants.ONBOARDING_SHOWN
+import audio.omgsoundboard.core.utils.Constants.PARTICLES_STATUS
+import audio.omgsoundboard.core.utils.Constants.THEME_TYPE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,13 +29,16 @@ class MainViewModel @Inject constructor(
     var currentScreen by mutableStateOf(Screens.CategorySoundsScreen, policy = neverEqualPolicy())
         private set
 
-    var searchText by mutableStateOf("")
-        private set
-
     var areParticlesEnabled by mutableStateOf(false)
         private set
 
     var selectedTheme by mutableStateOf(ThemeType.DARK)
+        private set
+
+    var onboardingShown by mutableStateOf(false)
+        private set
+
+    var searchText by mutableStateOf("")
         private set
 
     var customSounds = mutableStateListOf<PlayableSound>()
@@ -70,6 +74,10 @@ class MainViewModel @Inject constructor(
             screens.title = category
         }
         currentScreen = screens
+    }
+
+    fun setOnboardingShown(){
+        userPreferences.putBooleanPair(ONBOARDING_SHOWN, true)
     }
 
     fun setParticlesState() {
@@ -213,6 +221,7 @@ class MainViewModel @Inject constructor(
 
     private fun readUserPreferences() {
         areParticlesEnabled = userPreferences.getBooleanPair(PARTICLES_STATUS)
+        onboardingShown = userPreferences.getBooleanPair(ONBOARDING_SHOWN)
         selectedTheme = toThemeType(userPreferences.getStringPair(THEME_TYPE))
     }
 }

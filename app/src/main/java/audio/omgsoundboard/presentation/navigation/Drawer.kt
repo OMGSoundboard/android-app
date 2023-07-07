@@ -13,16 +13,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import audio.omgsoundboard.R
-import audio.omgsoundboard.utils.Constants
-import audio.omgsoundboard.utils.Constants.CATEGORY_ALL
-import audio.omgsoundboard.utils.Constants.CATEGORY_CUSTOM
-import audio.omgsoundboard.utils.Constants.CATEGORY_FUNNY
-import audio.omgsoundboard.utils.Constants.CATEGORY_GAMES
-import audio.omgsoundboard.utils.Constants.CATEGORY_MOVIES
-import audio.omgsoundboard.utils.Constants.CATEGORY_MUSIC
-import audio.omgsoundboard.utils.Constants.OPTIONS_PARTICLES
-import audio.omgsoundboard.utils.Constants.OPTIONS_THEME_PICKER
+import audio.omgsoundboard.core.R
+import audio.omgsoundboard.core.utils.Constants
+import audio.omgsoundboard.core.utils.Constants.CATEGORY_ALL
+import audio.omgsoundboard.core.utils.Constants.CATEGORY_CUSTOM
+import audio.omgsoundboard.core.utils.Constants.CATEGORY_FUNNY
+import audio.omgsoundboard.core.utils.Constants.CATEGORY_GAMES
+import audio.omgsoundboard.core.utils.Constants.CATEGORY_MOVIES
+import audio.omgsoundboard.core.utils.Constants.CATEGORY_MUSIC
+import audio.omgsoundboard.core.utils.Constants.OPTIONS_PARTICLES
+import audio.omgsoundboard.core.utils.Constants.OPTIONS_THEME_PICKER
 import kotlinx.coroutines.launch
 
 
