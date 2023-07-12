@@ -54,4 +54,5 @@
     <string name="terms_of_service">Términos de Servicio</string>
     <string name="privacy_policy">Política de Privacidad</string>
     <string name="can_not_handle">No tienes ninguna aplicación capaz de manejar esta acción</string>
+    <string name="onboarding_skip">Omitir</string>
 </resources>
