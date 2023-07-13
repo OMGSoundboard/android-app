@@ -55,4 +55,17 @@
     <string name="privacy_policy">Política de Privacidad</string>
     <string name="can_not_handle">No tienes ninguna aplicación capaz de manejar esta acción</string>
     <string name="onboarding_skip">Omitir</string>
+    <string name="onboarding_back">Atrás</string>
+    <string name="onboarding_next">Siguiente</string>
+    <string name="onboarding_finish">Finalizar</string>
+    <string name="onboarding_text_1">Pulsa sobre los sonidos para reproducirlos/pararlos, pulsa sobre más de uno para superponerlos</string>
+    <string name="onboarding_text_2">Pulsa el corazón para marcar tus canciones favoritas</string>
+    <string name="onboarding_text_5">Exporta una copia de seguridad de tus sonidos personalizados y restáuralos en cualquier dispositivo o compártelos con tu familia y amigos</string>
+    <string name="onboarding_text_4">Puedes agregar tus sonidos personalizados a la caja de resonancia</string>
+    <string name="onboarding_text_3">Mantén pulsado un sonido para compartirlo, configurarlo como tono de llamada, notificación o alarma</string>
+    <string name="onboarding_text_6">Por defecto, el diseño sigue tu sistema, pero puedes cambiarlo si lo deseas</string>
+    <string name="onboarding_text_7">Consulta la pantalla Acerca de para obtener más información sobre la caja de resonancia y las posibilidades de ayudar</string>
+    <string name="favorites_title">Favoritos</string>
+    <string name="about_title">Acerca de</string>
+    <string name="custom_title">Personalizado</string>
 </resources>
