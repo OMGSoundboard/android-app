@@ -1,0 +1,22 @@
+¡Tener el meme o sonido adecuado en el momento adecuado puede hacer que una broma funcione! Los sonidos son muy divertidos y por eso necesitas descargar OMGSoundboard.
+OMGSoundboard te permite crear tus propias cajas de resonancia. Lo emocionante de esta aplicación es que sólo te permite estar limitado por tu imaginación. Eres libre de usar los sonidos que quieras porque es posible importar sonidos que te encanten. Por supuesto, también integra una copia de seguridad para que puedas conservar tu colección para siempre. El software es sencillo y fácil de usar. También puedes superponer los sonidos añadiendo efectos y reproduciendo varios efectos de sonido a la vez.
+
+OMGSoundboard funciona sin conexión, ofrece una buena función de búsqueda y la posibilidad de establecer sonidos como tonos de llamada y/o alarmas.
+
+Ten en cuenta que OMGSoundboard sólo tiene una cantidad muy limitada de sonidos disponibles por defecto debido a razones de derechos de autor.
+
+Estas son algunas de las principales características de la aplicación:
+✔️ Tienes la opción de crear tantas cajas de resonancia como quieras.
+✔️ Puedes importar tus melodías personales
+✔️ Tienes control total sobre cuándo empieza y termina el sonido.
+✔️ Los sonidos se pueden reproducir al mismo tiempo, lo que te permite superponerlos si lo deseas.
+✔️ OMGSoundboard hará una copia de seguridad de tus sonidos para que no se pierdan.
+✔️ Todas las aplicaciones que permiten compartir se pueden usar para compartir los sonidos. (Bluetooh, Wifi, NFC, Redes Sociales, etc.)
+✔️ Tienes la oportunidad de seleccionar tonos de llamada, alarma y sonidos de notificación.
+✔️ Puedes guardar tus sonidos favoritos como marcadores.
+✔️ Permite el filtrado de palabras para una búsqueda más útil y rápida dentro de una gran cantidad de sonidos.
+✔️ Sin anuncios y sin rastreadores.
+
+Página web: <a href="https://omgsoundboard.audio/">https://omgsoundboard.audio/</a>
+Traducelo en Weblate: <a href="https://hosted.weblate.org/engage/omgsoundboard/">https://hosted.weblate.org/engage/omgsoundboard/</a>
+Codigo fuente y libre en el GitHub: <a href="https://github.com/OMGSoundboard/android-app/">https://github.com/OMGSoundboard/android-app/</a>
