@@ -57,4 +57,15 @@
     <string name="custom_sound_add_title">Ton hinzufügen</string>
     <string name="permission_description">Erlaube OMGSoundboard, die Systemeinstellungen zu ändern, um deine Sounds als Klingeltöne, Alarme und Benachrichtigungen einzustellen</string>
     <string name="permission_allow">Erlauben</string>
+    <string name="onboarding_text_1">Tippe auf die Sounds, um sie abzuspielen und anzuhalten. Tippe auf mehrere Sounds, um sie zu überlagern</string>
+    <string name="onboarding_text_4">Eigene Sounds können ebenfalls zum Soundboard hinzugefügt werden</string>
+    <string name="onboarding_next">Weiter</string>
+    <string name="onboarding_back">Zurück</string>
+    <string name="onboarding_skip">Überspringen</string>
+    <string name="onboarding_finish">Fertig</string>
+    <string name="onboarding_text_7">Schau gerne im Menüpunkt Über vorbei, um mehr über das Soundboard sowie Möglichkeiten zum Beitragen zu erfahren</string>
+    <string name="onboarding_text_5">Exportiere ein Backup deiner eigenen Sounds, stelle es auf einem beliebigen Gerät wieder her oder teile es mit deiner Familie und Freunden</string>
+    <string name="onboarding_text_3">Halte einen Sound lange gedrückt, um diesen zu teilen oder als Klingelton, Benachrichtigung oder Wecker einzustellen</string>
+    <string name="onboarding_text_2">Markiere deine Lieblingsmelodien mit einem Herz</string>
+    <string name="onboarding_text_6">Das Design folgt der Einstellung des Gerätes, kann aber auch angepasst werden</string>
 </resources>
