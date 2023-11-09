@@ -104,7 +104,9 @@ fun SoundsScreen(
         allSoundsIds.recycle()
 
         if (!hasWriteSettingsPermission) {
-            showPermissionDialog = true
+            if (!mainViewModel.systemPreferencesDialogShown){
+                showPermissionDialog = true
+            }
         }
     }
 

@@ -76,6 +76,7 @@
     <string name="permission">We need some permissions</string>
     <string name="permission_description">Allow OMGSoundboard to modify your system settings in order to set our sounds as ringtones, alarms and notifications</string>
     <string name="permission_allow">Allow</string>
+    <string name="permission_cancel">Cancel</string>
     <string name="permission_granted">Now you can set our sounds as ringtones, alarms and notifications</string>
     <string name="permission_not_granted">You did not allow the permission</string>
 

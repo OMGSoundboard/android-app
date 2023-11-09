@@ -14,6 +14,7 @@ import audio.omgsoundboard.presentation.theme.ThemeType
 import audio.omgsoundboard.presentation.theme.toThemeType
 import audio.omgsoundboard.core.utils.Constants.ONBOARDING_SHOWN
 import audio.omgsoundboard.core.utils.Constants.PARTICLES_STATUS
+import audio.omgsoundboard.core.utils.Constants.SYSTEM_PREFERENCES_DIALOG_SHOWN
 import audio.omgsoundboard.core.utils.Constants.THEME_TYPE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -36,6 +37,9 @@ class MainViewModel @Inject constructor(
         private set
 
     var onboardingShown by mutableStateOf(false)
+        private set
+
+    var systemPreferencesDialogShown by mutableStateOf<Boolean>(true)
         private set
 
     var searchText by mutableStateOf("")
@@ -78,6 +82,10 @@ class MainViewModel @Inject constructor(
 
     fun setOnboardingShown(){
         userPreferences.putBooleanPair(ONBOARDING_SHOWN, true)
+    }
+
+    private fun setSystemPreferencesDialogShown(){
+        userPreferences.putBooleanPair(SYSTEM_PREFERENCES_DIALOG_SHOWN, true)
     }
 
     fun setParticlesState() {
@@ -222,6 +230,15 @@ class MainViewModel @Inject constructor(
     private fun readUserPreferences() {
         areParticlesEnabled = userPreferences.getBooleanPair(PARTICLES_STATUS)
         onboardingShown = userPreferences.getBooleanPair(ONBOARDING_SHOWN)
+
+        systemPreferencesDialogShown = userPreferences.getBooleanPair(
+            SYSTEM_PREFERENCES_DIALOG_SHOWN)
+
+        //To only show it once
+        if (!systemPreferencesDialogShown){
+            setSystemPreferencesDialogShown()
+        }
+
         selectedTheme = toThemeType(userPreferences.getStringPair(THEME_TYPE))
     }
 }
