@@ -1,0 +1,1 @@
+- Changing system settings to set sounds as ringtones, alarms, and notifications is now optional.
