@@ -49,6 +49,10 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+    // https://f-droid.org/docs/Reproducible_Builds/#png-crushcrunch
+     aaptOptions {
+        cruncherEnabled = false
+    }
 }
 
 dependencies {
