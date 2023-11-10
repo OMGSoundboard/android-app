@@ -1,0 +1,1 @@
+- Cambiar la configuración del sistema para establecer los sonidos como tonos de llamada, alarmas y notificaciones es ahora opcional.
