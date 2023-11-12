@@ -1,0 +1,1 @@
+- Remove Unneeded Internet Permission
