@@ -1,0 +1,6 @@
+- The Terms of Service inside the app are gone to make clear that the app is proudfully libre and FOSS 🥰
+- Dependency updates ⚙️
+- Translation updates 🗺️
+
+Thank you so much to all contributors and the F-Droid team! 😘
+Feel more than welcome to help with translations on https://hosted.weblate.org/engage/omgsoundboard/. 👍
