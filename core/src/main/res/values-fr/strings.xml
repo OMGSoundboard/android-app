@@ -53,4 +53,20 @@
     <string name="export_backup">Exporter la sauvegarde</string>
     <string name="restore_backup">Restaurer la sauvegarde</string>
     <string name="dmca">DMCA</string>
+    <string name="onboarding_text_1">Appuyez sur les sons pour les lire/arrêter, appuyez sur plusieurs pour superposer les sons</string>
+    <string name="onboarding_text_4">Vous pouvez ajouter vos sons personnalisés à la table d\'harmonie</string>
+    <string name="onboarding_next">Suivant</string>
+    <string name="onboarding_back">Dos</string>
+    <string name="onboarding_skip">Sauter</string>
+    <string name="favorites_title">Favoris</string>
+    <string name="onboarding_finish">Finition</string>
+    <string name="can_not_handle">Vous n\'avez aucune application capable de gérer cette action</string>
+    <string name="onboarding_text_7">N\'hésitez pas à consulter l\'écran À propos pour en savoir plus sur la table d\'harmonie et les possibilités d\'aide</string>
+    <string name="permission_cancel">Annuler</string>
+    <string name="onboarding_text_5">Exportez une sauvegarde de vos sons personnalisés et restaurez-les sur n\'importe quel appareil ou partagez-les avec votre famille et vos amis</string>
+    <string name="onboarding_text_3">Maintenez un son pour le partager, définissez-le comme sonnerie, notification ou alarme</string>
+    <string name="custom_title">Coutume</string>
+    <string name="onboarding_text_2">Appuyez sur le cœur pour marquer vos morceaux préférés</string>
+    <string name="about_title">À propos</string>
+    <string name="onboarding_text_6">Par défaut, la conception suit votre système, mais n\'hésitez pas à la modifier</string>
 </resources>
