@@ -22,7 +22,6 @@ object Data {
         AboutModel(icon = R.drawable.helpdesk, title = R.string.helpdesk, url = "https://help.omgsoundboard.audio/"),
     )
     val legal = arrayListOf(
-        AboutModel(icon = R.drawable.terms_of_service, title = R.string.terms_of_service, url = "https://omgsoundboard.audio/assets/legal/OMGSoundboard_ToS.pdf"),
         AboutModel(icon = R.drawable.privacy_policy, title = R.string.privacy_policy, url = "https://omgsoundboard.audio/assets/legal/OMGSoundboard_PrivacyPolicy.pdf"),
         AboutModel(icon = R.drawable.disclaimer, title = R.string.disclaimer, url = "https://omgsoundboard.audio/assets/legal/OMGSoundboard_Disclaimer.pdf"),
         AboutModel(icon = R.drawable.disclaimer, title = R.string.dmca, url = "mailto:marvin@omgsoundboard.audio?subject=DMCA"),
