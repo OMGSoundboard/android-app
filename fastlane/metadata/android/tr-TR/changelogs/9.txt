@@ -1,0 +1,1 @@
+- Sesleri zil sesi, alarm ve bildirim sesi olarak ayarlamak için sistem ayarlarını değiştirmek artık isteğe bağlı.
