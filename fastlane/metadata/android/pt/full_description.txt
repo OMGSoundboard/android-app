@@ -1,0 +1,22 @@
+Ter o meme ou som certo no tempo certo pode fazer uma piada funcionar! Sons são tão divertidos e essa é a razão que precisas de instalar o OMGSoundboard.
+OMGSoundboard permite-te criar as tuas próprias mesas de som. O que é interessante nesta aplicação é que ela permite que sejas limitado apenas pela tua imaginação. Estás livre para utilizar quaisquer sons que quiseres porque é possível importar os sons que amas. Uma cópia de segurança é integrada para não perderes a tua coleção. O programa é simples e intuitivo de usar. Também podes sobrepor os sons adicionando efeitos e reproduzindo vários efeitos sonoros de uma só vez.
+
+OMGSoundboard funciona sem acesso à Internet, oferecendo uma boa função de pesquisa, e a habilidade de definir sons como toques e/ou alarmes.
+
+Note que o OMGSoundboard tem uma quantidade limitada de sons disponíveis por padrão por motivos de direitos autorais.
+
+As seguintes são algumas das funcionalidades principais da aplicação:
+✔️	Tens a opção de criar quantas mesas de som quiseres.
+✔️	Podes importar as tuas próprias músicas e sons.
+✔️	Tens controlo completo sobre o momento em que os sons começam e acabam.
+✔️	Os sons podem ser reproduzidos ao mesmo tempo, permitindo que você os coloque em camadas, se desejar.
+✔️	OMGSoundboard fará uma cópia de segurança dos teus sons para não serem perdidos.
+✔️	Todas as aplicações que permitem partilhar podem ser utilizadas para partilhar os sons. (Bluetooth, Wifi, NFC, redes sociais, entre outros.)
+✔️	Podes escolher o som do toque, do alarme e das notificações.
+✔️	Podes guardar os teus sons favoritos nos marcadores de páginas.
+✔️	Permite filtragem por palavras para uma pesquisa mais rápida e útil em um grande número de sons.
+✔️	Sem anúncios ou rastreadores.
+
+Página Web: <a href="https://omgsoundboard.audio/">https://omgsoundboard.audio/</a>
+Ajuda a traduzir no Hosted Weblate: <a href="https://hosted.weblate.org/engage/omgsoundboard/">https://hosted.weblate.org/engage/omgsoundboard/</a>
+Programas livres(código aberto) no GitHub: <a href="https://github.com/OMGSoundboard/android-app/">https://github.com/OMGSoundboard/android-app/</a>
