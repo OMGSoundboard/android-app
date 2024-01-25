@@ -1,0 +1,6 @@
+- Uygulamanın içindeki Hizmet Şartları, uygulamanın özgür ve FOSS niteliklerine uygun olduğunu açıkça beyan eder 🥰
+- Bağımlılık güncellemeleri ⚙️
+- Çeviri güncellemeleri 🗺️
+
+Katkıda bulunan herkese ve F-Droid ekibine çok teşekkür ederiz! 😘
+https://hosted.weblate.org/engage/omgsoundboard/ adresindeki çevirilere yardım etmekten memnuniyet duyarız. 👍

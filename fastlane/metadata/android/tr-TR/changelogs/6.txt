@@ -1,0 +1,9 @@
+- Daha iyi anlaşılması için uygulama tanıtımı ekleyin 💡
+- Google tarafından Wear OS desteği ⌚
+- Çeviri güncellemeleri 🗺️
+- Bağımlılık ve başlık altı güncellemeleri ⚙️
+
+Sorunları https://github.com/OMGSoundboard/android-app/issues adresinden bildirebilir ve https://hosted.weblate.org/engage/omgsoundboard/ adresinden çevirilere yardımcı olabilirseniz harika olur. 😅
+Uygulama için kendi kaydettiğiniz açık kaynak melodileriniz varsa bize de bildirin. 🎙️
+Teşekkürler! 🙏
+İyi günler dilerim! 🌞

@@ -1,0 +1,6 @@
+- Os Termos de Serviço dentro da aplicação foram removidos para deixar claro que a aplicação é orgulhosamente livre e código aberto 🥰
+- Atualizações de dependências ⚙️
+- Atualização das traduções 🗺️
+
+Muito obrigado a todos os colaboradores e à equipe F-Droid! 😘
+Sente-te mais do que bem-vindo a ajudar com traduções em https://hosted.weblate.org/engage/omgsoundboard/. 👍
