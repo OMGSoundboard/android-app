@@ -15,6 +15,7 @@ The following are some of the app's main features:
 ✔️	You get to select Ringtone, Alarm, and Notification sounds.
 ✔️	You can save your favorite sounds as bookmarks.
 ✔️	Allows for word-filtering for a more useful and fast search inside a large number of sounds.
+✔️	Supports Wear OS by Google smartwatches.
 ✔️	No ads and no trackers.
 
 Webpage: <a href="https://omgsoundboard.audio/">https://omgsoundboard.audio/</a>
