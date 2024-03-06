@@ -1,7 +1,7 @@
 buildscript {
     ext {
         compose_version = '1.6.2'
-        wear_compose_version = '1.0.0'
+        wear_compose_version = '1.3.0'
     }
     dependencies {
         classpath 'com.jaredsburrows:gradle-license-plugin:0.9.7'
