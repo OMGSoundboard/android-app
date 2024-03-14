@@ -1,0 +1,1 @@
+- Alterar definições do sistema para definir toques, alarmes e sons de notificações é opcional agora.
