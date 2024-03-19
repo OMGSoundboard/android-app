@@ -1,0 +1,2 @@
+- Definir Android 13 como versão alvo 🤖
+- Atualizações de Dependências ⚙️

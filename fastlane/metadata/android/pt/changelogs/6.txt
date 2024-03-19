@@ -1,0 +1,9 @@
+- Adicionar introdução à aplicação💡
+- Suporte para Wear OS pela Google ⌚
+- Atualizações na tradução🗺️
+- Atualizações de dependências e atualizações internas⚙️
+
+Seria fantástico se pudesses reportar problemas em https://github.com/OMGSoundboard/android-app/issues e ajudar com as traduções em https://hosted.weblate.org/engage/omgsoundboard/. 😅
+Diz-nos se tiveres sons livres que gravaste tu mesmo para a aplicação. 🎙️
+Obrigado! 🙏
+Tem um bom dia! 🌞
