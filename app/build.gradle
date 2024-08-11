@@ -9,12 +9,12 @@ plugins {
 
 android {
     namespace 'audio.omgsoundboard'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "audio.omgsoundboard"
         minSdk 24
-        targetSdk 34
+        targetSdk 35
         versionCode 12
         versionName "12.0"
 
