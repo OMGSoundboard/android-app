@@ -28,6 +28,7 @@ import audio.omgsoundboard.presentation.composables.PermissionDialog
 import audio.omgsoundboard.presentation.navigation.Screens
 import audio.omgsoundboard.presentation.ui.MainViewModel
 import audio.omgsoundboard.presentation.ui.sounds.SoundItem
+import audio.omgsoundboard.presentation.utils.getTitleFromUri
 
 @Composable
 fun CustomScreen(mainViewModel: MainViewModel) {
@@ -43,11 +44,13 @@ fun CustomScreen(mainViewModel: MainViewModel) {
 
     var showNewCustomSoundDialog by remember { mutableStateOf(false) }
     var pickedSoundUri by remember { mutableStateOf(Uri.EMPTY) }
+    var pickedSoundDefaultTitle by remember { mutableStateOf("") }
 
     val soundPicker = rememberLauncherForActivityResult(
         ActivityResultContracts.GetContent()
     ) { soundUri ->
         if (soundUri != null) {
+            pickedSoundDefaultTitle = getTitleFromUri(context, soundUri) ?: ""
             pickedSoundUri = soundUri
             showNewCustomSoundDialog = true
         }
@@ -117,11 +120,15 @@ fun CustomScreen(mainViewModel: MainViewModel) {
     }
 
     if (showNewCustomSoundDialog) {
-        NewCustomSoundDialog(onAdd = { title ->
-            mainViewModel.addCustomSound(title, pickedSoundUri)
-        }, onDismiss = {
-            showNewCustomSoundDialog = false
-        })
+        NewCustomSoundDialog(
+            defaultTitle = pickedSoundDefaultTitle,
+            onAdd = { title ->
+                mainViewModel.addCustomSound(title, pickedSoundUri)
+            },
+            onDismiss = {
+                showNewCustomSoundDialog = false
+            }
+        )
     }
 
     if (mainViewModel.fabPress) {

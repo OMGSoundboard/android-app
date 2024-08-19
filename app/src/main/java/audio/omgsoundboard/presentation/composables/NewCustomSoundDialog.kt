@@ -16,9 +16,13 @@ import androidx.compose.ui.window.Dialog
 import audio.omgsoundboard.core.R
 
 @Composable
-fun NewCustomSoundDialog(onAdd: (String) -> Unit, onDismiss: () -> Unit) {
+fun NewCustomSoundDialog(
+    defaultTitle: String,
+    onAdd: (String) -> Unit,
+    onDismiss: () -> Unit,
+) {
 
-    var newCustomSoundTitle by remember { mutableStateOf("") }
+    var newCustomSoundTitle by remember { mutableStateOf(defaultTitle) }
     var error by remember { mutableStateOf(false) }
 
     Dialog(
