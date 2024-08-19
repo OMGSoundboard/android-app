@@ -9,7 +9,8 @@ data class PlayableSound(
     val title: String = "",
     val resId: Int = 0,
     val uri: Uri = Uri.EMPTY,
-    var isFav: Boolean = false
+    var isFav: Boolean = false,
+    val date: Long = 0L
 )
 
 fun FavoritesEntity.toDomain() = PlayableSound(
@@ -23,4 +24,5 @@ fun CustomSoundsEntity.toDomain() = PlayableSound(
     id = id,
     title = title,
     uri = uri,
+    date = date
 )

@@ -45,6 +45,10 @@ class StorageRepositoryImpl @Inject constructor(
         return customSoundsDao.getCustomSounds().map { it.toDomain() }
     }
 
+    override suspend fun updateCustomSound(customSound: PlayableSound) {
+        customSoundsDao.updateCustomSound(CustomSoundsEntity(id = customSound.id, title = customSound.title, uri = customSound.uri, date = System.currentTimeMillis()))
+    }
+
     override suspend fun deleteCustomSound(customSoundId: Int) {
        customSoundsDao.deleteCustomSound(customSoundId)
     }

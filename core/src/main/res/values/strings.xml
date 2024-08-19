@@ -85,5 +85,6 @@
 
     <string name="export_backup">Export backup</string>
     <string name="restore_backup">Restore backup</string>
+    <string name="rename">Rename</string>
 
 </resources>

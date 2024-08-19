@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import audio.omgsoundboard.core.utils.Constants
 
 @Dao
@@ -14,6 +15,9 @@ interface CustomSoundsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCustomSound(sound: CustomSoundsEntity)
+
+    @Update
+    suspend fun updateCustomSound(sound: CustomSoundsEntity)
 
     @Query("DELETE FROM ${Constants.CUSTOM_SOUNDS_TABLE} WHERE id = :customSoundId")
     suspend fun deleteCustomSound(customSoundId: Int)

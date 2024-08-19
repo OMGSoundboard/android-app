@@ -26,6 +26,8 @@ fun DropMenu(
     hasWriteSettingsPermission: Boolean,
     mainViewModel: MainViewModel,
     askForPermission: () -> Unit,
+    isCustomSound: Boolean = false,
+    showRenameCustomSound: () -> Unit = {},
     onDismiss: () -> Unit
 ) {
     val density = LocalDensity.current
@@ -117,6 +119,17 @@ fun DropMenu(
                     }
                 },
             )
+            if (isCustomSound){
+                DropdownMenuItem(
+                    text = {
+                        Text(stringResource(id = R.string.rename))
+                    },
+                    onClick = {
+                        isExpanded = !isExpanded
+                        showRenameCustomSound()
+                    },
+                )
+            }
         }
     }
 }

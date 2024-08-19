@@ -22,13 +22,19 @@ import androidx.compose.ui.unit.dp
 import audio.omgsoundboard.core.R
 import audio.omgsoundboard.core.domain.models.PlayableSound
 import audio.omgsoundboard.presentation.composables.DropMenu
-import audio.omgsoundboard.presentation.composables.NewCustomSoundDialog
+import audio.omgsoundboard.presentation.composables.CustomSoundDialog
 import audio.omgsoundboard.presentation.composables.Particles
 import audio.omgsoundboard.presentation.composables.PermissionDialog
 import audio.omgsoundboard.presentation.navigation.Screens
 import audio.omgsoundboard.presentation.ui.MainViewModel
 import audio.omgsoundboard.presentation.ui.sounds.SoundItem
 import audio.omgsoundboard.presentation.utils.getTitleFromUri
+
+enum class CustomDialogAction
+{
+    CREATE,
+    RENAME
+}
 
 @Composable
 fun CustomScreen(mainViewModel: MainViewModel) {
@@ -38,11 +44,15 @@ fun CustomScreen(mainViewModel: MainViewModel) {
     var showPermissionDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        mainViewModel.setCurrentScreenValue(Screens.CustomScreen, context.getString(R.string.custom_title))
+        mainViewModel.setCurrentScreenValue(
+            Screens.CustomScreen,
+            context.getString(R.string.custom_title)
+        )
         mainViewModel.getCustomSounds()
     }
 
-    var showNewCustomSoundDialog by remember { mutableStateOf(false) }
+    var showCustomSoundDialog by remember { mutableStateOf(false) }
+    var customDialogAction by remember { mutableStateOf(CustomDialogAction.CREATE) }
     var pickedSoundUri by remember { mutableStateOf(Uri.EMPTY) }
     var pickedSoundDefaultTitle by remember { mutableStateOf("") }
 
@@ -52,7 +62,8 @@ fun CustomScreen(mainViewModel: MainViewModel) {
         if (soundUri != null) {
             pickedSoundDefaultTitle = getTitleFromUri(context, soundUri) ?: ""
             pickedSoundUri = soundUri
-            showNewCustomSoundDialog = true
+            showCustomSoundDialog = true
+            customDialogAction = CustomDialogAction.CREATE
         }
     }
 
@@ -108,7 +119,7 @@ fun CustomScreen(mainViewModel: MainViewModel) {
                         mainViewModel.changeFav(index, isFav)
                     }
                 }, onPlay = {
-                    mainViewModel.playSound(index,0, sound.uri)
+                    mainViewModel.playSound(index, 0, sound.uri)
                 }, onDropMenu = {
                     touchPoint = it
                     pickedSound = sound
@@ -119,14 +130,19 @@ fun CustomScreen(mainViewModel: MainViewModel) {
 
     }
 
-    if (showNewCustomSoundDialog) {
-        NewCustomSoundDialog(
+    if (showCustomSoundDialog) {
+        CustomSoundDialog(
             defaultTitle = pickedSoundDefaultTitle,
             onAdd = { title ->
-                mainViewModel.addCustomSound(title, pickedSoundUri)
+                if (customDialogAction == CustomDialogAction.RENAME) {
+                    val renamedSound = pickedSound.copy(title = title)
+                    mainViewModel.renameCustomSound(renamedSound)
+                } else {
+                    mainViewModel.addCustomSound(title, pickedSoundUri)
+                }
             },
             onDismiss = {
-                showNewCustomSoundDialog = false
+                showCustomSoundDialog = false
             }
         )
     }
@@ -160,12 +176,19 @@ fun CustomScreen(mainViewModel: MainViewModel) {
 
     if (mainViewModel.isDropMenuExpanded) {
         DropMenu(
-            touchPoint,
-            pickedSound,
-            hasWriteSettingsPermission,
-            mainViewModel,
+            touchPoint = touchPoint,
+            pickedSound = pickedSound,
+            hasWriteSettingsPermission = hasWriteSettingsPermission,
+            mainViewModel = mainViewModel,
             askForPermission = {
                 showPermissionDialog = true
+
+            },
+            isCustomSound = true,
+            showRenameCustomSound = {
+                pickedSoundDefaultTitle = pickedSound.title
+                showCustomSoundDialog = true
+                customDialogAction = CustomDialogAction.RENAME
             },
             onDismiss = {
                 mainViewModel.toggleDropMenu()

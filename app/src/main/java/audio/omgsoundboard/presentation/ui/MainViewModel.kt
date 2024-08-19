@@ -114,6 +114,15 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun renameCustomSound(renamedSound: PlayableSound){
+        viewModelScope.launch {
+            storage.updateCustomSound(renamedSound)
+            val index = customSounds.indexOfFirst { it.id == renamedSound.id }
+            customSounds[index] = renamedSound
+        }
+    }
+
+
     fun exportBackup(uri: Uri) {
         storage.backupFiles(uri, customSounds)
     }

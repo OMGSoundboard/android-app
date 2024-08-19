@@ -11,6 +11,7 @@ interface StorageRepository {
 
     suspend fun getAllCustomSounds(): List<PlayableSound>
     suspend fun insertNewCustomSound(title: String, uri: Uri): List<PlayableSound>
+    suspend fun updateCustomSound(customSound: PlayableSound)
     suspend fun deleteCustomSound(customSoundId: Int)
 
     fun backupFiles(uri: Uri, metadata: List<PlayableSound>)

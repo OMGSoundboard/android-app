@@ -16,7 +16,7 @@ import androidx.compose.ui.window.Dialog
 import audio.omgsoundboard.core.R
 
 @Composable
-fun NewCustomSoundDialog(
+fun CustomSoundDialog(
     defaultTitle: String,
     onAdd: (String) -> Unit,
     onDismiss: () -> Unit,
