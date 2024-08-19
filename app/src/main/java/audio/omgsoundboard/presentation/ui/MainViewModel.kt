@@ -239,6 +239,9 @@ class MainViewModel @Inject constructor(
             setSystemPreferencesDialogShown()
         }
 
-        selectedTheme = toThemeType(userPreferences.getStringPair(THEME_TYPE))
+        val savedTheme = userPreferences.getStringPair(THEME_TYPE)
+        if (savedTheme.isNotBlank()){
+            selectedTheme = toThemeType(userPreferences.getStringPair(THEME_TYPE))
+        }
     }
 }
