@@ -10,6 +10,7 @@
 [![Known Vulnerabilities](https://snyk.io/test/github/OMGSoundboard/android-app/badge.svg?targetFile=app%2Fbuild.gradle)](https://snyk.io/test/github/OMGSoundboard/android-app?targetFile=app%2Fbuild.gradle)
 [![API](https://img.shields.io/badge/API-24%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=24)
 [![F-Droid](https://img.shields.io/f-droid/v/audio.omgsoundboard.svg)](https://f-droid.org/en/packages/audio.omgsoundboard/)
+[![IzzyOnDroid](https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/audio.omgsoundboard&label=IzzyOnDroid&cacheSeconds=86400)](https://apt.izzysoft.de/fdroid/index/apk/audio.omgsoundboard)
 [![Google Play](https://badgen.net/badge/icon/googleplay?icon=googleplay&label)](https://play.google.com/store/apps/details?id=audio.omgsoundboard)
 
 # OMGSoundboard
@@ -22,6 +23,11 @@ OMGSoundboard is a full soundboard app that will make your day a little brighter
     <img alt="Get it on F-Droid"
         height="80"
         src="https://user-images.githubusercontent.com/15004217/36919296-19b8524e-1e5d-11e8-8962-48463b1cec8a.png" />
+        </a>
+<a href="https://apt.izzysoft.de/fdroid/index/apk/audio.omgsoundboard">
+    <img alt="Get it on IzzyOnDroid"
+        height="80"
+        src="https://github.com/user-attachments/assets/043055b8-5c91-4fdd-9c33-462c0054add9" />
         </a>
 <a href="https://play.google.com/store/apps/details?id=audio.omgsoundboard">
     <img alt="Get it on Google Play"
