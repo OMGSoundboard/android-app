@@ -1,0 +1,9 @@
+- 📁 Import several files (or a folder) at once
+- 🎨 Edit categories and rename sounds (file's name is the tune's name/title by default)
+- 🤖 Target Android 15
+- 🐛 Bugfixes
+- ⚙️ Dependecy updates
+- 🗺️ Translation updates
+
+Thank you so much to all contributors, IzzyOnDroid and the F-Droid team! 😘
+Feel more than welcome to help with translations on https://hosted.weblate.org/engage/omgsoundboard/. 👍
