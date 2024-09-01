@@ -72,7 +72,7 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
 
     // Compose Nav Destinations
-    implementation "androidx.navigation:navigation-compose:2.6.0"
+    implementation "androidx.navigation:navigation-compose:2.7.7"
 
     //Room
     implementation "androidx.room:room-ktx:2.6.1"
