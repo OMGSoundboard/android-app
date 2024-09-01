@@ -92,6 +92,6 @@ dependencies {
     implementation "me.nikhilchaudhari:quarks:1.0.0-alpha02"
 
     //Icons
-    implementation("androidx.compose.material:material-icons-extended:1.4.3")
+    implementation("androidx.compose.material:material-icons-extended:1.6.8")
 
 }
