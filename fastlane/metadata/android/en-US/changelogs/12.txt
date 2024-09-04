@@ -1,5 +1,6 @@
 - 📁 Import several files (or a folder) at once
 - 🎨 Edit categories and rename sounds (file's name is the tune's name/title by default)
+- 🚮 Deleting tunes is possible now
 - 🤖 Target Android 15
 - 🐛 Bugfixes
 - ⚙️ Dependecy updates
