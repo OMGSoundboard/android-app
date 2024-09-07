@@ -1,9 +1,10 @@
 - 📁 Importa varios archivos (o una carpeta) a la vez
 - 🎨 Editar categorías y renombrar sonidos (el nombre del archivo es el nombre/título de la melodía por defecto)
+- 🚮 Ahora es posible eliminar canciones
 - 🤖 Objetivo Android 15
 - 🐛 Corrección de errores
 - ⚙️ Actualizaciones de dependencias
 - 🗺️ Actualizaciones en la traducción
 
-¡Muchas gracias a todos los contribuyentes, IzzyOnDroid y al equipo de F-Droid! 😘
+¡Muchas gracias a todos los colaboradores, IzzyOnDroid y al equipo de F-Droid! 😘
 Eres más que bienvenido a ayudar con las traducciones en https://hosted.weblate.org/engage/omgsoundboard/. 👍
