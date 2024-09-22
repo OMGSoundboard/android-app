@@ -1,0 +1,10 @@
+- 📁 Importe vários arquivos (ou uma pasta) de uma vez
+- 🎨 Edite categorias e renomeie sons (o nome do arquivo é o nome/título do áudio por padrão)
+- 🚮 Excluir áudios agora é possível
+- 🤖 Focado no Android 15
+- 🐛 Correções de erros
+- ⚙️ Atualizações de dependências
+- 🗺️ Atualizações de tradução
+
+Muito obrigado a todos os contribuidores, IzzyOnDroid e a equipe do F-Droid! 😘
+Esteja mais do que bem-vindo(a) para ajudar com traduções em https://hosted.weblate.org/engage/omgsoundboard/. 👍
