@@ -2,104 +2,116 @@ package audio.omgsoundboard.presentation.navigation
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import audio.omgsoundboard.core.R
+import audio.omgsoundboard.core.domain.models.Category
 import audio.omgsoundboard.core.utils.Constants
-import audio.omgsoundboard.core.utils.Constants.CATEGORY_ALL
-import audio.omgsoundboard.core.utils.Constants.CATEGORY_CUSTOM
-import audio.omgsoundboard.core.utils.Constants.CATEGORY_FUNNY
-import audio.omgsoundboard.core.utils.Constants.CATEGORY_GAMES
-import audio.omgsoundboard.core.utils.Constants.CATEGORY_MOVIES
-import audio.omgsoundboard.core.utils.Constants.CATEGORY_MUSIC
 import audio.omgsoundboard.core.utils.Constants.OPTIONS_PARTICLES
 import audio.omgsoundboard.core.utils.Constants.OPTIONS_THEME_PICKER
 import kotlinx.coroutines.launch
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DrawerContent(
+    categories: List<Category>,
     drawerState: DrawerState,
-    defaultPick: DrawerItemModel,
     areParticlesEnable: Boolean,
-    onClick: (DrawerItemModel) -> Unit
+    onCategory: (Category) -> Unit,
+    onAction: (String) -> Unit,
 ) {
 
-    var currentPick by remember { mutableStateOf(defaultPick) }
+    var currentPick by remember { mutableIntStateOf(-1) }
     val coroutineScope = rememberCoroutineScope()
 
-    ModalDrawerSheet {
-        Text(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
-            text = stringResource(id = R.string.categories_header)
-        )
 
+    ModalDrawerSheet {
         LazyColumn(
             horizontalAlignment = Alignment.Start
         ) {
-            items(DrawerParams.drawerCategories) { item ->
-                DrawerItem(
+            stickyHeader {
+                Text(
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
+                    text = stringResource(id = R.string.categories_header)
+                )
+            }
+            items(categories) { item ->
+                DrawerCategoryItem(
                     item = item,
-                    isCurrent = currentPick == item,
-                    isSelectable = item.selectable
+                    isCurrent = currentPick == item.id,
+                    isSelectable = true
                 ) {
 
-                    if (currentPick == item) {
-                        return@DrawerItem
+                    if (currentPick == item.id) {
+                        return@DrawerCategoryItem
                     }
 
-                    currentPick = item
+                    currentPick = item.id
 
                     coroutineScope.launch {
                         drawerState.close()
                     }
 
-                    onClick(item)
+                    onCategory(item)
                 }
             }
-        }
-
-        Text(
-            modifier = Modifier.padding(start = 16.dp, top = 32.dp, bottom = 16.dp),
-            text = stringResource(id = R.string.options_header)
-        )
-
-        LazyColumn(
-            horizontalAlignment = Alignment.Start
-        ) {
+            stickyHeader {
+                Text(
+                    modifier = Modifier.padding(start = 16.dp, top = 32.dp, bottom = 16.dp),
+                    text = stringResource(id = R.string.options_header)
+                )
+            }
             items(DrawerParams.drawerOptions) { item ->
-                DrawerItem(
+                DrawerOptionItem(
                     item = item,
-                    isCurrent = currentPick == item,
+                    isCurrent = currentPick == item.id,
                     isSelectable = item.selectable,
                     switch = R.drawable.particles == item.drawableId,
                     areParticlesEnable = areParticlesEnable
                 ) {
 
                     if (item.selectable){
-                        if (currentPick == item) {
-                            return@DrawerItem
+                        if (currentPick == item.id) {
+                            return@DrawerOptionItem
                         }
 
-                        currentPick = item
+                        currentPick = item.id!!
 
                         coroutineScope.launch {
                             drawerState.close()
                         }
 
-                        onClick(item)
+                        onAction(item.action!!)
 
                     } else {
-                        onClick(item)
+                        onAction(item.action!!)
                     }
                 }
             }
@@ -107,8 +119,57 @@ fun DrawerContent(
     }
 }
 
+
 @Composable
-fun DrawerItem(
+fun DrawerCategoryItem(
+    item: Category,
+    isCurrent: Boolean,
+    isSelectable: Boolean,
+    switch: Boolean = false,
+    areParticlesEnable: Boolean = false,
+    onClick: () -> Unit
+) {
+
+    val color = if (isCurrent) {
+        if (isSelectable){
+            MaterialTheme.colorScheme.primary
+        } else {
+            MaterialTheme.colorScheme.onBackground
+        }
+    } else {
+        MaterialTheme.colorScheme.onBackground
+    }
+
+    Column(
+        modifier = Modifier
+            .width(250.dp)
+            .clickable { onClick() },
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.Start
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .width(IntrinsicSize.Max)
+                .padding(16.dp),
+        ) {
+            Text(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                text = item.name,
+                color = color
+            )
+            if (switch){
+                Switch(modifier = Modifier.height(8.dp),checked = areParticlesEnable, onCheckedChange  = {
+                    onClick()
+                } )
+            }
+        }
+    }
+}
+
+@Composable
+fun DrawerOptionItem(
     item: DrawerItemModel,
     isCurrent: Boolean,
     isSelectable: Boolean,
@@ -162,62 +223,20 @@ fun DrawerItem(
 
 
 data class DrawerItemModel(
+    val id: Int?,
+    val action: String?,
     val screens: Screens?,
-    val category: String?,
     val selectable: Boolean,
     @StringRes val title: Int,
     @DrawableRes val drawableId: Int,
 )
 
 object DrawerParams {
-    val drawerCategories = arrayListOf(
-        DrawerItemModel(
-            Screens.CategorySoundsScreen,
-            CATEGORY_ALL,
-            true,
-            R.string.category_all,
-            R.drawable.all,
-        ),
-        DrawerItemModel(
-            Screens.CategorySoundsScreen,
-            CATEGORY_FUNNY,
-            true,
-            R.string.category_funny,
-            R.drawable.funny,
-        ),
-        DrawerItemModel(
-            Screens.CategorySoundsScreen,
-            CATEGORY_GAMES,
-            true,
-            R.string.category_games,
-            R.drawable.games,
-        ),
-        DrawerItemModel(
-            Screens.CategorySoundsScreen,
-            CATEGORY_MOVIES,
-            true,
-            R.string.category_movies,
-            R.drawable.movies,
-        ),
-        DrawerItemModel(
-            Screens.CategorySoundsScreen,
-            CATEGORY_MUSIC,
-            true,
-            R.string.category_music,
-            R.drawable.music,
-        ),
-        DrawerItemModel(
-            Screens.CustomScreen,
-            CATEGORY_CUSTOM,
-            true,
-            R.string.category_custom,
-            R.drawable.tune,
-        )
-    )
     val drawerOptions = arrayListOf(
         DrawerItemModel(
             null,
             OPTIONS_PARTICLES,
+            null,
             false,
             R.string.options_particles,
             R.drawable.particles,
@@ -225,17 +244,18 @@ object DrawerParams {
         DrawerItemModel(
             null,
             OPTIONS_THEME_PICKER,
+            null,
             false,
             R.string.options_theme_picker,
             R.drawable.color_picker,
         ),
         DrawerItemModel(
-            Screens.AboutScreen,
+            -2,
             Constants.OPTIONS_ABOUT,
+            Screens.AboutScreen,
             true,
             R.string.options_about,
             R.drawable.about,
         ),
     )
-
 }
