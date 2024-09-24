@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import audio.omgsoundboard.presentation.ui.MainViewModel
 import audio.omgsoundboard.presentation.ui.about.AboutScreen
+import audio.omgsoundboard.presentation.ui.favorites.FavoritesScreen
 import audio.omgsoundboard.presentation.ui.onboarding.OnboardingScreen
 import audio.omgsoundboard.presentation.ui.sounds.SoundsScreen
 
@@ -53,7 +54,9 @@ fun NavigationController(
             }
 
             composable(route = Screens.FavoritesScreen.route) {
-                //FavoritesScreen(mainViewModel = viewModel)
+                FavoritesScreen(onNavigateUp = {
+                    navController.navigateUp()
+                })
             }
 
             composable(route = Screens.AboutScreen.route) {

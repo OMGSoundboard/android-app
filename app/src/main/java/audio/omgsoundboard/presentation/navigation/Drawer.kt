@@ -22,8 +22,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,7 +48,7 @@ fun DrawerContent(
     onAction: (String) -> Unit,
 ) {
 
-    var currentPick by remember { mutableIntStateOf(-1) }
+    var currentPick by rememberSaveable { mutableIntStateOf(-1) }
     val coroutineScope = rememberCoroutineScope()
 
 

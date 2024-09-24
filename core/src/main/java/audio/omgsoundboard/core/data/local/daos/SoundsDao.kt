@@ -35,4 +35,7 @@ interface SoundsDao {
 
     @Query("SELECT * FROM $SOUNDS_TABLE")
     fun getAllSounds(): Flow<List<SoundsEntity>>
+
+    @Query("SELECT * FROM $SOUNDS_TABLE WHERE isFavorite = 1")
+    fun getAllFavorites(): Flow<List<SoundsEntity>>
 }

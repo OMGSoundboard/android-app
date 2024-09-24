@@ -82,7 +82,6 @@ class SoundsViewModel @Inject constructor(
     fun onEvent(event: SoundsEvents) {
         when (event) {
             is SoundsEvents.OnSetCategoryId -> {
-                println(event.id)
                 _categoryId.value = event.id
             }
 
@@ -129,7 +128,7 @@ class SoundsViewModel @Inject constructor(
             }
 
             is SoundsEvents.OnTextFieldChange -> {
-                _state.value = _state.value.copy(textFieldValue = event.text)
+                _state.value = _state.value.copy(textFieldValue = event.text, textFieldError = false)
             }
 
             is SoundsEvents.OnConfirmRename -> {
