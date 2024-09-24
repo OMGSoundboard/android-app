@@ -3,12 +3,7 @@ package audio.omgsoundboard.core.data
 import android.content.Context
 import android.net.Uri
 import androidx.core.content.FileProvider
-import audio.omgsoundboard.core.data.local.CustomSoundsDao
-import audio.omgsoundboard.core.data.local.CustomSoundsEntity
-import audio.omgsoundboard.core.data.local.FavoritesDao
-import audio.omgsoundboard.core.data.local.toEntity
 import audio.omgsoundboard.core.domain.models.PlayableSound
-import audio.omgsoundboard.core.domain.models.toDomain
 import audio.omgsoundboard.core.domain.repository.StorageRepository
 import java.io.File
 import java.io.FileOutputStream
@@ -20,38 +15,8 @@ import javax.inject.Inject
 
 class StorageRepositoryImpl @Inject constructor(
     private val context: Context,
-    private val favoritesDao: FavoritesDao,
-    private val customSoundsDao: CustomSoundsDao
 ): StorageRepository {
 
-    override suspend fun getAllFavorites(): List<PlayableSound> {
-       return favoritesDao.getFavorites().map { it.toDomain() }
-    }
-
-    override suspend fun insertNewFavorite(sound: PlayableSound) {
-        favoritesDao.insertFavorite(sound.toEntity())
-    }
-
-    override suspend fun deleteFavorite(favoriteId: Int) {
-       favoritesDao.deleteFavorite(favoriteId)
-    }
-
-    override suspend fun getAllCustomSounds(): List<PlayableSound> {
-       return customSoundsDao.getCustomSounds().map { it.toDomain() }
-    }
-
-    override suspend fun insertNewCustomSound(title: String, uri: Uri) : List<PlayableSound> {
-        customSoundsDao.insertCustomSound(CustomSoundsEntity(title = title, uri = uri, date = System.currentTimeMillis()))
-        return customSoundsDao.getCustomSounds().map { it.toDomain() }
-    }
-
-    override suspend fun updateCustomSound(customSound: PlayableSound) {
-        customSoundsDao.updateCustomSound(CustomSoundsEntity(id = customSound.id, title = customSound.title, uri = customSound.uri, date = System.currentTimeMillis()))
-    }
-
-    override suspend fun deleteCustomSound(customSoundId: Int) {
-       customSoundsDao.deleteCustomSound(customSoundId)
-    }
 
     override fun backupFiles(uri: Uri, metadata: List<PlayableSound>) {
         runCatching {
@@ -114,7 +79,7 @@ class StorageRepositoryImpl @Inject constructor(
         }
 
         playableSounds.forEach {
-            customSoundsDao.insertCustomSound(CustomSoundsEntity(title = it.title, uri = it.uri, date = System.currentTimeMillis()))
+            //customSoundsDao.insertCustomSound(CustomSoundsEntity(title = it.title, uri = it.uri, date = System.currentTimeMillis()))
         }
 
     }
