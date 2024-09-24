@@ -16,14 +16,15 @@ import androidx.compose.ui.window.Dialog
 import audio.omgsoundboard.core.R
 
 @Composable
-fun CustomSoundDialog(
-    defaultTitle: String,
-    onAdd: (String) -> Unit,
+fun AddSoundDialog(
+    isRename: Boolean,
+    text: String,
+    onChange: (String) -> Unit,
+    error: Boolean,
+    onFinish: () -> Unit,
     onDismiss: () -> Unit,
 ) {
 
-    var newCustomSoundTitle by remember { mutableStateOf(defaultTitle) }
-    var error by remember { mutableStateOf(false) }
 
     Dialog(
         onDismissRequest = onDismiss,
@@ -45,39 +46,28 @@ fun CustomSoundDialog(
             ) {
                 Text(
                     modifier = Modifier.padding(bottom = 16.dp),
-                    text = stringResource(id = R.string.custom_sound_add_title),
+                    text =  stringResource(id = if (isRename) R.string.update_sound else R.string.sound_add_title),
                     fontSize = 20.sp
                 )
                 OutlinedTextField(
-                    value = newCustomSoundTitle,
+                    value = text,
                     singleLine = true,
                     isError = error,
                     placeholder = {
                         Text(text = stringResource(id = R.string.custom_sound_add_placeholder))
                     },
-                    onValueChange = {
-                        newCustomSoundTitle = it
-                    },
+                    onValueChange = onChange,
                     shape = RoundedCornerShape(12.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
-                    onClick = {
-                        if (newCustomSoundTitle.isNotBlank()) {
-                            error = false
-                            onAdd(newCustomSoundTitle)
-                            onDismiss()
-                        } else {
-                            error = true
-                        }
-                    }
+                    onClick = onFinish
                 ) {
-                    Text(text = stringResource(id = R.string.custom_sound_add), fontSize = 18.sp)
+                    Text(text = stringResource(id = if (isRename) R.string.save else  R.string.custom_sound_add), fontSize = 18.sp)
                 }
             }
         }
     }
-
 }

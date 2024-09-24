@@ -53,7 +53,7 @@
     <string name="favorites_title">Favoriten</string>
     <string name="ringtone_set">Ton als Klingelton eingestellt</string>
     <string name="notification_set">Ton als Benachrichtigungston eingestellt</string>
-    <string name="custom_sound_add_title">Ton hinzufügen</string>
+    <string name="sound_add_title">Ton hinzufügen</string>
     <string name="permission_description">Erlaube OMGSoundboard, die Systemeinstellungen zu ändern, um deine Sounds als Klingeltöne, Alarme und Benachrichtigungen einzustellen</string>
     <string name="permission_allow">Erlauben</string>
     <string name="onboarding_text_1">Tippe auf die Sounds, um sie abzuspielen und anzuhalten. Tippe auf mehrere Sounds, um sie zu überlagern</string>

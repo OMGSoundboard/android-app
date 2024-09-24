@@ -21,15 +21,15 @@ import javax.inject.Inject
 
 
 class PlayerRepositoryImpl @Inject constructor(
-    private val context: Context
+    private val context: Context,
 ) : PlayerRepository {
 
     private val mediaPlayerList = mutableMapOf<Int, MediaPlayer>()
 
-    override fun playFile(index: Int, resourceId: Int, uri: Uri?) {
+    override fun playFile(index: Int, resourceId: Int?, uri: Uri) {
 
-        val playerUri = if (uri == Uri.EMPTY || uri == null) {
-            getUriPath(resourceId)
+        val playerUri = if (uri == Uri.EMPTY) {
+            getUriPath(resourceId!!)
         } else {
             uri
         }
@@ -48,9 +48,13 @@ class PlayerRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun shareFile(fileName: String, resourceId: Int) {
+    override fun shareFile(fileName: String, resourceId: Int?, uri: Uri) {
         try {
-            val audioUri = getAudioUri("$fileName.mp3", resourceId)
+            val audioUri = if (uri == Uri.EMPTY) {
+                getAudioUri("$fileName.mp3", resourceId!!)
+            } else {
+                uri
+            }
             context.grantUriPermission("android", audioUri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
             val shareIntent = Intent(Intent.ACTION_SEND)
@@ -70,13 +74,17 @@ class PlayerRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun setMedia(type: MediaManager, fileName: String, resourceId: Int, cUri: Uri?) {
+    override fun setMedia(type: MediaManager, fileName: String, resourceId: Int?, cUri: Uri) {
 
         var mediaType = RingtoneManager.TYPE_RINGTONE
 
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
 
-            val mediaUri = cUri ?: getAudioUri(fileName, resourceId)
+            val mediaUri = if (cUri == Uri.EMPTY) {
+               getAudioUri(fileName, resourceId!!)
+            } else {
+                cUri
+            }
 
             mediaType = when (type) {
                 MediaManager.Ringtone -> {
@@ -97,7 +105,13 @@ class PlayerRepositoryImpl @Inject constructor(
             )
 
         } else {
-            val uri = cUri ?: getUriPath(resourceId)
+            val uri = if (cUri == Uri.EMPTY) {
+                getAudioUri(fileName, resourceId!!)
+            } else {
+                cUri
+            }
+
+            if (uri == null) return
 
             val values = ContentValues()
             values.put(MediaStore.MediaColumns.DATA, uri.path)

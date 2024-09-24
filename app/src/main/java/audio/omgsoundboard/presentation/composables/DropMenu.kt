@@ -6,7 +6,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
@@ -14,20 +18,19 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpOffset
 import audio.omgsoundboard.core.R
-import audio.omgsoundboard.core.domain.models.PlayableSound
-import audio.omgsoundboard.core.domain.repository.MediaManager
-import audio.omgsoundboard.presentation.ui.MainViewModel
 
 
 @Composable
 fun DropMenu(
     touchPoint: Offset,
-    pickedSound: PlayableSound,
     hasWriteSettingsPermission: Boolean,
-    mainViewModel: MainViewModel,
     askForPermission: () -> Unit,
-    isCustomSound: Boolean = false,
-    showRenameCustomSound: () -> Unit = {},
+    onShare: () -> Unit,
+    onSetAsRingtone: () -> Unit,
+    onSetAsAlarm: () -> Unit,
+    onSetAsNotification: () -> Unit,
+    onRename: () -> Unit,
+    onDelete: () -> Unit,
     onDismiss: () -> Unit
 ) {
     val density = LocalDensity.current
@@ -47,7 +50,7 @@ fun DropMenu(
                 },
                 onClick = {
                     isExpanded = !isExpanded
-                    mainViewModel.shareSound(pickedSound.title, pickedSound.resId)
+                    onShare()
                 },
             )
             DropdownMenuItem(
@@ -57,12 +60,7 @@ fun DropMenu(
                 onClick = {
                     isExpanded = !isExpanded
                     if (hasWriteSettingsPermission) {
-                        mainViewModel.setMedia(
-                            MediaManager.Ringtone,
-                            pickedSound.title,
-                            pickedSound.resId,
-                            pickedSound.uri
-                        )
+                        onSetAsRingtone()
                         Toast.makeText(
                             context,
                             context.resources.getString(R.string.ringtone_set),
@@ -80,12 +78,7 @@ fun DropMenu(
                 onClick = {
                     isExpanded = !isExpanded
                     if (hasWriteSettingsPermission) {
-                        mainViewModel.setMedia(
-                            MediaManager.Alarm,
-                            pickedSound.title,
-                            pickedSound.resId,
-                            pickedSound.uri
-                        )
+                        onSetAsAlarm()
                         Toast.makeText(
                             context,
                             context.resources.getString(R.string.alarm_set),
@@ -103,12 +96,7 @@ fun DropMenu(
                 onClick = {
                     isExpanded = !isExpanded
                     if (hasWriteSettingsPermission) {
-                        mainViewModel.setMedia(
-                            MediaManager.Notification,
-                            pickedSound.title,
-                            pickedSound.resId,
-                            pickedSound.uri
-                        )
+                        onSetAsNotification()
                         Toast.makeText(
                             context,
                             context.resources.getString(R.string.notification_set),
@@ -119,17 +107,24 @@ fun DropMenu(
                     }
                 },
             )
-            if (isCustomSound){
-                DropdownMenuItem(
-                    text = {
-                        Text(stringResource(id = R.string.rename))
-                    },
-                    onClick = {
-                        isExpanded = !isExpanded
-                        showRenameCustomSound()
-                    },
-                )
-            }
+            DropdownMenuItem(
+                text = {
+                    Text(stringResource(id = R.string.rename))
+                },
+                onClick = {
+                    isExpanded = !isExpanded
+                    onRename()
+                },
+            )
+            DropdownMenuItem(
+                text = {
+                    Text(stringResource(id = R.string.delete))
+                },
+                onClick = {
+                    isExpanded = !isExpanded
+                    onDelete()
+                },
+            )
         }
     }
 }

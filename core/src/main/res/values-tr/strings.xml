@@ -52,7 +52,7 @@
     <string name="permission_cancel">İptal</string>
     <string name="permission_granted">Artık seslerimizi zil sesi, alarm ve bildirim olarak ayarlayabilirsiniz</string>
     <string name="permission_not_granted">İzin vermediniz</string>
-    <string name="custom_sound_add_title">Ses ekleyin</string>
+    <string name="sound_add_title">Ses ekleyin</string>
     <string name="custom_sound_add_placeholder">Yeni ses başlığı</string>
     <string name="custom_sound_add">Ekle</string>
     <string name="export_backup">Yedeklemeyi dışa aktar</string>

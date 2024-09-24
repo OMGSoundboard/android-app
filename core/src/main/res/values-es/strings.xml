@@ -12,7 +12,7 @@
     <string name="permission_allow">Permitir</string>
     <string name="permission_granted">Ahora puedes usar nuestros sonidos como tono de llamada, alarma y notificaciones</string>
     <string name="permission_not_granted">No activaste el permiso</string>
-    <string name="custom_sound_add_title">Añadir sonido</string>
+    <string name="sound_add_title">Añadir sonido</string>
     <string name="custom_sound_add_placeholder">Título del nuevo sonido</string>
     <string name="custom_sound_add">Añadir</string>
     <string name="restore_backup">Restaurar copia de seguridad</string>
