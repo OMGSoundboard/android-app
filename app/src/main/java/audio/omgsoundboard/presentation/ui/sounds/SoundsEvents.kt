@@ -15,11 +15,17 @@ sealed class SoundsEvents {
     data class OnSetAsRingtone(val sound: PlayableSound) : SoundsEvents()
     data class OnSetAsAlarm(val sound: PlayableSound) : SoundsEvents()
     data class OnSetAsNotification(val sound: PlayableSound) : SoundsEvents()
-    data class OnShowHideRenameSoundDialog(val initialText: String): SoundsEvents()
+    data class OnShowHideAddRenameSoundDialog(
+        val initialText: String,
+        val isRenaming: Boolean,
+        val uri: Uri = Uri.EMPTY,
+    ) : SoundsEvents()
+
     data class OnTextFieldChange(val text: String) : SoundsEvents()
-    data class OnConfirmRename(val sound: PlayableSound): SoundsEvents()
-    object OnShowHideDeleteSoundDialog: SoundsEvents()
-    data class OnConfirmDelete(val soundId: Int): SoundsEvents()
+    data class OnConfirmRename(val sound: PlayableSound) : SoundsEvents()
+    object OnConfirmAdd : SoundsEvents()
+    object OnShowHideDeleteSoundDialog : SoundsEvents()
+    data class OnConfirmDelete(val soundId: Int) : SoundsEvents()
     object OnToggleDropMenu : SoundsEvents()
     object OnToggleParticles : SoundsEvents()
     object OnShowHideThemePicker : SoundsEvents()

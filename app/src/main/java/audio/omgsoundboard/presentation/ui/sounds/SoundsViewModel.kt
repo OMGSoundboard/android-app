@@ -3,6 +3,7 @@ package audio.omgsoundboard.presentation.ui.sounds
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import audio.omgsoundboard.core.R
 import audio.omgsoundboard.core.data.local.daos.CategoryDao
 import audio.omgsoundboard.core.data.local.daos.SoundsDao
 import audio.omgsoundboard.core.data.local.entities.toEntity
@@ -17,6 +18,7 @@ import audio.omgsoundboard.domain.repository.StorageRepository
 import audio.omgsoundboard.presentation.theme.ThemeType
 import audio.omgsoundboard.presentation.theme.toThemeType
 import audio.omgsoundboard.presentation.utils.UiEvent
+import audio.omgsoundboard.presentation.utils.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
@@ -117,8 +119,13 @@ class SoundsViewModel @Inject constructor(
                 setMedia(MediaManager.Notification, event.sound)
             }
 
-            is SoundsEvents.OnShowHideRenameSoundDialog -> {
-                _state.value = _state.value.copy(showRenameSoundDialog = !_state.value.showRenameSoundDialog, textFieldValue = event.initialText)
+            is SoundsEvents.OnShowHideAddRenameSoundDialog -> {
+                _state.value = _state.value.copy(
+                    showAddRenameSoundDialog = !_state.value.showAddRenameSoundDialog,
+                    textFieldValue = event.initialText,
+                    isRenaming = event.isRenaming,
+                    addedSoundUri = event.uri
+                )
             }
 
             is SoundsEvents.OnTextFieldChange -> {
@@ -127,6 +134,10 @@ class SoundsViewModel @Inject constructor(
 
             is SoundsEvents.OnConfirmRename -> {
                 renameSound(event.sound)
+            }
+
+            is SoundsEvents.OnConfirmAdd -> {
+                addSound()
             }
 
             is SoundsEvents.OnShowHideDeleteSoundDialog -> {
@@ -156,6 +167,36 @@ class SoundsViewModel @Inject constructor(
             is SoundsEvents.OnNavigate -> {
                 sendUiEvent(UiEvent.Navigate(event.route))
             }
+        }
+    }
+
+    private fun addSound(){
+        viewModelScope.launch {
+            val title = _state.value.textFieldValue
+            val uri = _state.value.addedSoundUri!!
+
+            val sound = PlayableSound(
+                title = title,
+                uri = uri,
+                date = System.currentTimeMillis(),
+                isFav = false,
+                categoryId = _categoryId.value,
+                resId = null
+            )
+
+            val newSoundUri = player.addSound(title, uri)
+
+            if (newSoundUri != null){
+                soundsDao.insertSound(sound.copy(uri = newSoundUri).toEntity())
+            } else {
+                sendUiEvent(UiEvent.ShowInfoDialog(UiText.StringResource(R.string.can_not_add_sound)))
+            }
+
+            _state.value = _state.value.copy(
+                showAddRenameSoundDialog = false,
+                textFieldValue = "",
+                addedSoundUri = Uri.EMPTY
+            )
         }
     }
 

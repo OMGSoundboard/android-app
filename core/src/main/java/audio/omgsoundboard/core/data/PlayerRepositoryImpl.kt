@@ -35,16 +35,28 @@ class PlayerRepositoryImpl @Inject constructor(
         }
 
         if (mediaPlayerList.contains(index)) {
-            mediaPlayerList[index]?.release()
+            mediaPlayerList[index]?.apply {
+                reset()
+                release()
+            }
+            mediaPlayerList.remove(index)
+        }
+
+        if (mediaPlayerList.contains(index)) {
+            mediaPlayerList[index]?.apply {
+                reset()
+                release()
+            }
             mediaPlayerList.remove(index)
         } else {
-            val mediaPlayer = MediaPlayer.create(context, playerUri)
+            val mediaPlayer = MediaPlayer.create(context, playerUri) ?: return
             mediaPlayerList[index] = mediaPlayer
+            mediaPlayer.start()
             mediaPlayer.setOnCompletionListener {
+                mediaPlayerList[index]?.reset()
                 mediaPlayerList.remove(index)
                 mediaPlayer.release()
             }
-            mediaPlayer.start()
         }
     }
 
@@ -157,7 +169,7 @@ class PlayerRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun addCustomSound(fileName: String, uri: Uri): Uri? {
+    override fun addSound(fileName: String, uri: Uri): Uri? {
         val inputStream = context.contentResolver.openInputStream(uri)
 
         if (inputStream != null) {

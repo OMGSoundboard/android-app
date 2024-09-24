@@ -16,7 +16,7 @@ import androidx.compose.ui.window.Dialog
 import audio.omgsoundboard.core.R
 
 @Composable
-fun AddSoundDialog(
+fun AddRenameSoundDialog(
     isRename: Boolean,
     text: String,
     onChange: (String) -> Unit,

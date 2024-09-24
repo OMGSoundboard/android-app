@@ -3,7 +3,15 @@
 package audio.omgsoundboard.presentation.ui.sounds
 
 import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -60,8 +68,9 @@ import audio.omgsoundboard.core.domain.models.PlayableSound
 import audio.omgsoundboard.core.utils.Constants.OPTIONS_ABOUT
 import audio.omgsoundboard.core.utils.Constants.OPTIONS_PARTICLES
 import audio.omgsoundboard.core.utils.Constants.OPTIONS_THEME_PICKER
-import audio.omgsoundboard.presentation.composables.AddSoundDialog
+import audio.omgsoundboard.presentation.composables.AddRenameSoundDialog
 import audio.omgsoundboard.presentation.composables.DropMenu
+import audio.omgsoundboard.presentation.composables.Fab
 import audio.omgsoundboard.presentation.composables.InfoDialog
 import audio.omgsoundboard.presentation.composables.MyTextField
 import audio.omgsoundboard.presentation.composables.PermissionDialog
@@ -69,6 +78,7 @@ import audio.omgsoundboard.presentation.composables.ThemePicker
 import audio.omgsoundboard.presentation.navigation.DrawerContent
 import audio.omgsoundboard.presentation.navigation.Screens
 import audio.omgsoundboard.presentation.utils.UiEvent
+import audio.omgsoundboard.presentation.utils.getTitleFromUri
 import kotlinx.coroutines.launch
 
 
@@ -77,12 +87,30 @@ fun SoundsScreen(
     onNavigate: (String) -> Unit,
     viewModel: SoundsViewModel = hiltViewModel(),
 ) {
+
+    val context = LocalContext.current
+    var showInfoDialog by remember { mutableStateOf(false) }
+    var infoDialogText by remember { mutableStateOf("") }
+
     LaunchedEffect(Unit) {
         viewModel.uiEvent.collect { event ->
             when (event) {
+                is UiEvent.ShowInfoDialog -> {
+                    showInfoDialog = true
+                    infoDialogText = event.message.asString(context)
+                }
                 is UiEvent.Navigate -> onNavigate(event.route)
                 else -> Unit
             }
+        }
+    }
+
+    val soundPicker = rememberLauncherForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { soundUri ->
+        if (soundUri != null) {
+            val pickedSoundTitle = getTitleFromUri(context, soundUri) ?: ""
+            viewModel.onEvent(SoundsEvents.OnShowHideAddRenameSoundDialog(pickedSoundTitle, false, soundUri))
         }
     }
 
@@ -117,9 +145,37 @@ fun SoundsScreen(
             )
         }
     ) {
-        SoundsScreenContent(state, drawerState, viewModel::onEvent)
+        Box(modifier = Modifier.fillMaxSize()) {
+            SoundsScreenContent(state, drawerState, viewModel::onEvent)
+            AnimatedVisibility(
+                modifier = Modifier.align(Alignment.BottomEnd),
+                visible = state.currentCategory?.id != -1, enter = slideInVertically() + expandVertically(
+                    expandFrom = Alignment.Top
+                ) + fadeIn(
+                    initialAlpha = 0.3f
+                ), exit = slideOutVertically(targetOffsetY = { it }) + shrinkVertically()
+            ) {
+                Fab(
+                    modifier = Modifier.padding(12.dp),
+                ) {
+                    soundPicker.launch("audio/mpeg")
+                }
+            }
+
+        }
     }
 
+    if (showInfoDialog) {
+        InfoDialog(
+            text = infoDialogText,
+            onDismissRequest = {
+                showInfoDialog = false
+            },
+            onConfirmation = {
+                showInfoDialog = false
+            }
+        )
+    }
 
     if (state.showThemePicker) {
         ThemePicker(
@@ -224,7 +280,7 @@ fun SoundsScreenContent(
                 }
             }
 
-            itemsIndexed(state.sounds) { index, sound ->
+            itemsIndexed(state.sounds, key = { _, sound -> sound.id }) { index, sound ->
                 SoundItem(
                     item = sound,
                     index = index,
@@ -232,7 +288,7 @@ fun SoundsScreenContent(
                         onEvents(SoundsEvents.OnToggleFav(sound.id))
                     },
                     onPlay = {
-                        onEvents(SoundsEvents.OnPlaySound(index, sound.resId, sound.uri))
+                        onEvents(SoundsEvents.OnPlaySound(sound.id, sound.resId, sound.uri))
                     },
                     onDropMenu = {
                         touchPoint = it
@@ -264,7 +320,7 @@ fun SoundsScreenContent(
                 onEvents(SoundsEvents.OnSetAsNotification(pickedSound))
             },
             onRename = {
-                onEvents(SoundsEvents.OnShowHideRenameSoundDialog(pickedSound.title))
+                onEvents(SoundsEvents.OnShowHideAddRenameSoundDialog(pickedSound.title, true))
             },
             onDelete = {
                 onEvents(SoundsEvents.OnShowHideDeleteSoundDialog)
@@ -275,19 +331,23 @@ fun SoundsScreenContent(
         )
     }
 
-    if (state.showRenameSoundDialog){
-        AddSoundDialog(
-            isRename = true,
+    if (state.showAddRenameSoundDialog){
+        AddRenameSoundDialog(
+            isRename = state.isRenaming,
             text = state.textFieldValue,
             onChange = {
                 onEvents(SoundsEvents.OnTextFieldChange(it))
             },
             error = state.textFieldError,
             onFinish = {
-                onEvents(SoundsEvents.OnConfirmRename(pickedSound))
+                if (state.isRenaming){
+                    onEvents(SoundsEvents.OnConfirmRename(pickedSound))
+                } else {
+                    onEvents(SoundsEvents.OnConfirmAdd)
+                }
             },
             onDismiss = {
-                onEvents(SoundsEvents.OnShowHideRenameSoundDialog(""))
+                onEvents(SoundsEvents.OnShowHideAddRenameSoundDialog("", false))
             }
         )
     }
@@ -297,6 +357,7 @@ fun SoundsScreenContent(
             text = stringResource(R.string.delete_sound_confirm),
             onConfirmation = {
                 onEvents(SoundsEvents.OnConfirmDelete(pickedSound.id))
+                onEvents(SoundsEvents.OnShowHideDeleteSoundDialog)
             },
             onDismissRequest = {
                 onEvents(SoundsEvents.OnShowHideDeleteSoundDialog)
@@ -326,7 +387,6 @@ fun SoundItem(
     onPlay: () -> Unit,
     onDropMenu: (Offset) -> Unit,
 ) {
-
     val interactionSource = remember { MutableInteractionSource() }
     val scope = rememberCoroutineScope()
 
@@ -346,8 +406,15 @@ fun SoundItem(
                         }
                         onPlay()
                     },
-                    onLongPress = {
-                        onDropMenu(it)
+                    onLongPress = { offset ->
+                        scope.launch {
+                            // Start the ripple effect on long press
+                            val press = PressInteraction.Press(offset)
+                            interactionSource.emit(press)
+                            onDropMenu(offset)
+                            // End the ripple effect after the long press is handled
+                            interactionSource.emit(PressInteraction.Release(press))
+                        }
                     }
                 )
             },
@@ -396,6 +463,7 @@ fun SoundItem(
         }
     }
 }
+
 
 
 
