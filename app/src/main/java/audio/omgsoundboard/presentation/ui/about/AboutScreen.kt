@@ -1,3 +1,5 @@
+
+
 package audio.omgsoundboard.presentation.ui.about
 
 import android.content.ActivityNotFoundException
@@ -5,12 +7,26 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -20,105 +36,110 @@ import audio.omgsoundboard.core.R
 import audio.omgsoundboard.core.utils.Data
 import audio.omgsoundboard.presentation.composables.AboutItem
 import audio.omgsoundboard.presentation.composables.Licenses
-import audio.omgsoundboard.presentation.composables.Particles
-import audio.omgsoundboard.presentation.navigation.Screens
-import audio.omgsoundboard.presentation.ui.MainViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AboutScreen(mainViewModel: MainViewModel){
+fun AboutScreen(
+    onNavigateUp: () -> Unit,
+) {
 
     val context = LocalContext.current
+    var showLicenses by remember { mutableStateOf(false) }
 
-    LaunchedEffect(Unit){
-        mainViewModel.setCurrentScreenValue(Screens.AboutScreen, context.getString(R.string.about_title))
-    }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
 
-    var showLicenses by remember{ mutableStateOf(false)}
+        TopAppBar(
+            title = {
+                Text(text = stringResource(R.string.about_title))
+            },
+            navigationIcon = {
+                IconButton(onClick = onNavigateUp) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                        contentDescription = null,
+                    )
+                }
+            },
+        )
 
-    Box(
-        modifier = Modifier.fillMaxWidth(),
-        contentAlignment = Alignment.Center
-    ){
-
-        if (mainViewModel.areParticlesEnabled){
-            Particles()
+        Card(modifier = Modifier.padding(horizontal = 16.dp)) {
+            Text(
+                modifier = Modifier.padding(vertical = 24.dp, horizontal = 16.dp),
+                text = stringResource(id = R.string.about_header)
+            )
         }
 
-        Column(
+        Card(
             modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 16.dp)
         ) {
 
-            Card(modifier = Modifier.padding(horizontal = 16.dp)) {
-                Text(modifier = Modifier.padding(vertical = 24.dp, horizontal = 16.dp) ,text = stringResource(id = R.string.about_header))
-            }
+            Column(
 
-            Card(modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 16.dp)) {
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.Start
+            ) {
 
-                Column(
+                Text(
+                    modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 16.dp),
+                    text = stringResource(id = R.string.contribute)
+                )
 
-                    verticalArrangement = Arrangement.Top,
-                    horizontalAlignment = Alignment.Start
-                ) {
-
-                    Text(
-                        modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 16.dp),
-                        text = stringResource(id = R.string.contribute)
-                    )
-
-                    Data.contribute.forEach {
-                        AboutItem(icon = it.icon, title = it.title) {
-                            launchUrl(context, it.url)
-                        }
+                Data.contribute.forEach {
+                    AboutItem(icon = it.icon, title = it.title) {
+                        launchUrl(context, it.url)
                     }
+                }
 
-                    Text(
-                        modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 16.dp),
-                        text = stringResource(id = R.string.contact)
-                    )
+                Text(
+                    modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 16.dp),
+                    text = stringResource(id = R.string.contact)
+                )
 
-                    Data.contact.forEach {
-                        AboutItem(icon = it.icon, title = it.title) {
-                            launchUrl(context, it.url)
-                        }
+                Data.contact.forEach {
+                    AboutItem(icon = it.icon, title = it.title) {
+                        launchUrl(context, it.url)
                     }
+                }
 
-                    Text(
-                        modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 16.dp),
-                        text = stringResource(id = R.string.legal)
-                    )
+                Text(
+                    modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 16.dp),
+                    text = stringResource(id = R.string.legal)
+                )
 
-                    Data.legal.forEach {
-                        AboutItem(icon = it.icon, title = it.title) {
-                            launchUrl(context, it.url)
-                        }
+                Data.legal.forEach {
+                    AboutItem(icon = it.icon, title = it.title) {
+                        launchUrl(context, it.url)
                     }
-                    AboutItem(icon = R.drawable.open_source_licenses, title =  R.string.open_source) {
-                        showLicenses = true
-                    }
+                }
+                AboutItem(icon = R.drawable.open_source_licenses, title = R.string.open_source) {
+                    showLicenses = true
                 }
             }
         }
     }
 
-    if (showLicenses){
+
+    if (showLicenses) {
         Licenses {
             showLicenses = false
         }
     }
-
 }
 
-private fun launchUrl(context: Context, url: String){
+private fun launchUrl(context: Context, url: String) {
     try {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         context.startActivity(intent)
-    } catch (e: ActivityNotFoundException){
-        Toast.makeText(context, context.getString(R.string.can_not_handle), Toast.LENGTH_SHORT).show()
+    } catch (e: ActivityNotFoundException) {
+        Toast.makeText(context, context.getString(R.string.can_not_handle), Toast.LENGTH_SHORT)
+            .show()
     }
 }

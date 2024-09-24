@@ -130,7 +130,7 @@ fun SoundsScreen(
                 onAction = {
                     when (it) {
                         OPTIONS_ABOUT -> {
-                            viewModel.onEvent(SoundsEvents.OnNavigate(it))
+                            viewModel.onEvent(SoundsEvents.OnNavigate(Screens.AboutScreen.route))
                         }
 
                         OPTIONS_PARTICLES -> {

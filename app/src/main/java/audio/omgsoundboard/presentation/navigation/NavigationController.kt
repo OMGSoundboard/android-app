@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import audio.omgsoundboard.presentation.ui.MainViewModel
+import audio.omgsoundboard.presentation.ui.about.AboutScreen
 import audio.omgsoundboard.presentation.ui.onboarding.OnboardingScreen
 import audio.omgsoundboard.presentation.ui.sounds.SoundsScreen
 
@@ -56,7 +57,9 @@ fun NavigationController(
             }
 
             composable(route = Screens.AboutScreen.route) {
-                //AboutScreen(mainViewModel = viewModel)
+                AboutScreen(onNavigateUp = {
+                    navController.navigateUp()
+                })
             }
         }
     }
