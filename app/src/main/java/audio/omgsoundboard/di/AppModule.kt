@@ -1,8 +1,8 @@
 package audio.omgsoundboard.di
 
 import android.content.Context
-import audio.omgsoundboard.data.UserPreferencesImpl
-import audio.omgsoundboard.domain.repository.UserPreferences
+import audio.omgsoundboard.data.StorageRepositoryImpl
+import audio.omgsoundboard.domain.repository.StorageRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,8 +16,8 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideUserPreferences(@ApplicationContext context: Context) : UserPreferences {
-        return UserPreferencesImpl(context)
+    fun providesStorage(@ApplicationContext context: Context) : StorageRepository {
+        return StorageRepositoryImpl(context)
     }
 
 }
