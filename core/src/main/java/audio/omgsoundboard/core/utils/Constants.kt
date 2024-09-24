@@ -19,6 +19,6 @@ object Constants {
     const val OPTIONS_THEME_PICKER =  "Picker"
     const val OPTIONS_ABOUT =  "About"
 
-    const val FAVORITES_TABLE = "Favorites"
-    const val CUSTOM_SOUNDS_TABLE = "CustomSounds"
+    const val CATEGORIES_TABLE = "categories"
+    const val SOUNDS_TABLE = "sounds"
 }
