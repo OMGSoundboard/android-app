@@ -128,3 +128,43 @@ fun DropMenu(
         }
     }
 }
+
+
+@Composable
+fun SimpleDropMenu(
+    touchPoint: Offset,
+    onRename: () -> Unit,
+    onDelete: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    val density = LocalDensity.current
+    var isExpanded by remember { mutableStateOf(true) }
+    val (xDp, yDp) = with(density) { (touchPoint.x.toDp()) to (touchPoint.y.toDp()) }
+
+    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+        DropdownMenu(
+            offset = DpOffset(xDp, -maxHeight + yDp),
+            expanded = isExpanded,
+            onDismissRequest = onDismiss,
+        ) {
+            DropdownMenuItem(
+                text = {
+                    Text(stringResource(id = R.string.rename))
+                },
+                onClick = {
+                    isExpanded = !isExpanded
+                    onRename()
+                },
+            )
+            DropdownMenuItem(
+                text = {
+                    Text(stringResource(id = R.string.delete))
+                },
+                onClick = {
+                    isExpanded = !isExpanded
+                    onDelete()
+                },
+            )
+        }
+    }
+}

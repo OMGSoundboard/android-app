@@ -30,7 +30,7 @@ import audio.omgsoundboard.presentation.composables.AddRenameSoundDialog
 import audio.omgsoundboard.presentation.composables.DropMenu
 import audio.omgsoundboard.presentation.composables.InfoDialog
 import audio.omgsoundboard.presentation.composables.PermissionDialog
-import audio.omgsoundboard.presentation.ui.sounds.SoundItem
+import audio.omgsoundboard.presentation.composables.SoundItem
 import audio.omgsoundboard.presentation.utils.UiEvent
 
 

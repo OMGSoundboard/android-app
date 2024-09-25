@@ -15,6 +15,7 @@ object Constants {
     const val CATEGORY_CUSTOM = "Custom"
     const val CATEGORY_FAVORITES = "Favorites"
 
+    const val OPTIONS_CATEGORY = "Categories"
     const val OPTIONS_PARTICLES = "Particles"
     const val OPTIONS_THEME_PICKER =  "Picker"
     const val OPTIONS_ABOUT =  "About"

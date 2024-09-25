@@ -1,7 +1,6 @@
 package audio.omgsoundboard.core.data.local.daos
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -22,8 +21,8 @@ interface CategoryDao {
     @Update
     suspend fun updateCategory(category: CategoryEntity)
 
-    @Delete
-    suspend fun deleteCategory(category: CategoryEntity)
+    @Query("DELETE FROM categories WHERE id = :id")
+    suspend fun deleteCategory(id: Int)
 
     @Query("SELECT * FROM categories WHERE name = :name LIMIT 1")
     suspend fun getCategoryByName(name: String): CategoryEntity

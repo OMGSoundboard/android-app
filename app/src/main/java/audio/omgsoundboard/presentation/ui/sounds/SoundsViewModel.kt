@@ -171,7 +171,7 @@ class SoundsViewModel @Inject constructor(
 
     private fun addSound(){
         viewModelScope.launch {
-            val title = _state.value.textFieldValue
+            val title = _state.value.textFieldValue.trim()
             val uri = _state.value.addedSoundUri!!
 
             val sound = PlayableSound(
@@ -219,8 +219,12 @@ class SoundsViewModel @Inject constructor(
 
     private fun renameSound(sound: PlayableSound){
         viewModelScope.launch {
-            val newSound = sound.copy(title = _state.value.textFieldValue)
+            val newSound = sound.copy(title = _state.value.textFieldValue.trim())
             soundsDao.updateSound(newSound.toEntity())
+            _state.value = _state.value.copy(
+                showAddRenameSoundDialog = false,
+                textFieldValue = "",
+            )
         }
     }
 

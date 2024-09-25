@@ -12,24 +12,12 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.LocalIndication
-import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.indication
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.PressInteraction
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Menu
@@ -41,7 +29,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
@@ -56,9 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -66,6 +51,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import audio.omgsoundboard.core.R
 import audio.omgsoundboard.core.domain.models.PlayableSound
 import audio.omgsoundboard.core.utils.Constants.OPTIONS_ABOUT
+import audio.omgsoundboard.core.utils.Constants.OPTIONS_CATEGORY
 import audio.omgsoundboard.core.utils.Constants.OPTIONS_PARTICLES
 import audio.omgsoundboard.core.utils.Constants.OPTIONS_THEME_PICKER
 import audio.omgsoundboard.presentation.composables.AddRenameSoundDialog
@@ -74,6 +60,7 @@ import audio.omgsoundboard.presentation.composables.Fab
 import audio.omgsoundboard.presentation.composables.InfoDialog
 import audio.omgsoundboard.presentation.composables.MyTextField
 import audio.omgsoundboard.presentation.composables.PermissionDialog
+import audio.omgsoundboard.presentation.composables.SoundItem
 import audio.omgsoundboard.presentation.composables.ThemePicker
 import audio.omgsoundboard.presentation.navigation.DrawerContent
 import audio.omgsoundboard.presentation.navigation.Screens
@@ -129,6 +116,10 @@ fun SoundsScreen(
                 },
                 onAction = {
                     when (it) {
+                        OPTIONS_CATEGORY -> {
+                            viewModel.onEvent(SoundsEvents.OnNavigate(Screens.CategoriesScreen.route))
+                        }
+
                         OPTIONS_ABOUT -> {
                             viewModel.onEvent(SoundsEvents.OnNavigate(Screens.AboutScreen.route))
                         }
@@ -378,91 +369,6 @@ fun SoundsScreenContent(
     }
 }
 
-
-@Composable
-fun SoundItem(
-    item: PlayableSound,
-    index: Int,
-    onFav: () -> Unit,
-    onPlay: () -> Unit,
-    onDropMenu: (Offset) -> Unit,
-) {
-    val interactionSource = remember { MutableInteractionSource() }
-    val scope = rememberCoroutineScope()
-
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(60.dp)
-            .padding(bottom = 6.dp)
-            .indication(interactionSource, LocalIndication.current)
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onTap = { offset ->
-                        scope.launch {
-                            val press = PressInteraction.Press(offset)
-                            interactionSource.emit(press)
-                            interactionSource.emit(PressInteraction.Release(press))
-                        }
-                        onPlay()
-                    },
-                    onLongPress = { offset ->
-                        scope.launch {
-                            // Start the ripple effect on long press
-                            val press = PressInteraction.Press(offset)
-                            interactionSource.emit(press)
-                            onDropMenu(offset)
-                            // End the ripple effect after the long press is handled
-                            interactionSource.emit(PressInteraction.Release(press))
-                        }
-                    }
-                )
-            },
-        color = MaterialTheme.colorScheme.surfaceVariant,
-        shape = RoundedCornerShape(0.dp),
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier
-                    .background(
-                        if (index % 2 == 0) {
-                            MaterialTheme.colorScheme.tertiary
-                        } else {
-                            MaterialTheme.colorScheme.primary
-                        }
-                    )
-                    .width(3.dp)
-                    .height(60.dp)
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
-                    text = item.title,
-                )
-                IconButton(onClick = onFav) {
-                    Icon(
-                        painter = painterResource(
-                            id = if (item.isFav) {
-                                R.drawable.fav
-                            } else {
-                                R.drawable.fav_outlined
-                            }
-                        ),
-                        tint = MaterialTheme.colorScheme.primary,
-                        contentDescription = null,
-                    )
-                }
-            }
-        }
-    }
-}
 
 
 
