@@ -54,7 +54,7 @@ import audio.omgsoundboard.core.utils.Constants.OPTIONS_ABOUT
 import audio.omgsoundboard.core.utils.Constants.OPTIONS_CATEGORY
 import audio.omgsoundboard.core.utils.Constants.OPTIONS_PARTICLES
 import audio.omgsoundboard.core.utils.Constants.OPTIONS_THEME_PICKER
-import audio.omgsoundboard.presentation.composables.AddRenameSoundDialog
+import audio.omgsoundboard.presentation.composables.AddRenameDialog
 import audio.omgsoundboard.presentation.composables.DropMenu
 import audio.omgsoundboard.presentation.composables.Fab
 import audio.omgsoundboard.presentation.composables.InfoDialog
@@ -323,8 +323,10 @@ fun SoundsScreenContent(
     }
 
     if (state.showAddRenameSoundDialog){
-        AddRenameSoundDialog(
-            isRename = state.isRenaming,
+        AddRenameDialog(
+            title = stringResource(id = if (state.isRenaming)  R.string.update_sound else R.string.sound_add_title),
+            placeholderText = stringResource(id = R.string.sound_add_placeholder),
+            buttonText = stringResource(id = if (state.isRenaming) R.string.save else  R.string.add),
             text = state.textFieldValue,
             onChange = {
                 onEvents(SoundsEvents.OnTextFieldChange(it))

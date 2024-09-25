@@ -47,8 +47,8 @@
     <string name="notification_set">Son défini comme notification</string>
     <string name="permission">Nous avons besoin de quelques autorisations</string>
     <string name="sound_add_title">Ajouter un son</string>
-    <string name="custom_sound_add_placeholder">Nouveau titre sonore</string>
-    <string name="custom_sound_add">Ajouter</string>
+    <string name="sound_add_placeholder">Nouveau titre sonore</string>
+    <string name="add">Ajouter</string>
     <string name="export_backup">Exporter la sauvegarde</string>
     <string name="restore_backup">Restaurer la sauvegarde</string>
     <string name="dmca">DMCA</string>

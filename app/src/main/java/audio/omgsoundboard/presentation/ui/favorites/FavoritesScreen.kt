@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import audio.omgsoundboard.core.R
 import audio.omgsoundboard.core.domain.models.PlayableSound
-import audio.omgsoundboard.presentation.composables.AddRenameSoundDialog
+import audio.omgsoundboard.presentation.composables.AddRenameDialog
 import audio.omgsoundboard.presentation.composables.DropMenu
 import audio.omgsoundboard.presentation.composables.InfoDialog
 import audio.omgsoundboard.presentation.composables.PermissionDialog
@@ -152,8 +152,10 @@ fun FavoritesScreenContent(
     }
 
     if (state.showRenameSoundDialog){
-        AddRenameSoundDialog(
-            isRename = true,
+        AddRenameDialog(
+            title = stringResource(id = R.string.update_sound),
+            placeholderText = stringResource(id = R.string.sound_add_placeholder),
+            buttonText = stringResource(id = R.string.save),
             text = state.textFieldValue,
             onChange = {
                 onEvents(FavoritesEvents.OnTextFieldChange(it))

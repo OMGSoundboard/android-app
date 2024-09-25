@@ -80,8 +80,8 @@
     <string name="permission_not_granted">You did not allow the permission</string>
 
     <string name="sound_add_title">Add sound</string>
-    <string name="custom_sound_add_placeholder">New sound title</string>
-    <string name="custom_sound_add">Add</string>
+    <string name="sound_add_placeholder">New sound title</string>
+    <string name="add">Add</string>
 
     <string name="export_backup">Export backup</string>
     <string name="restore_backup">Restore backup</string>
@@ -95,4 +95,7 @@
     <string name="ok">Ok</string>
     <string name="continue_dialog">Continue</string>
     <string name="can_not_add_sound">The sound could not be added</string>
+    <string name="category_add_title">Add category</string>
+    <string name="update_category">Update category</string>
+    <string name="category_add_placeholder">New category title</string>
 </resources>

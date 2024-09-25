@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import audio.omgsoundboard.core.R
 import audio.omgsoundboard.core.domain.models.Category
-import audio.omgsoundboard.presentation.composables.AddRenameSoundDialog
+import audio.omgsoundboard.presentation.composables.AddRenameDialog
 import audio.omgsoundboard.presentation.composables.CategoryItem
 import audio.omgsoundboard.presentation.composables.Fab
 import audio.omgsoundboard.presentation.composables.InfoDialog
@@ -122,8 +122,10 @@ fun CategoriesScreenContent(
     }
 
     if (state.showAddRenameCategoryDialog){
-        AddRenameSoundDialog(
-            isRename = state.isRenaming,
+        AddRenameDialog(
+            title = stringResource(id = if (state.isRenaming)  R.string.update_category else R.string.category_add_title),
+            placeholderText = stringResource(id = R.string.category_add_placeholder),
+            buttonText = stringResource(id = if (state.isRenaming) R.string.save else  R.string.add),
             text = state.textFieldValue,
             onChange = {
                 onEvents(CategoriesEvents.OnTextFieldChange(it))

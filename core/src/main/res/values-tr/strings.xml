@@ -53,8 +53,8 @@
     <string name="permission_granted">Artık seslerimizi zil sesi, alarm ve bildirim olarak ayarlayabilirsiniz</string>
     <string name="permission_not_granted">İzin vermediniz</string>
     <string name="sound_add_title">Ses ekleyin</string>
-    <string name="custom_sound_add_placeholder">Yeni ses başlığı</string>
-    <string name="custom_sound_add">Ekle</string>
+    <string name="sound_add_placeholder">Yeni ses başlığı</string>
+    <string name="add">Ekle</string>
     <string name="export_backup">Yedeklemeyi dışa aktar</string>
     <string name="restore_backup">Yedeklemeyi geri yükle</string>
     <string name="onboarding_text_1">Çalmak/durdurmak için seslerin üzerine dokunun, sesleri üst üste bindirmek için birden fazla sesin üzerine dokunun</string>

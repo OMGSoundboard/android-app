@@ -1,23 +1,29 @@
 package audio.omgsoundboard.presentation.composables
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import audio.omgsoundboard.core.R
 
 @Composable
-fun AddRenameSoundDialog(
-    isRename: Boolean,
+fun AddRenameDialog(
+    title: String,
+    placeholderText: String,
+    buttonText: String,
     text: String,
     onChange: (String) -> Unit,
     error: Boolean,
@@ -46,7 +52,7 @@ fun AddRenameSoundDialog(
             ) {
                 Text(
                     modifier = Modifier.padding(bottom = 16.dp),
-                    text =  stringResource(id = if (isRename) R.string.update_sound else R.string.sound_add_title),
+                    text = title,
                     fontSize = 20.sp
                 )
                 OutlinedTextField(
@@ -54,7 +60,7 @@ fun AddRenameSoundDialog(
                     singleLine = true,
                     isError = error,
                     placeholder = {
-                        Text(text = stringResource(id = R.string.custom_sound_add_placeholder))
+                        Text(text = placeholderText)
                     },
                     onValueChange = onChange,
                     shape = RoundedCornerShape(12.dp)
@@ -65,7 +71,7 @@ fun AddRenameSoundDialog(
                     shape = RoundedCornerShape(12.dp),
                     onClick = onFinish
                 ) {
-                    Text(text = stringResource(id = if (isRename) R.string.save else  R.string.custom_sound_add), fontSize = 18.sp)
+                    Text(text = buttonText, fontSize = 18.sp)
                 }
             }
         }
