@@ -38,7 +38,10 @@ class Migration1To2(private val context: Context) : Migration(1, 2) {
             db.execSQL("INSERT INTO categories (name) VALUES (?)", arrayOf(category))
         }
 
-        val funnyCategory = db.execSQL("SELECT id FROM categories WHERE name = 'Funny'")
+        val cursor = db.query("SELECT id FROM categories WHERE name = ?", arrayOf("Funny"))
+        cursor.moveToFirst()
+        val funnyCategoryId = cursor.getInt(0)
+        cursor.close()
         val currentTimeMillis = System.currentTimeMillis()
 
         val titles = context.resources.getStringArray(R.array.seeded_sounds)
@@ -51,7 +54,7 @@ class Migration1To2(private val context: Context) : Migration(1, 2) {
 
             db.execSQL(
                 "INSERT INTO sounds (title, uri, date, category_id, res_id, isFavorite) VALUES (?, ?, ?, ?, ?, ?)",
-                arrayOf(title, uri, currentTimeMillis, funnyCategory, resId, 0)
+                arrayOf(title, uri, currentTimeMillis, funnyCategoryId, resId, 0)
             )
         }
 
@@ -68,13 +71,21 @@ class Migration1To2(private val context: Context) : Migration(1, 2) {
         db.execSQL("""
             UPDATE sounds
             SET isFavorite = 1
-            WHERE res_id IN (
+            WHERE res_id IS NOT NULL
+            AND res_id IN (
                 SELECT resId
                 FROM Favorites
-            ) OR uri IN (
+            );
+        """)
+
+        db.execSQL("""
+            UPDATE sounds
+            SET isFavorite = 1
+            WHERE uri != ''
+            AND uri IN (
                 SELECT uri
                 FROM Favorites
-            )
+            );
         """)
 
         // Drop old tables and rename new favorites
