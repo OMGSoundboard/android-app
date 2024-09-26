@@ -98,4 +98,10 @@
     <string name="category_add_title">Add category</string>
     <string name="update_category">Update category</string>
     <string name="category_add_placeholder">New category title</string>
+    <string name="files_backed">Your files have been successfully backed up.</string>
+    <string name="backup_error">Backup failed: %1$s</string>
+    <string name="backup_restored">Backup has been successfully restored</string>
+    <string name="backup_restored_2">Backup has been successfully restored. As no metadata was found, sounds were assigned to %1$s</string>
+    <string name="restore_backup_error">Failed to restore backup: %1$s</string>
+
 </resources>
