@@ -3,7 +3,7 @@ package audio.omgsoundboard.domain.repository
 import audio.omgsoundboard.domain.models.UserPreferences
 import kotlinx.coroutines.flow.Flow
 
-interface StorageRepository {
+interface SharedPrefRepository {
 
     fun putStringPair(key: String, value: String)
     fun getStringPair(key: String, defaultValue: String): String

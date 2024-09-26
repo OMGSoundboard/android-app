@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import audio.omgsoundboard.core.utils.Constants.ONBOARDING_SHOWN
-import audio.omgsoundboard.domain.repository.StorageRepository
+import audio.omgsoundboard.domain.repository.SharedPrefRepository
 import audio.omgsoundboard.presentation.theme.ThemeType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val storage: StorageRepository,
+    private val storage: SharedPrefRepository,
 ) : ViewModel() {
 
 

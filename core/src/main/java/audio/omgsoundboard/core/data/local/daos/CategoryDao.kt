@@ -29,4 +29,10 @@ interface CategoryDao {
 
     @Query("SELECT * FROM $CATEGORIES_TABLE")
     fun getAllCategories(): Flow<List<CategoryEntity>>
+
+    @Query("SELECT * FROM $CATEGORIES_TABLE")
+    suspend fun getAllCategoriesOnce(): List<CategoryEntity>
+
+    @Query("SELECT * FROM $CATEGORIES_TABLE ORDER BY RANDOM() LIMIT 1")
+    suspend fun getRandomCategory(): CategoryEntity
 }

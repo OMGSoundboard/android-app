@@ -21,9 +21,12 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -86,6 +89,7 @@ fun SoundsScreen(
                     showInfoDialog = true
                     infoDialogText = event.message.asString(context)
                 }
+
                 is UiEvent.Navigate -> onNavigate(event.route)
                 else -> Unit
             }
@@ -97,7 +101,13 @@ fun SoundsScreen(
     ) { soundUri ->
         if (soundUri != null) {
             val pickedSoundTitle = getTitleFromUri(context, soundUri) ?: ""
-            viewModel.onEvent(SoundsEvents.OnShowHideAddRenameSoundDialog(pickedSoundTitle, false, soundUri))
+            viewModel.onEvent(
+                SoundsEvents.OnShowHideAddRenameSoundDialog(
+                    pickedSoundTitle,
+                    false,
+                    soundUri
+                )
+            )
         }
     }
 
@@ -140,11 +150,13 @@ fun SoundsScreen(
             SoundsScreenContent(state, drawerState, viewModel::onEvent)
             AnimatedVisibility(
                 modifier = Modifier.align(Alignment.BottomEnd),
-                visible = state.currentCategory?.id != -1, enter = slideInVertically() + expandVertically(
+                visible = state.currentCategory?.id != -1,
+                enter = slideInVertically() + expandVertically(
                     expandFrom = Alignment.Top
                 ) + fadeIn(
                     initialAlpha = 0.3f
-                ), exit = slideOutVertically(targetOffsetY = { it }) + shrinkVertically()
+                ),
+                exit = slideOutVertically(targetOffsetY = { it }) + shrinkVertically()
             ) {
                 Fab(
                     modifier = Modifier.padding(12.dp),
@@ -188,6 +200,22 @@ fun SoundsScreenContent(
     onEvents: (SoundsEvents) -> Unit,
 ) {
 
+    val zipPicker = rememberLauncherForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { zipUri ->
+        if (zipUri != null) {
+            onEvents(SoundsEvents.OnRestoreBackup(zipUri))
+        }
+    }
+
+    val createFileLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.CreateDocument("application/zip")
+    ) {
+        if (it != null) {
+            onEvents(SoundsEvents.OnBackupFiles(it))
+        }
+    }
+
     val context = LocalContext.current
     var hasWriteSettingsPermission by remember { mutableStateOf(Settings.System.canWrite(context)) }
     var showPermissionDialog by remember { mutableStateOf(false) }
@@ -195,6 +223,8 @@ fun SoundsScreenContent(
     val coroutineScope = rememberCoroutineScope()
     var touchPoint: Offset by remember { mutableStateOf(Offset.Zero) }
     var pickedSound by remember { mutableStateOf(PlayableSound()) }
+
+    var showBackupOptions by remember { mutableStateOf(false) }
 
     Column {
         Crossfade(state.showSearchField, label = "TopBar") { show ->
@@ -246,6 +276,46 @@ fun SoundsScreenContent(
                                     imageVector = Icons.Default.Search,
                                     contentDescription = null,
                                 )
+                            }
+                            Box {
+                                IconButton(onClick = {
+                                    showBackupOptions = true
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Default.MoreVert,
+                                        tint = MaterialTheme.colorScheme.primary,
+                                        contentDescription = null
+                                    )
+                                }
+                                DropdownMenu(
+                                    expanded = showBackupOptions,
+                                    onDismissRequest = { showBackupOptions = false }
+                                ) {
+                                    DropdownMenuItem(
+                                        text = {
+                                            Text(
+                                                stringResource(id = R.string.export_backup),
+                                                color = MaterialTheme.colorScheme.onBackground
+                                            )
+                                        },
+                                        onClick = {
+                                            showBackupOptions = false
+                                            createFileLauncher.launch("OMGSoundboard_backup.zip")
+                                        }
+                                    )
+                                    DropdownMenuItem(
+                                        text = {
+                                            Text(
+                                                stringResource(id = R.string.restore_backup),
+                                                color = MaterialTheme.colorScheme.onBackground
+                                            )
+                                        },
+                                        onClick = {
+                                            showBackupOptions = false
+                                            zipPicker.launch("application/zip")
+                                        }
+                                    )
+                                }
                             }
                         }
                     )
@@ -322,18 +392,18 @@ fun SoundsScreenContent(
         )
     }
 
-    if (state.showAddRenameSoundDialog){
+    if (state.showAddRenameSoundDialog) {
         AddRenameDialog(
-            title = stringResource(id = if (state.isRenaming)  R.string.update_sound else R.string.sound_add_title),
+            title = stringResource(id = if (state.isRenaming) R.string.update_sound else R.string.sound_add_title),
             placeholderText = stringResource(id = R.string.sound_add_placeholder),
-            buttonText = stringResource(id = if (state.isRenaming) R.string.save else  R.string.add),
+            buttonText = stringResource(id = if (state.isRenaming) R.string.save else R.string.add),
             text = state.textFieldValue,
             onChange = {
                 onEvents(SoundsEvents.OnTextFieldChange(it))
             },
             error = state.textFieldError,
             onFinish = {
-                if (state.isRenaming){
+                if (state.isRenaming) {
                     onEvents(SoundsEvents.OnConfirmRename(pickedSound))
                 } else {
                     onEvents(SoundsEvents.OnConfirmAdd)
@@ -345,7 +415,7 @@ fun SoundsScreenContent(
         )
     }
 
-    if (state.showConfirmDeleteDialog){
+    if (state.showConfirmDeleteDialog) {
         InfoDialog(
             text = stringResource(R.string.delete_sound_confirm),
             onConfirmation = {

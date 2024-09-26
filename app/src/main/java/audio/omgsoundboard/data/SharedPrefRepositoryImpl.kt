@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import audio.omgsoundboard.core.utils.Constants.PARTICLES_STATUS
 import audio.omgsoundboard.core.utils.Constants.THEME_TYPE
 import audio.omgsoundboard.domain.models.UserPreferences
-import audio.omgsoundboard.domain.repository.StorageRepository
+import audio.omgsoundboard.domain.repository.SharedPrefRepository
 import audio.omgsoundboard.presentation.theme.ThemeType
 import audio.omgsoundboard.presentation.theme.toThemeType
 import kotlinx.coroutines.channels.Channel
@@ -15,9 +15,9 @@ import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
 
-class StorageRepositoryImpl @Inject constructor(
+class SharedPrefRepositoryImpl @Inject constructor(
     private val context: Context
-) : StorageRepository {
+) : SharedPrefRepository {
 
     private val sharedPref = context.getSharedPreferences("user_preferences", Context.MODE_PRIVATE)
 

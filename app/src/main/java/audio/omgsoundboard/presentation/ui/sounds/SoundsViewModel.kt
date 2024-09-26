@@ -7,14 +7,16 @@ import audio.omgsoundboard.core.R
 import audio.omgsoundboard.core.data.local.daos.CategoryDao
 import audio.omgsoundboard.core.data.local.daos.SoundsDao
 import audio.omgsoundboard.core.data.local.entities.toEntity
+import audio.omgsoundboard.core.domain.models.BackupResult
 import audio.omgsoundboard.core.domain.models.Category
 import audio.omgsoundboard.core.domain.models.PlayableSound
 import audio.omgsoundboard.core.domain.models.toDomain
 import audio.omgsoundboard.core.domain.repository.MediaManager
 import audio.omgsoundboard.core.domain.repository.PlayerRepository
+import audio.omgsoundboard.core.domain.repository.StorageRepository
 import audio.omgsoundboard.core.utils.Constants.PARTICLES_STATUS
 import audio.omgsoundboard.core.utils.Constants.THEME_TYPE
-import audio.omgsoundboard.domain.repository.StorageRepository
+import audio.omgsoundboard.domain.repository.SharedPrefRepository
 import audio.omgsoundboard.presentation.theme.ThemeType
 import audio.omgsoundboard.presentation.theme.toThemeType
 import audio.omgsoundboard.presentation.utils.UiEvent
@@ -37,6 +39,7 @@ class SoundsViewModel @Inject constructor(
     private val player: PlayerRepository,
     private val categoriesDao: CategoryDao,
     private val soundsDao: SoundsDao,
+    private val shared: SharedPrefRepository,
     private val storage: StorageRepository,
 ) : ViewModel() {
 
@@ -58,7 +61,13 @@ class SoundsViewModel @Inject constructor(
 
 
     private val _state = MutableStateFlow(SoundsState())
-    val state = combine(_state, _categories, _categoryId, _sounds, _searchTerm) { state, categories, categoryId, sounds, search ->
+    val state = combine(
+        _state,
+        _categories,
+        _categoryId,
+        _sounds,
+        _searchTerm
+    ) { state, categories, categoryId, sounds, search ->
         val allCategory = Category(id = -1, name = "All")
         val categoriesWithAll = listOf(allCategory) + categories.map { it.toDomain() }
 
@@ -81,12 +90,23 @@ class SoundsViewModel @Inject constructor(
 
     fun onEvent(event: SoundsEvents) {
         when (event) {
+            is SoundsEvents.OnRestoreBackup -> {
+                restoreBackup(event.uri)
+            }
+
+            is SoundsEvents.OnBackupFiles -> {
+                backupFiles(event.uri)
+            }
+
             is SoundsEvents.OnSetCategoryId -> {
                 _categoryId.value = event.id
             }
 
             is SoundsEvents.OnToggleSearch -> {
-                _state.value = _state.value.copy(searchTerm = "", showSearchField = !_state.value.showSearchField)
+                _state.value = _state.value.copy(
+                    searchTerm = "",
+                    showSearchField = !_state.value.showSearchField
+                )
                 _searchTerm.value = ""
             }
 
@@ -128,7 +148,8 @@ class SoundsViewModel @Inject constructor(
             }
 
             is SoundsEvents.OnTextFieldChange -> {
-                _state.value = _state.value.copy(textFieldValue = event.text, textFieldError = false)
+                _state.value =
+                    _state.value.copy(textFieldValue = event.text, textFieldError = false)
             }
 
             is SoundsEvents.OnConfirmRename -> {
@@ -140,7 +161,8 @@ class SoundsViewModel @Inject constructor(
             }
 
             is SoundsEvents.OnShowHideDeleteSoundDialog -> {
-                _state.value = _state.value.copy(showConfirmDeleteDialog = !_state.value.showConfirmDeleteDialog)
+                _state.value =
+                    _state.value.copy(showConfirmDeleteDialog = !_state.value.showConfirmDeleteDialog)
             }
 
             is SoundsEvents.OnConfirmDelete -> {
@@ -169,7 +191,55 @@ class SoundsViewModel @Inject constructor(
         }
     }
 
-    private fun addSound(){
+    private fun restoreBackup(uri: Uri) {
+        viewModelScope.launch {
+            when (val result = storage.restoreBackup(uri)) {
+                is BackupResult.Error -> {
+                    val errorMessage = result.exception.message ?: "Unknown error"
+                    sendUiEvent(
+                        UiEvent.ShowInfoDialog(
+                            UiText.StringResource(
+                                R.string.restore_backup_error,
+                                arrayOf(errorMessage)
+                            )
+                        )
+                    )
+                }
+
+                is BackupResult.Success -> {
+                    val message = result.message
+                    if (message != null) {
+                        sendUiEvent(UiEvent.ShowInfoDialog(UiText.StringResource(R.string.backup_restored_2, arrayOf(message))))
+                        return@launch
+                    }
+                    sendUiEvent(UiEvent.ShowInfoDialog(UiText.StringResource(R.string.backup_restored)))
+                }
+            }
+        }
+    }
+
+    private fun backupFiles(uri: Uri) {
+        viewModelScope.launch {
+            when (val result = storage.backupFiles(uri)) {
+                is BackupResult.Error -> {
+                    val errorMessage = result.exception.message ?: "Unknown error"
+                    sendUiEvent(
+                        UiEvent.ShowInfoDialog(
+                            UiText.StringResource(
+                                R.string.backup_error,
+                                arrayOf(errorMessage)
+                            )
+                        )
+                    )
+                }
+                is BackupResult.Success -> {
+                    sendUiEvent(UiEvent.ShowInfoDialog(UiText.StringResource(R.string.files_backed)))
+                }
+            }
+        }
+    }
+
+    private fun addSound() {
         viewModelScope.launch {
             val title = _state.value.textFieldValue.trim()
             val uri = _state.value.addedSoundUri!!
@@ -185,7 +255,7 @@ class SoundsViewModel @Inject constructor(
 
             val newSoundUri = player.addSound(title, uri)
 
-            if (newSoundUri != null){
+            if (newSoundUri != null) {
                 soundsDao.insertSound(sound.copy(uri = newSoundUri).toEntity())
             } else {
                 sendUiEvent(UiEvent.ShowInfoDialog(UiText.StringResource(R.string.can_not_add_sound)))
@@ -203,21 +273,21 @@ class SoundsViewModel @Inject constructor(
         player.playFile(index, resourceId, uri)
     }
 
-    private fun shareSound(sound: PlayableSound){
+    private fun shareSound(sound: PlayableSound) {
         player.shareFile(sound.title, sound.resId, sound.uri)
     }
 
-    private fun setMedia(type: MediaManager, sound: PlayableSound){
+    private fun setMedia(type: MediaManager, sound: PlayableSound) {
         player.setMedia(type, sound.title, sound.resId, sound.uri)
     }
 
-    private fun toggleFav(id: Int){
+    private fun toggleFav(id: Int) {
         viewModelScope.launch {
             soundsDao.toggleFav(id)
         }
     }
 
-    private fun renameSound(sound: PlayableSound){
+    private fun renameSound(sound: PlayableSound) {
         viewModelScope.launch {
             val newSound = sound.copy(title = _state.value.textFieldValue.trim())
             soundsDao.updateSound(newSound.toEntity())
@@ -228,7 +298,7 @@ class SoundsViewModel @Inject constructor(
         }
     }
 
-    private fun deleteSound(soundId: Int){
+    private fun deleteSound(soundId: Int) {
         viewModelScope.launch {
             soundsDao.deleteSound(soundId)
         }
@@ -237,22 +307,22 @@ class SoundsViewModel @Inject constructor(
     private fun toggleParticles() {
         viewModelScope.launch {
             val currentStatus = _state.value.areParticlesEnable
-            storage.putBooleanPair(PARTICLES_STATUS, !currentStatus)
+            shared.putBooleanPair(PARTICLES_STATUS, !currentStatus)
             _state.value = _state.value.copy(areParticlesEnable = !currentStatus)
         }
     }
 
-    private fun changeTheme(themeType: ThemeType){
+    private fun changeTheme(themeType: ThemeType) {
         viewModelScope.launch {
-            storage.putStringPair(THEME_TYPE, themeType.name)
+            shared.putStringPair(THEME_TYPE, themeType.name)
             _state.value = _state.value.copy(pickedTheme = themeType)
         }
     }
 
     private fun getUserPreferences() {
         viewModelScope.launch {
-            val themePref = storage.getStringPair(THEME_TYPE, ThemeType.DARK.name)
-            val particlesPref = storage.getBooleanPair(PARTICLES_STATUS, false)
+            val themePref = shared.getStringPair(THEME_TYPE, ThemeType.DARK.name)
+            val particlesPref = shared.getBooleanPair(PARTICLES_STATUS, false)
 
             _state.value = _state.value.copy(
                 pickedTheme = toThemeType(themePref),

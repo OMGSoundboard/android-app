@@ -15,6 +15,9 @@ interface SoundsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSound(sound: SoundsEntity): Long
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertSounds(sounds: List<SoundsEntity>)
+
     @Query("UPDATE $SOUNDS_TABLE SET isFavorite = NOT isFavorite WHERE id = :id")
     suspend fun toggleFav(id: Int)
 
@@ -35,6 +38,9 @@ interface SoundsDao {
 
     @Query("SELECT * FROM $SOUNDS_TABLE")
     fun getAllSounds(): Flow<List<SoundsEntity>>
+
+    @Query("SELECT * FROM $SOUNDS_TABLE")
+    suspend fun getAllSoundsOnce(): List<SoundsEntity>
 
     @Query("SELECT * FROM $SOUNDS_TABLE WHERE isFavorite = 1")
     fun getAllFavorites(): Flow<List<SoundsEntity>>
