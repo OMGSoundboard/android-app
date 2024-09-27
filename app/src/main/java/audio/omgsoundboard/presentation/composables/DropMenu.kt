@@ -29,6 +29,8 @@ fun DropMenu(
     onSetAsRingtone: () -> Unit,
     onSetAsAlarm: () -> Unit,
     onSetAsNotification: () -> Unit,
+    showCategoryChange: Boolean = false,
+    onChangeCategory: () -> Unit = {},
     onRename: () -> Unit,
     onDelete: () -> Unit,
     onDismiss: () -> Unit
@@ -51,6 +53,7 @@ fun DropMenu(
                 onClick = {
                     isExpanded = !isExpanded
                     onShare()
+                    onDismiss()
                 },
             )
             DropdownMenuItem(
@@ -61,6 +64,7 @@ fun DropMenu(
                     isExpanded = !isExpanded
                     if (hasWriteSettingsPermission) {
                         onSetAsRingtone()
+                        onDismiss()
                         Toast.makeText(
                             context,
                             context.resources.getString(R.string.ringtone_set),
@@ -79,6 +83,7 @@ fun DropMenu(
                     isExpanded = !isExpanded
                     if (hasWriteSettingsPermission) {
                         onSetAsAlarm()
+                        onDismiss()
                         Toast.makeText(
                             context,
                             context.resources.getString(R.string.alarm_set),
@@ -97,6 +102,7 @@ fun DropMenu(
                     isExpanded = !isExpanded
                     if (hasWriteSettingsPermission) {
                         onSetAsNotification()
+                        onDismiss()
                         Toast.makeText(
                             context,
                             context.resources.getString(R.string.notification_set),
@@ -107,6 +113,18 @@ fun DropMenu(
                     }
                 },
             )
+            if (showCategoryChange){
+                DropdownMenuItem(
+                    text = {
+                        Text(stringResource(id = R.string.change_category))
+                    },
+                    onClick = {
+                        isExpanded = !isExpanded
+                        onChangeCategory()
+                        onDismiss()
+                    },
+                )
+            }
             DropdownMenuItem(
                 text = {
                     Text(stringResource(id = R.string.rename))
@@ -114,6 +132,7 @@ fun DropMenu(
                 onClick = {
                     isExpanded = !isExpanded
                     onRename()
+                    onDismiss()
                 },
             )
             DropdownMenuItem(
@@ -123,6 +142,7 @@ fun DropMenu(
                 onClick = {
                     isExpanded = !isExpanded
                     onDelete()
+                    onDismiss()
                 },
             )
         }

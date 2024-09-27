@@ -18,6 +18,9 @@ interface SoundsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSounds(sounds: List<SoundsEntity>)
 
+    @Query("UPDATE $SOUNDS_TABLE SET category_id = :categoryId WHERE id = :soundId")
+    suspend fun changeCategory(soundId: Int, categoryId: Int)
+
     @Query("UPDATE $SOUNDS_TABLE SET isFavorite = NOT isFavorite WHERE id = :id")
     suspend fun toggleFav(id: Int)
 

@@ -58,6 +58,7 @@ import audio.omgsoundboard.core.utils.Constants.OPTIONS_CATEGORY
 import audio.omgsoundboard.core.utils.Constants.OPTIONS_PARTICLES
 import audio.omgsoundboard.core.utils.Constants.OPTIONS_THEME_PICKER
 import audio.omgsoundboard.presentation.composables.AddRenameDialog
+import audio.omgsoundboard.presentation.composables.ChangeCategoryDialog
 import audio.omgsoundboard.presentation.composables.DropMenu
 import audio.omgsoundboard.presentation.composables.Fab
 import audio.omgsoundboard.presentation.composables.InfoDialog
@@ -370,6 +371,7 @@ fun SoundsScreenContent(
             },
             onShare = {
                 onEvents(SoundsEvents.OnShareSound(pickedSound))
+                println(state.showDropMenu)
             },
             onSetAsRingtone = {
                 onEvents(SoundsEvents.OnSetAsRingtone(pickedSound))
@@ -380,6 +382,10 @@ fun SoundsScreenContent(
             onSetAsNotification = {
                 onEvents(SoundsEvents.OnSetAsNotification(pickedSound))
             },
+            showCategoryChange = true,
+            onChangeCategory = {
+                onEvents(SoundsEvents.OnShowHideChangeCategoryDialog)
+            },
             onRename = {
                 onEvents(SoundsEvents.OnShowHideAddRenameSoundDialog(pickedSound.title, true))
             },
@@ -388,6 +394,22 @@ fun SoundsScreenContent(
             },
             onDismiss = {
                 onEvents(SoundsEvents.OnToggleDropMenu)
+            }
+        )
+    }
+
+    if (state.showChangeCategoryDialog){
+        ChangeCategoryDialog(
+            currentCategoryId = state.currentCategory?.id,
+            categories = state.categories.drop(1),
+            onNewCategory = {
+                if (it != state.currentCategory?.id) {
+                    onEvents(SoundsEvents.OnConfirmSoundCategoryChange(pickedSound.id, it))
+                }
+                onEvents(SoundsEvents.OnShowHideChangeCategoryDialog)
+            },
+            onDismiss = {
+                onEvents(SoundsEvents.OnShowHideChangeCategoryDialog)
             }
         )
     }

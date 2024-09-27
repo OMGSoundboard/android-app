@@ -138,6 +138,14 @@ class SoundsViewModel @Inject constructor(
                 setMedia(MediaManager.Notification, event.sound)
             }
 
+            is SoundsEvents.OnShowHideChangeCategoryDialog -> {
+                _state.value = _state.value.copy(showChangeCategoryDialog = !_state.value.showChangeCategoryDialog,)
+            }
+
+            is SoundsEvents.OnConfirmSoundCategoryChange -> {
+                changeCategory(event.soundId, event.categoryId)
+            }
+
             is SoundsEvents.OnShowHideAddRenameSoundDialog -> {
                 _state.value = _state.value.copy(
                     showAddRenameSoundDialog = !_state.value.showAddRenameSoundDialog,
@@ -236,6 +244,12 @@ class SoundsViewModel @Inject constructor(
                     sendUiEvent(UiEvent.ShowInfoDialog(UiText.StringResource(R.string.files_backed)))
                 }
             }
+        }
+    }
+
+    private fun changeCategory(soundId: Int, categoryId: Int) {
+        viewModelScope.launch {
+            soundsDao.changeCategory(soundId, categoryId)
         }
     }
 

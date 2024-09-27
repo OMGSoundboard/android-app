@@ -17,6 +17,8 @@ sealed class SoundsEvents {
     data class OnSetAsRingtone(val sound: PlayableSound) : SoundsEvents()
     data class OnSetAsAlarm(val sound: PlayableSound) : SoundsEvents()
     data class OnSetAsNotification(val sound: PlayableSound) : SoundsEvents()
+    object OnShowHideChangeCategoryDialog: SoundsEvents()
+    data class OnConfirmSoundCategoryChange(val soundId: Int, val categoryId: Int): SoundsEvents()
     data class OnShowHideAddRenameSoundDialog(
         val initialText: String,
         val isRenaming: Boolean,

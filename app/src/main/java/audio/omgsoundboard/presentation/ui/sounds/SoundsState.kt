@@ -14,6 +14,7 @@ data class SoundsState(
     val searchTerm: String = "",
     val showDropMenu: Boolean = false,
     val showAddRenameSoundDialog: Boolean = false,
+    val showChangeCategoryDialog: Boolean = false,
     val isRenaming: Boolean = false,
     val addedSoundUri: Uri? = Uri.EMPTY,
     val textFieldValue: String = "",
