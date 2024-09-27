@@ -168,6 +168,10 @@ class SoundsViewModel @Inject constructor(
                 addSound()
             }
 
+            is SoundsEvents.OnAddMultipleSounds -> {
+                addMultipleSounds(event.uris)
+            }
+
             is SoundsEvents.OnShowHideDeleteSoundDialog -> {
                 _state.value =
                     _state.value.copy(showConfirmDeleteDialog = !_state.value.showConfirmDeleteDialog)
@@ -280,6 +284,31 @@ class SoundsViewModel @Inject constructor(
                 textFieldValue = "",
                 addedSoundUri = Uri.EMPTY
             )
+        }
+    }
+
+    private fun addMultipleSounds(uris: List<Uri>) {
+        viewModelScope.launch {
+            val result = player.addMultipleSounds(uris)
+            val sounds = result.map {
+                PlayableSound(
+                    title = it.title,
+                    uri = it.uri,
+                    date = System.currentTimeMillis(),
+                    isFav = false,
+                    categoryId = _categoryId.value,
+                    resId = null
+                )
+            }
+
+            soundsDao.insertSounds(sounds.map { it.toEntity() })
+
+            if (uris.size == sounds.size){
+                sendUiEvent(UiEvent.ShowInfoDialog(UiText.StringResource(R.string.sounds_added)))
+            } else {
+                val skippedSounds = uris.size - sounds.size
+                sendUiEvent(UiEvent.ShowInfoDialog(UiText.StringResource(R.string.sounds_added_2, arrayOf(skippedSounds.toString()))))
+            }
         }
     }
 

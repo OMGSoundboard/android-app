@@ -1,4 +1,4 @@
-package audio.omgsoundboard.presentation.utils
+package audio.omgsoundboard.core.utils
 
 import android.content.Context
 import android.net.Uri

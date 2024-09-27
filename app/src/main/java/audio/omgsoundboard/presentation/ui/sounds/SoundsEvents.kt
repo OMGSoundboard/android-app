@@ -28,6 +28,7 @@ sealed class SoundsEvents {
     data class OnTextFieldChange(val text: String) : SoundsEvents()
     data class OnConfirmRename(val sound: PlayableSound) : SoundsEvents()
     object OnConfirmAdd : SoundsEvents()
+    data class OnAddMultipleSounds(val uris: List<Uri>) : SoundsEvents()
     object OnShowHideDeleteSoundDialog : SoundsEvents()
     data class OnConfirmDelete(val soundId: Int) : SoundsEvents()
     object OnToggleDropMenu : SoundsEvents()

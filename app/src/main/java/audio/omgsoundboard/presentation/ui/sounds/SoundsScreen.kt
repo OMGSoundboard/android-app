@@ -69,7 +69,7 @@ import audio.omgsoundboard.presentation.composables.ThemePicker
 import audio.omgsoundboard.presentation.navigation.DrawerContent
 import audio.omgsoundboard.presentation.navigation.Screens
 import audio.omgsoundboard.presentation.utils.UiEvent
-import audio.omgsoundboard.presentation.utils.getTitleFromUri
+import audio.omgsoundboard.core.utils.getTitleFromUri
 import kotlinx.coroutines.launch
 
 
@@ -98,17 +98,22 @@ fun SoundsScreen(
     }
 
     val soundPicker = rememberLauncherForActivityResult(
-        ActivityResultContracts.GetContent()
-    ) { soundUri ->
-        if (soundUri != null) {
-            val pickedSoundTitle = getTitleFromUri(context, soundUri) ?: ""
-            viewModel.onEvent(
-                SoundsEvents.OnShowHideAddRenameSoundDialog(
-                    pickedSoundTitle,
-                    false,
-                    soundUri
+        ActivityResultContracts.GetMultipleContents()
+    ) { soundUris ->
+        if (soundUris.isNotEmpty()) {
+            if (soundUris.size == 1){
+                val uri = soundUris.first()
+                val pickedSoundTitle = getTitleFromUri(context, uri) ?: ""
+                viewModel.onEvent(
+                    SoundsEvents.OnShowHideAddRenameSoundDialog(
+                        pickedSoundTitle,
+                        false,
+                        uri
+                    )
                 )
-            )
+            } else {
+                viewModel.onEvent(SoundsEvents.OnAddMultipleSounds(soundUris))
+            }
         }
     }
 

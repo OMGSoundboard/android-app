@@ -104,5 +104,6 @@
     <string name="backup_restored_2">Backup has been successfully restored. As no metadata was found, sounds were assigned to %1$s</string>
     <string name="restore_backup_error">Failed to restore backup: %1$s</string>
     <string name="change_category">Change category</string>
-
+    <string name="sounds_added">Sounds have been successfully added.</string>
+    <string name="sounds_added_2">Some sounds were added, but %1$s sound(s) were skipped. Please try adding the skipped sounds individually.</string>
 </resources>

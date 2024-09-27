@@ -12,8 +12,10 @@ import android.provider.MediaStore
 import android.provider.MediaStore.Audio.AudioColumns
 import androidx.core.content.FileProvider
 import audio.omgsoundboard.core.R
+import audio.omgsoundboard.core.domain.models.SoundWithUri
 import audio.omgsoundboard.core.domain.repository.MediaManager
 import audio.omgsoundboard.core.domain.repository.PlayerRepository
+import audio.omgsoundboard.core.utils.getTitleFromUri
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -204,6 +206,54 @@ class PlayerRepositoryImpl @Inject constructor(
             )
         }
         return null
+    }
+
+    override fun addMultipleSounds(uris: List<Uri>): List<SoundWithUri> {
+        return uris.mapNotNull { uri ->
+            val title = getTitleFromUri(context, uri) ?: ""
+
+            if (title.isNotEmpty()) {
+                val inputStream = context.contentResolver.openInputStream(uri)
+
+                if (inputStream != null) {
+                    val outputFile = File(context.filesDir, "$title.mp3")
+                    var outputStream: FileOutputStream? = null
+
+                    try {
+                        outputStream = FileOutputStream(outputFile)
+                        val bufferSize = 1024
+                        val buffer = ByteArray(bufferSize)
+                        var length: Int
+
+                        while (inputStream.read(buffer).also { length = it } > 0) {
+                            outputStream.write(buffer, 0, length)
+                        }
+
+                        val fileUri = FileProvider.getUriForFile(
+                            context,
+                            "audio.omgsoundboard.provider",
+                            outputFile
+                        )
+                        SoundWithUri(title, fileUri)
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                        null
+                    } finally {
+                        try {
+                            outputStream?.flush()
+                            inputStream.close()
+                            outputStream?.close()
+                        } catch (e: IOException) {
+                            e.printStackTrace()
+                        }
+                    }
+                } else {
+                    null
+                }
+            } else {
+                null
+            }
+        }
     }
 
     private fun getUriPath(resourceId: Int): Uri {
