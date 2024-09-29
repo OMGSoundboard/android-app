@@ -109,4 +109,5 @@
     <string name="sync">Sync</string>
     <string name="sync_wearable">Sync wearable device</string>
     <string name="data_synced">Categories and sounds have been sent to your Wear device. To complete the sync, please tap the \'Sync\' button on your Wear device to ensure everything is updated and ready to use.</string>
+    <string name="data_synced_confirm">Data synced successfully.</string>
 </resources>

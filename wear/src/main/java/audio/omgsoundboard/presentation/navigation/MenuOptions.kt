@@ -21,5 +21,11 @@ object DrawerParams {
             R.string.options_about,
             R.drawable.about,
         ),
+        DrawerItemModel(
+            null,
+            Constants.OPTIONS_SYNC,
+            R.string.sync,
+            R.drawable.sync,
+        ),
     )
 }

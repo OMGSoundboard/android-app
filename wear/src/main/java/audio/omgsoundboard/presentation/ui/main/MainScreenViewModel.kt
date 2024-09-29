@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import audio.omgsoundboard.core.data.local.daos.CategoryDao
 import audio.omgsoundboard.core.domain.models.toDomain
+import audio.omgsoundboard.core.domain.repository.StorageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -14,6 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
     private val categoryDao: CategoryDao,
+    private val storage: StorageRepository
 ) : ViewModel() {
 
     var uiState by mutableStateOf(MainState())
@@ -21,6 +23,12 @@ class MainScreenViewModel @Inject constructor(
 
     init {
         getCategories()
+    }
+
+    fun sync(){
+        viewModelScope.launch {
+            storage.syncWearFiles()
+        }
     }
 
     private fun getCategories(){

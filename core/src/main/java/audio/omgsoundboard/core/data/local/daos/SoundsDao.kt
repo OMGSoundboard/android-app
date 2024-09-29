@@ -33,6 +33,9 @@ interface SoundsDao {
     @Query("SELECT * FROM $SOUNDS_TABLE WHERE category_id = :categoryId")
     fun getSoundsByCategoryId(categoryId: Int?): Flow<List<SoundsEntity>>
 
+    @Query("SELECT * FROM $SOUNDS_TABLE WHERE id = :id")
+    suspend fun getSoundById(id: Int): SoundsEntity?
+
     @Query("SELECT * FROM $SOUNDS_TABLE WHERE category_id = :categoryId AND title LIKE '%' || :query || '%'")
     fun searchSoundByCategory(categoryId: Int?, query: String): Flow<List<SoundsEntity>>
 

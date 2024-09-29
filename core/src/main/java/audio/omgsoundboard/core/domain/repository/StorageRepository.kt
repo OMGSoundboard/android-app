@@ -7,4 +7,5 @@ interface StorageRepository {
 
     suspend fun backupFiles(uri: Uri): BackupResult
     suspend fun restoreBackup(uri: Uri) : BackupResult
+    suspend fun syncWearFiles()
 }

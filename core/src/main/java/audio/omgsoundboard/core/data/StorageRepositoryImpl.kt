@@ -117,6 +117,31 @@ class StorageRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun syncWearFiles() {
+        try {
+            val privateFolder = File(context.filesDir.absolutePath)
+            privateFolder.listFiles()?.forEach { file ->
+                if (file.name.endsWith(".mp3")) {
+                    val fileId = file.name.removeSuffix(".mp3")
+
+                    val uri = FileProvider.getUriForFile(
+                        context,
+                        "audio.omgsoundboard.provider",
+                        file
+                    )
+
+                    val sound = soundsDao.getSoundById(fileId.toInt())
+                    if (sound != null){
+                        val newSound = sound.copy(uri = uri)
+                        soundsDao.updateSound(newSound)
+                    }
+                }
+            }
+        } catch (e: Exception) {
+           e.printStackTrace()
+        }
+    }
+
     private suspend fun restoredWithoutMetadata(sounds: List<SoundsEntity>): String {
         val category = categoryDao.getRandomCategory()
 

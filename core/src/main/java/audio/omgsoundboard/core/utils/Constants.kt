@@ -10,6 +10,7 @@ object Constants {
     const val OPTIONS_PARTICLES = "Particles"
     const val OPTIONS_THEME_PICKER =  "Picker"
     const val OPTIONS_ABOUT =  "About"
+    const val OPTIONS_SYNC =  "Sync"
 
     const val CATEGORIES_TABLE = "categories"
     const val SOUNDS_TABLE = "sounds"
