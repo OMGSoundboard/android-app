@@ -5,18 +5,23 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.wear.compose.material.ScalingLazyColumn
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
+import androidx.wear.compose.foundation.lazy.items
+import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material.Text
-import androidx.wear.compose.material.items
-import androidx.wear.compose.material.rememberScalingLazyListState
 import audio.omgsoundboard.core.R
+import audio.omgsoundboard.core.utils.Constants
 import audio.omgsoundboard.presentation.composables.Chip
 import audio.omgsoundboard.presentation.navigation.DrawerParams
 import audio.omgsoundboard.presentation.navigation.Screens
 
 @Composable
-fun MainScreen(onNavigate: (Screens, String) -> Unit){
-
+fun MainScreen(
+    onNavigate: (route: String) -> Unit,
+    viewModel: MainScreenViewModel = hiltViewModel(),
+){
+    val state = viewModel.uiState
     val scalingLazyListState = rememberScalingLazyListState()
 
     ScalingLazyColumn(
@@ -29,9 +34,9 @@ fun MainScreen(onNavigate: (Screens, String) -> Unit){
             Text(text = stringResource(id = R.string.categories_header))
         }
 
-        items(DrawerParams.drawerCategories){
-            Chip(icon = it.drawableId, title = it.title) {
-                onNavigate(it.screens, it.category)
+        items(state.categories){
+            Chip(title = it.name) {
+                onNavigate(Screens.SoundsScreen.route + "/${it.id}",)
             }
         }
 
@@ -40,8 +45,12 @@ fun MainScreen(onNavigate: (Screens, String) -> Unit){
         }
 
         items(DrawerParams.drawerOptions){
-            Chip(icon = it.drawableId, title = it.title) {
-                onNavigate(it.screens, it.category)
+            Chip(icon = it.drawableId, title = stringResource(it.title)) {
+               when(it.action){
+                   Constants.OPTIONS_ABOUT -> {
+                       onNavigate(Screens.AboutScreen.route)
+                   }
+               }
             }
         }
     }
