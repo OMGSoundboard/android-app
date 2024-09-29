@@ -36,7 +36,13 @@ fun MainScreen(
 
         items(state.categories){
             Chip(title = it.name) {
-                onNavigate(Screens.SoundsScreen.route + "/${it.id}",)
+                onNavigate(Screens.SoundsScreen.route + "/${it.id}")
+            }
+        }
+
+        item {
+            Chip(title = stringResource(R.string.favorites_title)) {
+                onNavigate(Screens.FavoritesScreen.route)
             }
         }
 

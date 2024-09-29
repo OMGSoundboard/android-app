@@ -60,12 +60,12 @@ fun SoundsScreen(
                     viewModel.onEvent(SoundsEvents.OnPlaySound(sound.id, sound.resId, sound.uri))
                 },
                 onFav = {
-                    viewModel.onEvent(SoundsEvents.OnToggleFav(sound.id))
                     Toast.makeText(
                         context,
-                        context.resources.getString(if (sound.isFav) R.string.added_to_fav else R.string.remove_from_fav),
+                        context.resources.getString(if (!sound.isFav) R.string.added_to_fav else R.string.remove_from_fav),
                         Toast.LENGTH_SHORT
                     ).show()
+                    viewModel.onEvent(SoundsEvents.OnToggleFav(sound.id))
                 }
             )
         }
