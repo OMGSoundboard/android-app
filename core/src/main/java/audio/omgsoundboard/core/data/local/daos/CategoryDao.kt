@@ -35,4 +35,7 @@ interface CategoryDao {
 
     @Query("SELECT * FROM $CATEGORIES_TABLE ORDER BY RANDOM() LIMIT 1")
     suspend fun getRandomCategory(): CategoryEntity
+
+    @Query("DELETE FROM $CATEGORIES_TABLE")
+    suspend fun deleteAllCategories()
 }

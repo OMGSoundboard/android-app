@@ -8,6 +8,7 @@ import audio.omgsoundboard.presentation.theme.ThemeType
 sealed class SoundsEvents {
     data class OnRestoreBackup(val uri: Uri) : SoundsEvents()
     data class OnBackupFiles(val uri: Uri) : SoundsEvents()
+    data class OnSyncWear(val nodeId: String): SoundsEvents()
     data class OnSetCategoryId(val id: Int) : SoundsEvents()
     object OnToggleSearch : SoundsEvents()
     data class OnSearchTerm(val term: String) : SoundsEvents()

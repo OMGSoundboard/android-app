@@ -47,4 +47,8 @@ interface SoundsDao {
 
     @Query("SELECT * FROM $SOUNDS_TABLE WHERE isFavorite = 1")
     fun getAllFavorites(): Flow<List<SoundsEntity>>
+
+    @Query("DELETE FROM $SOUNDS_TABLE")
+    suspend fun deleteAllSounds()
+
 }

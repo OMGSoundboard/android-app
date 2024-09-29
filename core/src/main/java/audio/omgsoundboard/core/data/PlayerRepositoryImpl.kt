@@ -1,6 +1,5 @@
 package audio.omgsoundboard.core.data
 
-import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -16,6 +15,7 @@ import audio.omgsoundboard.core.domain.models.SoundWithUri
 import audio.omgsoundboard.core.domain.repository.MediaManager
 import audio.omgsoundboard.core.domain.repository.PlayerRepository
 import audio.omgsoundboard.core.utils.getTitleFromUri
+import audio.omgsoundboard.core.utils.getUriPath
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -29,9 +29,10 @@ class PlayerRepositoryImpl @Inject constructor(
     private val mediaPlayerList = mutableMapOf<Int, MediaPlayer>()
 
     override fun playFile(index: Int, resourceId: Int?, uri: Uri) {
+        if (uri == Uri.EMPTY && resourceId == null) return
 
         val playerUri = if (uri == Uri.EMPTY) {
-            getUriPath(resourceId!!)
+            getUriPath(context, resourceId!!)
         } else {
             uri
         }
@@ -254,14 +255,6 @@ class PlayerRepositoryImpl @Inject constructor(
                 null
             }
         }
-    }
-
-    private fun getUriPath(resourceId: Int): Uri {
-        return Uri.Builder()
-            .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
-            .authority(context.packageName)
-            .appendPath("$resourceId")
-            .build()
     }
 
     private fun getAudioUri(fileName: String, resourceId: Int): Uri? {

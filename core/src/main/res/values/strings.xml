@@ -106,4 +106,7 @@
     <string name="change_category">Change category</string>
     <string name="sounds_added">Sounds have been successfully added.</string>
     <string name="sounds_added_2">Some sounds were added, but %1$s sound(s) were skipped. Please try adding the skipped sounds individually.</string>
+    <string name="sync">Sync</string>
+    <string name="sync_wearable">Sync wearable device</string>
+    <string name="data_synced">Categories and sounds have been sent to your Wear device. To complete the sync, please tap the \'Sync\' button on your Wear device to ensure everything is updated and ready to use.</string>
 </resources>

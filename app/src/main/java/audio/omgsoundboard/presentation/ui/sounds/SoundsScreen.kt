@@ -321,6 +321,20 @@ fun SoundsScreenContent(
                                             zipPicker.launch("application/zip")
                                         }
                                     )
+                                    if (state.wearNodes.isNotEmpty()) {
+                                        DropdownMenuItem(
+                                            text = {
+                                                Text(
+                                                    stringResource(id = R.string.sync_wearable) + " (${state.wearNodes.first().name})",
+                                                    color = MaterialTheme.colorScheme.onBackground
+                                                )
+                                            },
+                                            onClick = {
+                                                showBackupOptions = false
+                                                onEvents(SoundsEvents.OnSyncWear(state.wearNodes.first().id))
+                                            }
+                                        )
+                                    }
                                 }
                             }
                         }

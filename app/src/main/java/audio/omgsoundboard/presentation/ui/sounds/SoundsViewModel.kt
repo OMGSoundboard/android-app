@@ -16,11 +16,13 @@ import audio.omgsoundboard.core.domain.repository.PlayerRepository
 import audio.omgsoundboard.core.domain.repository.StorageRepository
 import audio.omgsoundboard.core.utils.Constants.PARTICLES_STATUS
 import audio.omgsoundboard.core.utils.Constants.THEME_TYPE
+import audio.omgsoundboard.domain.repository.DataLayerRepository
 import audio.omgsoundboard.domain.repository.SharedPrefRepository
 import audio.omgsoundboard.presentation.theme.ThemeType
 import audio.omgsoundboard.presentation.theme.toThemeType
 import audio.omgsoundboard.presentation.utils.UiEvent
 import audio.omgsoundboard.presentation.utils.UiText
+import audio.omgsoundboard.presentation.utils.combine
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
@@ -41,12 +43,15 @@ class SoundsViewModel @Inject constructor(
     private val soundsDao: SoundsDao,
     private val shared: SharedPrefRepository,
     private val storage: StorageRepository,
+    private val dataLayer: DataLayerRepository
 ) : ViewModel() {
 
     private val _searchTerm = MutableStateFlow("")
     private val _categoryId = MutableStateFlow(-1)
     private val _categories = categoriesDao.getAllCategories()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    private val _wearNodes = dataLayer.getConnectedWearNodesAsFlow().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
 
     private val _sounds = combine(_searchTerm, _categoryId) { searchTerm, categoryId ->
         Pair(searchTerm, categoryId)
@@ -66,8 +71,9 @@ class SoundsViewModel @Inject constructor(
         _categories,
         _categoryId,
         _sounds,
-        _searchTerm
-    ) { state, categories, categoryId, sounds, search ->
+        _searchTerm,
+        _wearNodes
+    ) { state, categories, categoryId, sounds, search, wearNodes ->
         val allCategory = Category(id = -1, name = "All")
         val categoriesWithAll = listOf(allCategory) + categories.map { it.toDomain() }
 
@@ -76,7 +82,8 @@ class SoundsViewModel @Inject constructor(
             categories = categoriesWithAll,
             currentCategory = currentCategory,
             sounds = sounds.map { it.toDomain() },
-            searchTerm = search
+            searchTerm = search,
+            wearNodes = wearNodes
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), SoundsState())
 
@@ -96,6 +103,10 @@ class SoundsViewModel @Inject constructor(
 
             is SoundsEvents.OnBackupFiles -> {
                 backupFiles(event.uri)
+            }
+
+            is SoundsEvents.OnSyncWear -> {
+                syncWear(event.nodeId)
             }
 
             is SoundsEvents.OnSetCategoryId -> {
@@ -254,6 +265,13 @@ class SoundsViewModel @Inject constructor(
     private fun changeCategory(soundId: Int, categoryId: Int) {
         viewModelScope.launch {
             soundsDao.changeCategory(soundId, categoryId)
+        }
+    }
+
+    private fun syncWear(nodeId: String){
+        viewModelScope.launch {
+            dataLayer.syncDataToWearable(nodeId)
+            sendUiEvent(UiEvent.ShowInfoDialog(UiText.StringResource(R.string.data_synced)))
         }
     }
 

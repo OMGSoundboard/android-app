@@ -5,10 +5,9 @@ import android.net.Uri
 import androidx.core.content.FileProvider
 import audio.omgsoundboard.core.data.local.daos.CategoryDao
 import audio.omgsoundboard.core.data.local.daos.SoundsDao
-import audio.omgsoundboard.core.data.local.entities.CategoryEntity
 import audio.omgsoundboard.core.data.local.entities.SoundsEntity
+import audio.omgsoundboard.core.domain.models.BackupMetadata
 import audio.omgsoundboard.core.domain.models.BackupResult
-import audio.omgsoundboard.core.domain.models.SoundBackup
 import audio.omgsoundboard.core.domain.models.toBackup
 import audio.omgsoundboard.core.domain.repository.StorageRepository
 import com.google.gson.Gson
@@ -29,12 +28,6 @@ class StorageRepositoryImpl @Inject constructor(
 ) : StorageRepository {
 
     private val gson = Gson()
-
-    data class BackupMetadata(
-        val sounds: List<SoundBackup>,
-        val categories: List<CategoryEntity>,
-    )
-
 
     override suspend fun backupFiles(uri: Uri): BackupResult = withContext(Dispatchers.IO) {
         try {
@@ -123,7 +116,6 @@ class StorageRepositoryImpl @Inject constructor(
             BackupResult.Error(e)
         }
     }
-
 
     private suspend fun restoredWithoutMetadata(sounds: List<SoundsEntity>): String {
         val category = categoryDao.getRandomCategory()
