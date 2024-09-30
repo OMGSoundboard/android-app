@@ -1,6 +1,5 @@
 package audio.omgsoundboard.core.data
 
-import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -12,8 +11,11 @@ import android.provider.MediaStore
 import android.provider.MediaStore.Audio.AudioColumns
 import androidx.core.content.FileProvider
 import audio.omgsoundboard.core.R
+import audio.omgsoundboard.core.domain.models.SoundWithUri
 import audio.omgsoundboard.core.domain.repository.MediaManager
 import audio.omgsoundboard.core.domain.repository.PlayerRepository
+import audio.omgsoundboard.core.utils.getTitleFromUri
+import audio.omgsoundboard.core.utils.getUriPath
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -21,36 +23,53 @@ import javax.inject.Inject
 
 
 class PlayerRepositoryImpl @Inject constructor(
-    private val context: Context
+    private val context: Context,
 ) : PlayerRepository {
 
     private val mediaPlayerList = mutableMapOf<Int, MediaPlayer>()
 
-    override fun playFile(index: Int, resourceId: Int, uri: Uri?) {
+    override fun playFile(index: Int, resourceId: Int?, uri: Uri) {
+        if (uri == Uri.EMPTY && resourceId == null) return
 
-        val playerUri = if (uri == Uri.EMPTY || uri == null) {
-            getUriPath(resourceId)
+        val playerUri = if (uri == Uri.EMPTY) {
+            getUriPath(context, resourceId!!)
         } else {
             uri
         }
 
         if (mediaPlayerList.contains(index)) {
-            mediaPlayerList[index]?.release()
+            mediaPlayerList[index]?.apply {
+                reset()
+                release()
+            }
+            mediaPlayerList.remove(index)
+        }
+
+        if (mediaPlayerList.contains(index)) {
+            mediaPlayerList[index]?.apply {
+                reset()
+                release()
+            }
             mediaPlayerList.remove(index)
         } else {
-            val mediaPlayer = MediaPlayer.create(context, playerUri)
+            val mediaPlayer = MediaPlayer.create(context, playerUri) ?: return
             mediaPlayerList[index] = mediaPlayer
+            mediaPlayer.start()
             mediaPlayer.setOnCompletionListener {
+                mediaPlayerList[index]?.reset()
                 mediaPlayerList.remove(index)
                 mediaPlayer.release()
             }
-            mediaPlayer.start()
         }
     }
 
-    override fun shareFile(fileName: String, resourceId: Int) {
+    override fun shareFile(fileName: String, resourceId: Int?, uri: Uri) {
         try {
-            val audioUri = getAudioUri("$fileName.mp3", resourceId)
+            val audioUri = if (uri == Uri.EMPTY) {
+                getAudioUri("$fileName.mp3", resourceId!!)
+            } else {
+                uri
+            }
             context.grantUriPermission("android", audioUri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
             val shareIntent = Intent(Intent.ACTION_SEND)
@@ -70,13 +89,17 @@ class PlayerRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun setMedia(type: MediaManager, fileName: String, resourceId: Int, cUri: Uri?) {
+    override fun setMedia(type: MediaManager, fileName: String, resourceId: Int?, cUri: Uri) {
 
         var mediaType = RingtoneManager.TYPE_RINGTONE
 
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
 
-            val mediaUri = cUri ?: getAudioUri(fileName, resourceId)
+            val mediaUri = if (cUri == Uri.EMPTY) {
+               getAudioUri(fileName, resourceId!!)
+            } else {
+                cUri
+            }
 
             mediaType = when (type) {
                 MediaManager.Ringtone -> {
@@ -97,7 +120,13 @@ class PlayerRepositoryImpl @Inject constructor(
             )
 
         } else {
-            val uri = cUri ?: getUriPath(resourceId)
+            val uri = if (cUri == Uri.EMPTY) {
+                getAudioUri(fileName, resourceId!!)
+            } else {
+                cUri
+            }
+
+            if (uri == null) return
 
             val values = ContentValues()
             values.put(MediaStore.MediaColumns.DATA, uri.path)
@@ -143,7 +172,7 @@ class PlayerRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun addCustomSound(fileName: String, uri: Uri): Uri? {
+    override fun addSound(fileName: String, uri: Uri): Uri? {
         val inputStream = context.contentResolver.openInputStream(uri)
 
         if (inputStream != null) {
@@ -180,12 +209,52 @@ class PlayerRepositoryImpl @Inject constructor(
         return null
     }
 
-    private fun getUriPath(resourceId: Int): Uri {
-        return Uri.Builder()
-            .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
-            .authority(context.packageName)
-            .appendPath("$resourceId")
-            .build()
+    override fun addMultipleSounds(uris: List<Uri>): List<SoundWithUri> {
+        return uris.mapNotNull { uri ->
+            val title = getTitleFromUri(context, uri) ?: ""
+
+            if (title.isNotEmpty()) {
+                val inputStream = context.contentResolver.openInputStream(uri)
+
+                if (inputStream != null) {
+                    val outputFile = File(context.filesDir, "$title.mp3")
+                    var outputStream: FileOutputStream? = null
+
+                    try {
+                        outputStream = FileOutputStream(outputFile)
+                        val bufferSize = 1024
+                        val buffer = ByteArray(bufferSize)
+                        var length: Int
+
+                        while (inputStream.read(buffer).also { length = it } > 0) {
+                            outputStream.write(buffer, 0, length)
+                        }
+
+                        val fileUri = FileProvider.getUriForFile(
+                            context,
+                            "audio.omgsoundboard.provider",
+                            outputFile
+                        )
+                        SoundWithUri(title, fileUri)
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                        null
+                    } finally {
+                        try {
+                            outputStream?.flush()
+                            inputStream.close()
+                            outputStream?.close()
+                        } catch (e: IOException) {
+                            e.printStackTrace()
+                        }
+                    }
+                } else {
+                    null
+                }
+            } else {
+                null
+            }
+        }
     }
 
     private fun getAudioUri(fileName: String, resourceId: Int): Uri? {

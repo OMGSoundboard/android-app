@@ -3,7 +3,8 @@ package audio.omgsoundboard.core.di
 import android.content.Context
 import audio.omgsoundboard.core.data.PlayerRepositoryImpl
 import audio.omgsoundboard.core.data.StorageRepositoryImpl
-import audio.omgsoundboard.core.data.local.SoundsDatabase
+import audio.omgsoundboard.core.data.local.daos.CategoryDao
+import audio.omgsoundboard.core.data.local.daos.SoundsDao
 import audio.omgsoundboard.core.domain.repository.PlayerRepository
 import audio.omgsoundboard.core.domain.repository.StorageRepository
 import dagger.Module
@@ -31,13 +32,13 @@ object RepositoryModule {
     @Singleton
     fun providesStorageRepository(
         @ApplicationContext context: Context,
-        db: SoundsDatabase,
+        soundsDao: SoundsDao,
+        categoryDao: CategoryDao
     ): StorageRepository {
         return StorageRepositoryImpl(
             context,
-            db.getFavoritesDao(),
-            db.getCustomSoundsDao()
+            soundsDao,
+            categoryDao
         )
     }
-
 }

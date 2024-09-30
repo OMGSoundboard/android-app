@@ -1,0 +1,22 @@
+Doğru zamanda doğru meme veya sese sahip olmak bir şakanın işe yaramasını sağlayabilir! Sesler çok eğlencelidir ve bu yüzden OMGSoundboard'u indirmeniz gerekir.
+OMGSoundboard kendi benzersiz ses panolarınızı oluşturmanızı sağlar. Bu uygulamanın heyecan verici yanı, yalnızca hayal gücünüzle sınırlı olmanıza izin vermesidir. İstediğiniz sesleri kullanmakta özgürsünüz çünkü sevdiğiniz sesleri içe aktarmanız mümkün. Koleksiyonunuzu sonsuza kadar saklayabilmeniz için elbette bir yedekleme de entegre edilmiştir. Yazılımın kullanımı basit ve anlaşılırdır. Ayrıca efektler ekleyerek ve aynı anda birkaç ses efekti çalarak sesleri katmanlandırabilirsiniz.
+
+OMGSoundboard çevrimdışı çalışır, iyi bir arama işlevi ve sesleri zil sesi ve/veya alarm olarak ayarlama olanağı sunar.
+
+Lütfen OMGSoundboard'un telif hakkı nedeniyle varsayılan olarak çok sınırlı sayıda sese sahip olduğunu unutmayın.
+
+Aşağıdakiler uygulamanın ana özelliklerinden bazılarıdır:
+✔️	İstediğiniz kadar ses tahtası yapma seçeneğiniz vardır.
+✔️	Kişisel melodileriniz içe aktarılabilir
+✔️	Sesin ne zaman başlayacağı ve duracağı üzerinde tam kontrole sahipsiniz.
+✔️	Sesler aynı anda çalınabilir ve istenirse katmanlara ayrılabilir.
+✔️	OMGSoundboard seslerinizi yedekler, böylece kaybolmazlar.
+✔️	Paylaşıma izin veren tüm uygulamalar sesleri paylaşmak için kullanılabilir. (Bluetooh, Wifi, NFC, Sosyal Ağlar vb.)
+✔️	Zil Sesi, Alarm ve Bildirim seslerini seçebilirsiniz.
+✔️	Favori seslerinizi yer imi olarak kaydedebilirsiniz.
+✔️	Çok sayıda ses içinde daha kullanışlı ve hızlı bir arama için kelime filtrelemeye izin verir.
+✔️	Reklam ve izleyici yok.
+
+Webpage: <a href="https://omgsoundboard.audio/">https://omgsoundboard.audio/</a>
+Translate it on Hosted Weblate: <a href="https://hosted.weblate.org/engage/omgsoundboard/">https://hosted.weblate.org/engage/omgsoundboard/</a>
+Libre software on GitHub: <a href="https://github.com/OMGSoundboard/android-app/">https://github.com/OMGSoundboard/android-app/</a>

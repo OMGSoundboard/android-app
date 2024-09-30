@@ -1,0 +1,1 @@
+- Remover Permissão de Internet Desnecessária

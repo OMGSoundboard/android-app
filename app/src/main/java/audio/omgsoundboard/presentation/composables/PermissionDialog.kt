@@ -21,10 +21,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,15 +36,11 @@ import audio.omgsoundboard.core.R
 fun PermissionDialog(result: (Boolean) -> Unit, onDismiss: () -> Unit){
 
     val context = LocalContext.current
-    var hasWriteSettingsPermission by remember { mutableStateOf(Settings.System.canWrite(context)) }
-    var showPermissionDialog by remember { mutableStateOf(false) }
 
     val writePermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) {
         if (Settings.System.canWrite(context)) {
-            hasWriteSettingsPermission = true
-            showPermissionDialog = false
             Toast.makeText(
                 context,
                 context.resources.getString(R.string.permission_granted),

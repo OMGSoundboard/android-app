@@ -18,7 +18,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.wear.compose.material.*
+import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
+import androidx.wear.compose.foundation.lazy.items
+import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
+import androidx.wear.compose.material.MaterialTheme
+import androidx.wear.compose.material.Text
 import audio.omgsoundboard.core.R
 import audio.omgsoundboard.core.utils.Data
 import audio.omgsoundboard.presentation.composables.Chip
@@ -45,7 +49,7 @@ fun AboutScreen(){
             Text(text = stringResource(id = R.string.contribute))
         }
         items(Data.contribute){
-            Chip(icon = it.icon, title = it.title) {
+            Chip(icon = it.icon, title = stringResource(it.title)) {
                 launchUrl(context, it.url)
             }
         }
@@ -53,7 +57,7 @@ fun AboutScreen(){
             Text(text = stringResource(id = R.string.contact))
         }
         items(Data.contact){
-            Chip(icon = it.icon, title = it.title) {
+            Chip(icon = it.icon, title = stringResource(it.title)) {
                 launchUrl(context, it.url)
             }
         }
@@ -61,7 +65,7 @@ fun AboutScreen(){
             Text(text = stringResource(id = R.string.legal))
         }
         items(Data.legal){
-            Chip(icon = it.icon, title = it.title) {
+            Chip(icon = it.icon, title = stringResource(it.title)) {
                 launchUrl(context, it.url)
             }
         }

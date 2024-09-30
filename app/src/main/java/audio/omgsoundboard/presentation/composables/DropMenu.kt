@@ -6,7 +6,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
@@ -14,18 +18,21 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpOffset
 import audio.omgsoundboard.core.R
-import audio.omgsoundboard.core.domain.models.PlayableSound
-import audio.omgsoundboard.core.domain.repository.MediaManager
-import audio.omgsoundboard.presentation.ui.MainViewModel
 
 
 @Composable
 fun DropMenu(
     touchPoint: Offset,
-    pickedSound: PlayableSound,
     hasWriteSettingsPermission: Boolean,
-    mainViewModel: MainViewModel,
     askForPermission: () -> Unit,
+    onShare: () -> Unit,
+    onSetAsRingtone: () -> Unit,
+    onSetAsAlarm: () -> Unit,
+    onSetAsNotification: () -> Unit,
+    showCategoryChange: Boolean = false,
+    onChangeCategory: () -> Unit = {},
+    onRename: () -> Unit,
+    onDelete: () -> Unit,
     onDismiss: () -> Unit
 ) {
     val density = LocalDensity.current
@@ -45,7 +52,8 @@ fun DropMenu(
                 },
                 onClick = {
                     isExpanded = !isExpanded
-                    mainViewModel.shareSound(pickedSound.title, pickedSound.resId)
+                    onShare()
+                    onDismiss()
                 },
             )
             DropdownMenuItem(
@@ -55,12 +63,8 @@ fun DropMenu(
                 onClick = {
                     isExpanded = !isExpanded
                     if (hasWriteSettingsPermission) {
-                        mainViewModel.setMedia(
-                            MediaManager.Ringtone,
-                            pickedSound.title,
-                            pickedSound.resId,
-                            pickedSound.uri
-                        )
+                        onSetAsRingtone()
+                        onDismiss()
                         Toast.makeText(
                             context,
                             context.resources.getString(R.string.ringtone_set),
@@ -78,12 +82,8 @@ fun DropMenu(
                 onClick = {
                     isExpanded = !isExpanded
                     if (hasWriteSettingsPermission) {
-                        mainViewModel.setMedia(
-                            MediaManager.Alarm,
-                            pickedSound.title,
-                            pickedSound.resId,
-                            pickedSound.uri
-                        )
+                        onSetAsAlarm()
+                        onDismiss()
                         Toast.makeText(
                             context,
                             context.resources.getString(R.string.alarm_set),
@@ -101,12 +101,8 @@ fun DropMenu(
                 onClick = {
                     isExpanded = !isExpanded
                     if (hasWriteSettingsPermission) {
-                        mainViewModel.setMedia(
-                            MediaManager.Notification,
-                            pickedSound.title,
-                            pickedSound.resId,
-                            pickedSound.uri
-                        )
+                        onSetAsNotification()
+                        onDismiss()
                         Toast.makeText(
                             context,
                             context.resources.getString(R.string.notification_set),
@@ -115,6 +111,78 @@ fun DropMenu(
                     } else {
                         askForPermission()
                     }
+                },
+            )
+            if (showCategoryChange){
+                DropdownMenuItem(
+                    text = {
+                        Text(stringResource(id = R.string.change_category))
+                    },
+                    onClick = {
+                        isExpanded = !isExpanded
+                        onChangeCategory()
+                        onDismiss()
+                    },
+                )
+            }
+            DropdownMenuItem(
+                text = {
+                    Text(stringResource(id = R.string.rename))
+                },
+                onClick = {
+                    isExpanded = !isExpanded
+                    onRename()
+                    onDismiss()
+                },
+            )
+            DropdownMenuItem(
+                text = {
+                    Text(stringResource(id = R.string.delete))
+                },
+                onClick = {
+                    isExpanded = !isExpanded
+                    onDelete()
+                    onDismiss()
+                },
+            )
+        }
+    }
+}
+
+
+@Composable
+fun SimpleDropMenu(
+    touchPoint: Offset,
+    onRename: () -> Unit,
+    onDelete: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    val density = LocalDensity.current
+    var isExpanded by remember { mutableStateOf(true) }
+    val (xDp, yDp) = with(density) { (touchPoint.x.toDp()) to (touchPoint.y.toDp()) }
+
+    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+        DropdownMenu(
+            offset = DpOffset(xDp, -maxHeight + yDp),
+            expanded = isExpanded,
+            onDismissRequest = onDismiss,
+        ) {
+            DropdownMenuItem(
+                text = {
+                    Text(stringResource(id = R.string.rename))
+                },
+                onClick = {
+                    isExpanded = !isExpanded
+                    onRename()
+                },
+            )
+            DropdownMenuItem(
+                text = {
+                    Text(stringResource(id = R.string.delete))
+                },
+                onClick = {
+                    isExpanded = !isExpanded
+                    onDelete()
                 },
             )
         }

@@ -1,0 +1,2 @@
+- Hedef Android 13 🤖
+- Bağımlılık Güncellemeleri ⚙️

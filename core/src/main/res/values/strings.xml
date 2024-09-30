@@ -79,11 +79,35 @@
     <string name="permission_granted">Now you can set our sounds as ringtones, alarms and notifications</string>
     <string name="permission_not_granted">You did not allow the permission</string>
 
-    <string name="custom_sound_add_title">Add sound</string>
-    <string name="custom_sound_add_placeholder">New sound title</string>
-    <string name="custom_sound_add">Add</string>
+    <string name="sound_add_title">Add sound</string>
+    <string name="sound_add_placeholder">New sound title</string>
+    <string name="add">Add</string>
 
     <string name="export_backup">Export backup</string>
     <string name="restore_backup">Restore backup</string>
+    <string name="rename">Rename</string>
+    <string name="delete">Delete</string>
+    <string name="update_sound">Update sound</string>
+    <string name="save">Save</string>
+    <string name="delete_sound_confirm">Are you sure you want to delete this sound?</string>
 
+    <string name="cancel">Cancel</string>
+    <string name="ok">Ok</string>
+    <string name="continue_dialog">Continue</string>
+    <string name="can_not_add_sound">The sound could not be added</string>
+    <string name="category_add_title">Add category</string>
+    <string name="update_category">Update category</string>
+    <string name="category_add_placeholder">New category title</string>
+    <string name="files_backed">Your files have been successfully backed up.</string>
+    <string name="backup_error">Backup failed: %1$s</string>
+    <string name="backup_restored">Backup has been successfully restored</string>
+    <string name="backup_restored_2">Backup has been successfully restored. As no metadata was found, sounds were assigned to %1$s</string>
+    <string name="restore_backup_error">Failed to restore backup: %1$s</string>
+    <string name="change_category">Change category</string>
+    <string name="sounds_added">Sounds have been successfully added.</string>
+    <string name="sounds_added_2">Some sounds were added, but %1$s sound(s) were skipped. Please try adding the skipped sounds individually.</string>
+    <string name="sync">Sync</string>
+    <string name="sync_wearable">Sync wearable device</string>
+    <string name="data_synced">Categories and sounds have been sent to your Wear device. To complete the sync, please tap the \'Sync\' button on your Wear device to ensure everything is updated and ready to use.</string>
+    <string name="data_synced_confirm">Data synced successfully.</string>
 </resources>

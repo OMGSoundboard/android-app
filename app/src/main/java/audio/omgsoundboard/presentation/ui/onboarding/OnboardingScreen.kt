@@ -20,20 +20,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import audio.omgsoundboard.core.R
 import audio.omgsoundboard.presentation.composables.PermissionDialog
-import audio.omgsoundboard.presentation.navigation.Screens
-import audio.omgsoundboard.presentation.ui.MainViewModel
 import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun OnboardingScreen(mainViewModel: MainViewModel, onNavigate: () -> Unit) {
+fun OnboardingScreen(
+    setOnboardingAsShown: () -> Unit,
+) {
 
     var showPermissionDialog by remember { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
-        mainViewModel.setCurrentScreenValue(Screens.OnboardingScreen)
-    }
 
     val pagerState = rememberPagerState(pageCount = { OnboardingElements.elements.size })
     val coroutineScope = rememberCoroutineScope()
@@ -76,8 +72,7 @@ fun OnboardingScreen(mainViewModel: MainViewModel, onNavigate: () -> Unit) {
                     .background(MaterialTheme.colorScheme.surfaceVariant)
                     .align(Alignment.TopEnd)
                     .clickable {
-                        mainViewModel.setOnboardingShown()
-                        onNavigate()
+                        setOnboardingAsShown()
                     },
             ) {
                 Text(
@@ -127,8 +122,7 @@ fun OnboardingScreen(mainViewModel: MainViewModel, onNavigate: () -> Unit) {
                                 pagerState.animateScrollToPage(pagerState.currentPage + 1)
                             }
                         } else {
-                            mainViewModel.setOnboardingShown()
-                            onNavigate()
+                            setOnboardingAsShown()
                         }
                     },
                 text = stringResource(
