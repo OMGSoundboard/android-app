@@ -56,12 +56,9 @@
     <string name="permission_cancel">Cancelar</string>
     <string name="permission_granted">Agora você pode definir nossos sons como toques do telefone, alarmes e sons de notificação</string>
     <string name="permission_not_granted">Você não concedeu a permissão</string>
-    <string name="custom_sound_add_title">Adicionar som</string>
-    <string name="custom_sound_add">Adicionar</string>
     <string name="export_backup">Exportar cópia de segurança</string>
     <string name="restore_backup">Restaurar cópia de segurança</string>
     <string name="permission_description">Permita que o OMGSoundboard altere suas configurações do sistema para definir nossos sons como toques do telefone, alarmes e sons de notificação</string>
-    <string name="custom_sound_add_placeholder">Novo título do som</string>
     <string name="about_title">Sobre</string>
     <string name="categories_header">Categorias</string>
     <string name="category_funny">Engraçado</string>
