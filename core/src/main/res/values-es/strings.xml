@@ -69,4 +69,27 @@
     <string name="custom_title">Personalizado</string>
     <string name="permission_cancel">Cancelar</string>
     <string name="rename">Renombrar</string>
+    <string name="delete">Borrar</string>
+    <string name="update_sound">Actualizar sonido</string>
+    <string name="save">Guardar</string>
+    <string name="delete_sound_confirm">¿Estás seguro de que deseas eliminar este sonido?</string>
+    <string name="cancel">Cancelar</string>
+    <string name="ok">De acuerdo</string>
+    <string name="continue_dialog">Continuar</string>
+    <string name="can_not_add_sound">No se pudo agregar el sonido</string>
+    <string name="category_add_title">Agregar categoría</string>
+    <string name="update_category">Actualizar categoría</string>
+    <string name="category_add_placeholder">Nuevo título de la categoría</string>
+    <string name="files_backed">Sus archivos han sido respaldados correctamente.</string>
+    <string name="backup_error">Error en la copia de seguridad: %1$s</string>
+    <string name="backup_restored">La copia de seguridad se ha restaurado correctamente</string>
+    <string name="restore_backup_error">Error al restaurar la copia de seguridad: %1$s</string>
+    <string name="change_category">Cambiar de categoría</string>
+    <string name="sounds_added">Los sonidos se han añadido correctamente.</string>
+    <string name="sounds_added_2">Se han añadido algunos sonidos, pero se han omitido %1$s sonido(s). Intente añadir los sonidos omitidos individualmente.</string>
+    <string name="sync">Sincronizar</string>
+    <string name="sync_wearable">Sincronizar dispositivo portátil</string>
+    <string name="backup_restored_2">La copia de seguridad se ha restaurado correctamente. Como no se encontraron metadatos, los sonidos se asignaron a %1$s</string>
+    <string name="data_synced">Las categorías y los sonidos se han enviado a tu dispositivo Wear. Para completar la sincronización, pulsa el botón \"Sincronizar\" en tu dispositivo Wear para asegurarte de que todo esté actualizado y listo para usar.</string>
+    <string name="data_synced_confirm">Datos sincronizados correctamente.</string>
 </resources>

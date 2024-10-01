@@ -69,4 +69,27 @@
     <string name="onboarding_text_6">Das Design folgt der Einstellung des Gerätes, kann aber auch angepasst werden</string>
     <string name="permission_cancel">Abbrechen</string>
     <string name="rename">Umbenennen</string>
+    <string name="delete">Löschen</string>
+    <string name="update_sound">Ton aktualisieren</string>
+    <string name="save">Speichern</string>
+    <string name="delete_sound_confirm">Möchtest du den Ton wirklich löschen?</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="ok">OK</string>
+    <string name="continue_dialog">Fortfahren</string>
+    <string name="can_not_add_sound">Der Ton konnte nicht hinzugefügt werden</string>
+    <string name="category_add_title">Kategorie hinzufügen</string>
+    <string name="update_category">Kategorie aktualisieren</string>
+    <string name="category_add_placeholder">Neuer Titel der Kategorie</string>
+    <string name="files_backed">Deine Dateien wurden erfoglreich gesichert.</string>
+    <string name="backup_error">Sicherung fehlgeschlagen: %1$s</string>
+    <string name="backup_restored">Sicherung wurde erfoglreich wiederhergestellt</string>
+    <string name="backup_restored_2">Die Sicherung wurde erfolgreich wiederhergestellt. Weil keine Metadaten gefunden wurden, wurden die Töne %1$s zugewiesen.</string>
+    <string name="restore_backup_error">Wiederherstellung der Sicherung fehlgeschlagen: %1$s</string>
+    <string name="change_category">Kategorie ändern</string>
+    <string name="sounds_added">Töne wurden erfolgreich hinzugefügt.</string>
+    <string name="sounds_added_2">Einige Töne wurden hinzugefügt aber, aber %1$s Ton/Töne wurden übersprungen. Bitte versuche es mit den fehlgeschlagen Tönen einzeln.</string>
+    <string name="sync">Synchronisieren</string>
+    <string name="sync_wearable">Wearable synchronisieren</string>
+    <string name="data_synced">Kategorien und Töne wurde an das Wearable übermittelt. Um die Synchronisierung abzuschließen, tippe bitte auf \'Synchronisieren\' auf dem Wearable. So wird sichergestellt, dass alles aktuell und einsatzbereit ist.</string>
+    <string name="data_synced_confirm">Daten erfolgreich synchronisiert.</string>
 </resources>
