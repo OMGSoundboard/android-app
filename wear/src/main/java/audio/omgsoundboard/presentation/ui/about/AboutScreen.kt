@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
@@ -30,6 +31,7 @@ import androidx.wear.compose.material.Text
 import audio.omgsoundboard.core.R
 import audio.omgsoundboard.core.utils.Data
 import audio.omgsoundboard.presentation.composables.Chip
+import audio.omgsoundboard.presentation.utils.fillMaxRectangle
 import kotlinx.coroutines.launch
 
 
@@ -58,8 +60,13 @@ fun AboutScreen(){
             state = scalingLazyListState
         ){
             item {
-                Row(modifier = Modifier.clip(RoundedCornerShape(12.dp)).background(color = MaterialTheme.colors.surface)) {
-                    Text(modifier = Modifier.padding(horizontal = 16.dp) ,text = stringResource(id = R.string.about_header), textAlign = TextAlign.Center)
+                Row(modifier = Modifier.fillMaxRectangle().clip(RoundedCornerShape(12.dp)).background(color = MaterialTheme.colors.surface)) {
+                    Text(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        text = stringResource(id = R.string.about_header),
+                        fontSize = 14.sp,
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
 
