@@ -4,7 +4,7 @@ package audio.omgsoundboard.presentation.ui.sounds
 import android.net.Uri
 import audio.omgsoundboard.core.domain.models.Category
 import audio.omgsoundboard.core.domain.models.PlayableSound
-import audio.omgsoundboard.domain.models.WearNode
+import audio.omgsoundboard.core.domain.models.WearNode
 import audio.omgsoundboard.presentation.theme.ThemeType
 
 data class SoundsState(

@@ -18,3 +18,4 @@ rootProject.name = "OMGSoundboard"
 include ':app'
 include ':wear'
 include ':core'
+include ':sync_manager'
