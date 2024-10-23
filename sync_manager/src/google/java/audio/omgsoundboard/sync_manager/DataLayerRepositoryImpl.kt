@@ -1,4 +1,4 @@
-package audio.omgsoundboard.data
+package audio.omgsoundboard.sync_manager
 
 import android.content.ContentResolver
 import android.content.Context
@@ -6,6 +6,7 @@ import android.net.Uri
 import audio.omgsoundboard.core.data.local.daos.CategoryDao
 import audio.omgsoundboard.core.data.local.daos.SoundsDao
 import audio.omgsoundboard.core.domain.models.BackupMetadata
+import audio.omgsoundboard.core.domain.models.WearNode
 import audio.omgsoundboard.core.domain.models.toBackup
 import audio.omgsoundboard.core.domain.models.toDomain
 import audio.omgsoundboard.core.utils.Constants.METADATA_KEY
@@ -14,22 +15,21 @@ import audio.omgsoundboard.core.utils.Constants.WEAR_CAPABILITY
 import audio.omgsoundboard.core.utils.getFileFromUri
 import audio.omgsoundboard.core.utils.getUriPath
 import audio.omgsoundboard.core.utils.makeMetadataJson
-import audio.omgsoundboard.domain.models.WearNode
-import audio.omgsoundboard.domain.repository.DataLayerRepository
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.wearable.CapabilityClient
 import com.google.android.gms.wearable.Node
 import com.google.android.gms.wearable.PutDataMapRequest
 import com.google.android.gms.wearable.Wearable
+import dagger.hilt.android.qualifiers.ApplicationContext
+import jakarta.inject.Inject
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
 
 class DataLayerRepositoryImpl @Inject constructor(
-    private val context: Context,
+    @ApplicationContext private val context: Context,
     private val categoryDao: CategoryDao,
     private val soundsDao: SoundsDao,
 ) : DataLayerRepository {

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.OMGSoundboard" parent="@android:style/Theme.DeviceDefault"  />
+
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen.IconBackground">
+        <item name="windowSplashScreenBackground">@color/splash_background_wear</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/wear_splash</item>
+        <item name="windowSplashScreenIconBackgroundColor">@android:color/white</item>
+        <item name="postSplashScreenTheme">@style/Theme.OMGSoundboard</item>
+    </style>
+
+</resources>

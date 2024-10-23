@@ -1,4 +1,4 @@
-package audio.omgsoundboard.domain.models
+package audio.omgsoundboard.core.domain.models
 
 data class WearNode(
     val id: String = "",
