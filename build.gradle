@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        compose_version = '1.7.5'
+        compose_version = '1.7.6'
         wear_compose_version = '1.4.0'
     }
     dependencies {
