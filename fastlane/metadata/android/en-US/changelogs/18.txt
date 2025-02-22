@@ -1,0 +1,8 @@
+- 💌 Hopefully fix reproducible builds (RB)
+- 🎨 Support Themed Icons on Android 13+
+- ⚙️ Dependency updates
+- 🗺️ Translation updates
+
+Thank you so much to all contributors, translators, IzzyOnDroid, the F-Droid team and @Rashxz! 😘
+Feel more than welcome to help with translations on https://hosted.weblate.org/engage/omgsoundboard/. 👍
+Learn more about reproducible builds on https://reproducible-builds.org/. 💌
