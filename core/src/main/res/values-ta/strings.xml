@@ -86,7 +86,7 @@
     <string name="onboarding_back">பின்</string>
     <string name="onboarding_next">அடுத்தது</string>
     <string name="onboarding_finish">முடிக்க</string>
-    <string name="onboarding_text_3">அதைப் பகிர ஒரு ஒலியைப் பிடித்துக் கொள்ளுங்கள், அதை ரிங்டோன், அறிவிப்பு அல்லது அலாரம் என அமைக்கவும்</string>
+    <string name="onboarding_text_3">அதைப் பகிர ஒரு ஒலியைப் பிடித்துக் கொள்ளுங்கள், அதை அழைப்புத்தொனி, அறிவிப்பு அல்லது எழுப்பொலியென அமை</string>
     <string name="onboarding_text_7">சவுண்ட்போர்டு மற்றும் உதவுவதற்கான சாத்தியக்கூறுகள் பற்றி மேலும் அறிய திரையை சரிபார்க்க வரவேற்பைப் பாருங்கள்</string>
     <string name="notification_set">அறிவிப்பாக ஒலி அமைக்கப்படுகிறது</string>
     <string name="sounds_added">ஒலிகள் வெற்றிகரமாக சேர்க்கப்பட்டுள்ளன.</string>
