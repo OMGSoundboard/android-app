@@ -17,7 +17,7 @@
 
 OMGSoundboard is a full soundboard app that will make your day a little brighter. You may add your own tunes. The app's interface is simple and has a modern look to it.
 
-🎵 Note: The soundboard ships with just a __very limited amount of tunes due to copyright reasons__. If you want to add your own sounds, please open a PR. We only accept self-made tunes though without copyright restrictions. 🎵 
+🎵 Note: The soundboard ships with just a __very limited amount of tunes due to copyright reasons__. There are no plans to include more tunes. The users are responsible for the sounds. Your content can be transferred to your own devices or to family and friends via a backup. 🎵 
 
 <a href="https://f-droid.org/packages/audio.omgsoundboard/">
     <img alt="Get it on F-Droid"
