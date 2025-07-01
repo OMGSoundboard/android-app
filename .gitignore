@@ -8,6 +8,7 @@
 .buildlog/
 .history
 .svn/
+local.properties
 
 # IntelliJ related
 *.iml
@@ -57,4 +58,3 @@ app.*.map.json
 /captures
 .externalNativeBuild
 .cxx
-local.properties

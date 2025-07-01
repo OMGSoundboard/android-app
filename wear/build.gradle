@@ -11,12 +11,12 @@ plugins {
 
 android {
     namespace 'audio.omgsoundboard'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "audio.omgsoundboard"
         minSdk 25
-        targetSdk 34
+        targetSdk 35
         versionCode 18
         versionName "18.0"
         vectorDrawables {
@@ -77,7 +77,7 @@ dependencies {
     implementation "androidx.wear.compose:compose-material:$wear_compose_version"
     implementation "androidx.wear.compose:compose-foundation:$wear_compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.6'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.9.1'
     implementation 'androidx.activity:activity-compose:1.10.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.1'
@@ -99,7 +99,7 @@ dependencies {
     implementation 'androidx.hilt:hilt-navigation-compose:1.2.0'
 
     //Icons
-    implementation("androidx.compose.material:material-icons-extended:1.7.5")
+    implementation("androidx.compose.material:material-icons-extended:1.7.8")
 
     //Splash Screen
     implementation 'androidx.core:core-splashscreen:1.0.1'
