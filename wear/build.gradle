@@ -89,8 +89,8 @@ dependencies {
     implementation "androidx.wear.compose:compose-navigation:$wear_compose_version"
 
     //Room
-    implementation "androidx.room:room-ktx:2.6.1"
-    ksp "androidx.room:room-compiler:2.6.1"
+    implementation "androidx.room:room-ktx:2.7.2"
+    ksp "androidx.room:room-compiler:2.7.2"
 
     //Dagger - Hilt
     implementation "com.google.dagger:hilt-android:2.56.2"
