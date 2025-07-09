@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Omgsoundboard</string>
+    <string name="app_name">ௐஒலிஅட்டை</string>
     <string name="onboarding_skip">தவிர்</string>
     <string name="onboarding_text_1">அவற்றை விளையாட/நிறுத்த ஒலிகளைத் தட்டவும், ஒலிகளை ஒன்றுடன் ஒன்று தட்டவும்</string>
     <string name="onboarding_text_2">உங்களுக்கு பிடித்த தாளங்களைக் குறிக்க இதயத்தை அழுத்தவும்</string>
