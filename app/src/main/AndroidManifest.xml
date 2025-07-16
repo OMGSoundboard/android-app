@@ -46,6 +46,25 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".presentation.ui.widget.widget_config.SoundWidgetConfigureActivity"
+            android:theme="@style/Theme.OMGSoundboard"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <receiver android:name=".presentation.ui.widget.SoundWidgetReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/sound_widget_info" />
+        </receiver>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="audio.omgsoundboard.provider"

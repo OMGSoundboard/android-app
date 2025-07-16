@@ -6,3 +6,7 @@ data class UserPreferences(
     val selectedTheme: ThemeType,
     val areParticlesEnabled: Boolean,
 )
+
+enum class BackgroundType {
+    COLOR, IMAGE
+}

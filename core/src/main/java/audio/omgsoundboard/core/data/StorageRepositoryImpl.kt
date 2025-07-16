@@ -3,6 +3,7 @@ package audio.omgsoundboard.core.data
 import android.content.Context
 import android.net.Uri
 import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import audio.omgsoundboard.core.data.local.daos.CategoryDao
 import audio.omgsoundboard.core.data.local.daos.SoundsDao
 import audio.omgsoundboard.core.data.local.entities.SoundsEntity
@@ -105,7 +106,7 @@ class StorageRepositoryImpl @Inject constructor(
             }
 
             if (metadata != null) {
-                restoreMetadata(metadata!!)
+                restoreMetadata(metadata)
                 BackupResult.Success()
             } else {
                 val catName = restoredWithoutMetadata(restoredSounds)
@@ -114,6 +115,30 @@ class StorageRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             e.printStackTrace()
             BackupResult.Error(e)
+        }
+    }
+
+
+    override suspend fun copyToInternalStorage(
+        uri: Uri,
+        filename: String
+    ): Uri? {
+        return withContext(Dispatchers.IO) {
+            runCatching {
+                val destFile = File(context.filesDir, filename)
+                destFile.parentFile?.mkdirs()
+
+                context.contentResolver.openInputStream(uri)?.use { input ->
+                    destFile.outputStream().use { output ->
+                        input.copyTo(output)
+                        output.flush()
+                    }
+                } ?: error("InputStream is null")
+
+                destFile.toUri()
+            }.getOrElse { throwable ->
+                null
+            }
         }
     }
 
