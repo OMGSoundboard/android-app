@@ -54,6 +54,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -61,6 +62,7 @@ import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
+import audio.omgsoundboard.core.R
 import audio.omgsoundboard.core.domain.models.PlayableSound
 import audio.omgsoundboard.domain.models.BackgroundType
 import audio.omgsoundboard.presentation.composables.ColorSelector
@@ -199,7 +201,7 @@ fun ConfigureScreen(
                                 }
                             }
                         ) {
-                            Text("Done")
+                            Text(stringResource(R.string.action_done))
                         }
                     }
                 }
@@ -223,7 +225,7 @@ fun ConfigureScreen(
                             pagerState.animateScrollToPage(0)
                         }
                     },
-                    text = { Text("Sound") }
+                    text = { Text(stringResource(R.string.tab_sound)) }
                 )
                 Tab(
                     selected = pagerState.currentPage == 1,
@@ -232,7 +234,7 @@ fun ConfigureScreen(
                             pagerState.animateScrollToPage(1)
                         }
                     },
-                    text = { Text("Preview & Background") }
+                    text = { Text(stringResource(R.string.tab_preview_personalization)) }
                 )
             }
 
@@ -274,7 +276,7 @@ fun SoundSelectionTab(
     ) {
         item {
             Text(
-                text = "Select a sound for your widget",
+                text = stringResource(R.string.select_sound_heading),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 8.dp)
@@ -304,7 +306,7 @@ fun PreviewAndBackgroundTab(
             .verticalScroll(rememberScrollState()),
     ) {
         Text(
-            text = "Widget Preview",
+            text = stringResource(R.string.widget_preview_heading),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
@@ -325,7 +327,7 @@ fun PreviewAndBackgroundTab(
 
         Spacer(modifier = Modifier.height(24.dp))
         Text(
-            text = "Background",
+            text = stringResource(R.string.background_heading),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
@@ -340,7 +342,7 @@ fun PreviewAndBackgroundTab(
                 onClick = {
                     onEvents(WidgetConfigurationEvents.OnBackgroundTypeChange(BackgroundType.COLOR))
                 },
-                label = { Text("Color") },
+                label = { Text(stringResource(R.string.background_color))},
                 leadingIcon = {
                     Icon(Icons.Default.Palette, contentDescription = null)
                 }
@@ -351,7 +353,7 @@ fun PreviewAndBackgroundTab(
                     onEvents(WidgetConfigurationEvents.OnBackgroundTypeChange(BackgroundType.IMAGE))
                     onImagePick()
                 },
-                label = { Text("Image") },
+                label = { Text(stringResource(R.string.background_image)) },
                 leadingIcon = {
                     Icon(Icons.Default.Image, contentDescription = null)
                 }
@@ -374,13 +376,13 @@ fun PreviewAndBackgroundTab(
         }
         Spacer(modifier = Modifier.height(24.dp))
         Text(
-            text = "Text Style",
+            text = stringResource(R.string.text_style_heading),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(8.dp))
 
-        Text("Font Size: ${state.fontSize.toInt()} sp")
+        Text(stringResource(R.string.font_size_label, state.fontSize.toInt()))
         Slider(
             value = state.fontSize,
             onValueChange = {
@@ -390,7 +392,7 @@ fun PreviewAndBackgroundTab(
             steps = 19
         )
         Spacer(modifier = Modifier.height(4.dp))
-        Text("Font Color")
+        Text(stringResource(R.string.font_color_label))
         Spacer(modifier = Modifier.height(8.dp))
         ColorSelector(
             selectedColor = state.fontColor,

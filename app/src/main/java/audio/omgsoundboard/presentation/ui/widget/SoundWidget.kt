@@ -18,6 +18,7 @@ import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.Image
 import androidx.glance.ImageProvider
+import androidx.glance.LocalContext
 import androidx.glance.action.ActionParameters
 import androidx.glance.action.actionParametersOf
 import androidx.glance.action.actionStartActivity
@@ -120,7 +121,7 @@ class SoundWidget: GlanceAppWidget() {
         fontSize: Float,
         backgroundImageUri: String?,
     ) {
-
+        val context = LocalContext.current
         val defaultBackgroundColor = Color.White
 
         val imageProvider = if (backgroundType == BackgroundType.IMAGE.name) {
@@ -185,7 +186,7 @@ class SoundWidget: GlanceAppWidget() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = sound?.title ?: "Tap to configure",
+                    text = sound?.title ?: context.getString(R.string.tap_to_configure),
                     style = TextStyle(
                         textAlign = TextAlign.Center,
                         color = ColorProvider(Color(fontColor), Color(fontColor)),

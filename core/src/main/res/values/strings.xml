@@ -112,5 +112,16 @@
     <string name="data_synced_confirm">Data synced successfully.</string>
 
     <string name="tap_to_configure">Tap to configure</string>
-
+    <string name="widget_config_title">Configure Widget</string>
+    <string name="action_done">Done</string>
+    <string name="tab_sound">Sound</string>
+    <string name="tab_preview_personalization">Preview &amp; Personalization</string>
+    <string name="select_sound_heading">Select a sound for your widget</string>
+    <string name="widget_preview_heading">Widget Preview</string>
+    <string name="background_heading">Background</string>
+    <string name="background_color">Color</string>
+    <string name="background_image">Image</string>
+    <string name="text_style_heading">Text Style</string>
+    <string name="font_size_label">Font Size: %1$d sp</string>
+    <string name="font_color_label">Font Color</string>
 </resources>
