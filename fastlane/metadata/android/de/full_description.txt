@@ -1,0 +1,20 @@
+Mit dem richtigen Meme oder Sound zur richtigen Zeit kann ein Witz funktionieren! Sounds machen so viel Spaß und deshalb müssen Sie <i>OMGSoundboard</i> herunterladen.
+
+Mit <i>OMGSoundboard</i> können Sie Ihre eigenen einzigartigen Soundboards erstellen. Das Spannende an dieser App ist, dass sie Ihnen nur durch Ihre Vorstellungskraft Grenzen setzt. Es steht Ihnen frei, beliebige Sounds zu verwenden, da es möglich ist, Sounds zu importieren, die Ihnen gefallen. Selbstverständlich ist auch ein Backup integriert, sodass Sie Ihre Sammlung für immer behalten können. Die Software ist einfach und unkompliziert zu bedienen. Sie können die Sounds auch überlagern, indem Sie Effekte hinzufügen und mehrere Soundeffekte gleichzeitig abspielen.
+
+<i>OMGSoundboard</i> funktioniert offline, bietet eine gute Suchfunktion und die Möglichkeit, Sounds als Klingeltöne und/oder Alarme einzustellen.
+
+Bitte beachten Sie, dass <i>OMGSoundboard</i> aus urheberrechtlichen Gründen standardmäßig nur eine sehr begrenzte Anzahl an Sounds zur Verfügung stellt.
+
+Im Folgenden sind einige der Hauptfunktionen der App aufgeführt:
+
+* Sie haben die Möglichkeit, so viele Resonanzböden herzustellen, wie Sie möchten.
+* Ihre persönlichen Melodien können importiert werden
+* Sie haben die vollständige Kontrolle darüber, wann der Ton beginnt und endet.
+* Sounds können gleichzeitig abgespielt werden, sodass Sie sie bei Bedarf überlagern können.
+* OMGSoundboard sichert Ihre Sounds, damit sie nicht verloren gehen.
+* Zum Teilen der Sounds können alle Apps verwendet werden, die das Teilen ermöglichen. (Bluetooh, WLAN, NFC, soziale Netzwerke usw.)
+* Sie können Klingelton-, Alarm- und Benachrichtigungstöne auswählen.
+* Sie können Ihre Lieblingssounds als Lesezeichen speichern.
+* Ermöglicht die Wortfilterung für eine nützlichere und schnellere Suche in einer großen Anzahl von Lauten.
+* Keine Werbung und keine Tracker.
