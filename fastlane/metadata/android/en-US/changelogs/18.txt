@@ -1,4 +1,5 @@
 - 💌 Hopefully fix reproducible builds (RB)
+- 🤖 Target Android 16 
 - 🎨 Support Themed Icons on Android 13+
 - ⚙️ Dependency updates
 - 🗺️ Translation updates
