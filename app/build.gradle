@@ -135,7 +135,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
 
     //Coil
-    implementation("io.coil-kt.coil3:coil-compose:3.2.0")
+    implementation("io.coil-kt.coil3:coil-compose:3.3.0")
     
     //Widgets
     implementation "androidx.glance:glance-appwidget:1.1.1"
