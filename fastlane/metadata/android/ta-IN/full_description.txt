@@ -20,6 +20,6 @@
 * Google கூகிள் ச்மார்ட்வாட்ச்களால் OS ஐ ஆதரிக்கிறது. 
 * விளம்பரங்கள் இல்லை மற்றும் டிராக்கர்கள் இல்லை. 
 
-வலைப்பக்கம்: <a href = "https://omgsoundboard.audio/"> https://omgsoundboard.audio/ </a>  
-புரவலன் செய்யப்பட்ட வெப்லேட்டில் இதை மொழிபெயர்க்கவும்: <a href = "https://hosted.weblate.org/engage/omgsoundboard/">  
-கிட்அப்பில் உள்ள லிப்ரே மென்பொருள்: <a href = "https://github.com/omgsoundboard/android-app/"> https://github.com/omgsoundboard/android-app/ </a>
+வலைப்பக்கம்: <a href="https://omgsoundboard.audio/">https://omgsoundboard.audio/</a>   
+புரவலன் செய்யப்பட்ட வெப்லேட்டில் இதை மொழிபெயர்க்கவும்: <a href="https://hosted.weblate.org/engage/omgsoundboard/">https://hosted.weblate.org/engage/omgsoundboard/</a>  
+கிட்அப்பில் உள்ள லிப்ரே மென்பொருள்: <a href="https://github.com/OMGSoundboard/android-app/">https://github.com/OMGSoundboard/android-app/</a>
