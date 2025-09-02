@@ -54,7 +54,7 @@ dependencies {
 
     //Wear
     googleImplementation 'com.google.android.gms:play-services-wearable:19.0.0'
-    googleImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.1'
+    googleImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.2'
 
     //Dagger - Hilt
     implementation "com.google.dagger:hilt-android:2.57"
