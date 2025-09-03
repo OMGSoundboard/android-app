@@ -34,7 +34,9 @@ fun OnboardingScreen(
     val pagerState = rememberPagerState(pageCount = { OnboardingElements.elements.size })
     val coroutineScope = rememberCoroutineScope()
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing)
+    ) {
         HorizontalPager(
             modifier = Modifier.fillMaxSize(),
             state = pagerState,
