@@ -1,0 +1,8 @@
+- 🛑 New feature: Stop button for longer tunes
+- 🐛 Bugfixes
+- ⚙️ Dependency updates
+- 🗺️ Translation updates
+
+Thank you so much to all contributors, translators, IzzyOnDroid, the F-Droid team and @Rashxz! 😘
+Feel more than welcome to help with translations on https://hosted.weblate.org/engage/omgsoundboard/. 👍
+Learn more about reproducible builds on https://reproducible-builds.org/. 💌
