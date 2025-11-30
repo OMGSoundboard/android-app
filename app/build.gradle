@@ -116,8 +116,8 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:2.9.5"
 
     //Room
-    implementation "androidx.room:room-ktx:2.7.2"
-    ksp "androidx.room:room-compiler:2.7.2"
+    implementation "androidx.room:room-ktx:2.8.4"
+    ksp "androidx.room:room-compiler:2.8.4"
 
     //Dagger - Hilt
     implementation "com.google.dagger:hilt-android:2.57.2"
