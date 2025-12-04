@@ -17,8 +17,8 @@ android {
         applicationId "audio.omgsoundboard"
         minSdk 25
         targetSdk 35
-        versionCode 22
-        versionName "22.0"
+        versionCode 24
+        versionName "24.0"
         vectorDrawables {
             useSupportLibrary true
         }
