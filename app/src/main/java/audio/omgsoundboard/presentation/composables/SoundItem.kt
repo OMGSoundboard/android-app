@@ -1,5 +1,7 @@
 package audio.omgsoundboard.presentation.composables
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -9,6 +11,7 @@ import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -20,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -37,6 +41,7 @@ import kotlinx.coroutines.launch
 fun SoundItem(
     item: PlayableSound,
     index: Int,
+    playbackProgress: Float? = null,
     onFav: () -> Unit,
     onPlay: () -> Unit,
     onDropMenu: (Offset) -> Unit,
@@ -75,44 +80,57 @@ fun SoundItem(
         color = MaterialTheme.colorScheme.surfaceVariant,
         shape = RoundedCornerShape(0.dp),
     ) {
-        Row(
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier
-                    .background(
-                        if (index % 2 == 0) {
-                            MaterialTheme.colorScheme.tertiary
-                        } else {
-                            MaterialTheme.colorScheme.primary
-                        }
-                    )
-                    .width(3.dp)
-                    .height(60.dp)
-            )
+        val accentColor = if (index % 2 == 0) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary
+        Box(modifier = Modifier.fillMaxSize()) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxSize(),
             ) {
-                Text(
-                    modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
-                    text = item.title,
+                Box(
+                    modifier = Modifier
+                        .background(accentColor)
+                        .width(3.dp)
+                        .height(60.dp)
                 )
-                IconButton(onClick = onFav) {
-                    Icon(
-                        painter = painterResource(
-                            id = if (item.isFav) {
-                                R.drawable.fav
-                            } else {
-                                R.drawable.fav_outlined
-                            }
-                        ),
-                        tint = MaterialTheme.colorScheme.primary,
-                        contentDescription = null,
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
+                        text = item.title,
                     )
+                    IconButton(onClick = onFav) {
+                        Icon(
+                            painter = painterResource(
+                                id = if (item.isFav) {
+                                    R.drawable.fav
+                                } else {
+                                    R.drawable.fav_outlined
+                                }
+                            ),
+                            tint = MaterialTheme.colorScheme.primary,
+                            contentDescription = null,
+                        )
+                    }
                 }
+            }
+
+            if (playbackProgress != null) {
+                val animatedProgress by animateFloatAsState(
+                    targetValue = playbackProgress.coerceIn(0f, 1f),
+                    animationSpec = tween(durationMillis = 100),
+                    label = "playback_progress",
+                )
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .fillMaxWidth(animatedProgress)
+                        .height(3.dp)
+                        .background(accentColor),
+                )
             }
         }
     }

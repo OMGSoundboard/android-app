@@ -59,6 +59,7 @@ import audio.omgsoundboard.core.domain.models.PlayableSound
 import audio.omgsoundboard.core.utils.Constants.OPTIONS_ABOUT
 import audio.omgsoundboard.core.utils.Constants.OPTIONS_CATEGORY
 import audio.omgsoundboard.core.utils.Constants.OPTIONS_PARTICLES
+import audio.omgsoundboard.core.utils.Constants.OPTIONS_PLAYBACK_BEHAVIOR
 import audio.omgsoundboard.core.utils.Constants.OPTIONS_THEME_PICKER
 import audio.omgsoundboard.presentation.composables.AddRenameDialog
 import audio.omgsoundboard.presentation.composables.ChangeCategoryDialog
@@ -67,6 +68,7 @@ import audio.omgsoundboard.presentation.composables.Fab
 import audio.omgsoundboard.presentation.composables.InfoDialog
 import audio.omgsoundboard.presentation.composables.MyTextField
 import audio.omgsoundboard.presentation.composables.PermissionDialog
+import audio.omgsoundboard.presentation.composables.PlaybackBehaviorDialog
 import audio.omgsoundboard.presentation.composables.SoundItem
 import audio.omgsoundboard.presentation.composables.ThemePicker
 import audio.omgsoundboard.presentation.navigation.DrawerContent
@@ -150,6 +152,10 @@ fun SoundsScreen(
                         OPTIONS_THEME_PICKER -> {
                             viewModel.onEvent(SoundsEvents.OnShowHideThemePicker)
                         }
+
+                        OPTIONS_PLAYBACK_BEHAVIOR -> {
+                            viewModel.onEvent(SoundsEvents.OnShowHidePlaybackBehaviorDialog)
+                        }
                     }
                 }
             )
@@ -200,6 +206,16 @@ fun SoundsScreen(
             onDismiss = {
                 viewModel.onEvent(SoundsEvents.OnShowHideThemePicker)
             }
+        )
+    }
+
+    if (state.showPlaybackBehaviorDialog) {
+        PlaybackBehaviorDialog(
+            stopOnRetap = state.stopOnRetap,
+            stopOnNewSound = state.stopOnNewSound,
+            onToggleStopOnRetap = { viewModel.onEvent(SoundsEvents.OnToggleStopOnRetap) },
+            onToggleStopOnNewSound = { viewModel.onEvent(SoundsEvents.OnToggleStopOnNewSound) },
+            onDismiss = { viewModel.onEvent(SoundsEvents.OnShowHidePlaybackBehaviorDialog) }
         )
     }
 }
@@ -370,6 +386,7 @@ fun SoundsScreenContent(
                 SoundItem(
                     item = sound,
                     index = index,
+                    playbackProgress = state.playbackProgress[sound.id],
                     onFav = {
                         onEvents(SoundsEvents.OnToggleFav(sound.id))
                     },

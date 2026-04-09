@@ -20,6 +20,7 @@ import audio.omgsoundboard.presentation.theme.OMGSoundboardTheme
 import audio.omgsoundboard.presentation.ui.about.AboutScreen
 import audio.omgsoundboard.presentation.ui.favorites.FavoritesScreen
 import audio.omgsoundboard.presentation.ui.main.MainScreen
+import audio.omgsoundboard.presentation.ui.playbackbehavior.PlaybackBehaviorScreen
 import audio.omgsoundboard.presentation.ui.sounds.SoundsScreen
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -76,6 +77,10 @@ class MainActivity : ComponentActivity() {
 
                         composable(route = Screens.AboutScreen.route){
                             AboutScreen()
+                        }
+
+                        composable(route = Screens.PlaybackBehaviorScreen.route){
+                            PlaybackBehaviorScreen()
                         }
                     }
                 }

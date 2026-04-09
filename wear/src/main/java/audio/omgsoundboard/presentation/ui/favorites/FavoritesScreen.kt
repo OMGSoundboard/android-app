@@ -59,6 +59,7 @@ fun FavoritesScreen(
             items(state.sounds, key = { it.id }) { sound ->
                 SoundItem(
                     item = sound,
+                    playbackProgress = state.playbackProgress[sound.id],
                     onPlay = {
                         viewModel.onEvent(FavoritesEvents.OnPlaySound(sound.id, sound.resId, sound.uri))
                     },

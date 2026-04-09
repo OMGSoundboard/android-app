@@ -2,11 +2,15 @@ package audio.omgsoundboard.presentation.ui.sounds
 
 import android.widget.Toast
 import androidx.compose.foundation.gestures.scrollBy
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -75,6 +79,7 @@ fun SoundsScreen(
             items(state.sounds, key = { it.id }) { sound ->
                 SoundItem(
                     item = sound,
+                    playbackProgress = state.playbackProgress[sound.id],
                     onPlay = {
                         viewModel.onEvent(SoundsEvents.OnPlaySound(sound.id, sound.resId, sound.uri))
                     },
@@ -95,29 +100,46 @@ fun SoundsScreen(
 @Composable
 fun SoundItem(
     item: PlayableSound,
+    playbackProgress: Float? = null,
     onPlay: () -> Unit,
     onFav: () -> Unit,
 ) {
     Card(modifier = Modifier.padding(vertical = 2.dp), onClick = onPlay) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = item.title,
-                textAlign = TextAlign.Start
-            )
-            Button(onClick = onFav) {
-                Icon(
-                    painter = painterResource(
-                        id = if (item.isFav) {
-                            R.drawable.fav
-                        } else {
-                            R.drawable.fav_outlined
-                        }
-                    ),
-                    contentDescription = null,
+        Box(modifier = Modifier.fillMaxWidth()) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = item.title,
+                    textAlign = TextAlign.Start
+                )
+                Button(onClick = onFav) {
+                    Icon(
+                        painter = painterResource(
+                            id = if (item.isFav) {
+                                R.drawable.fav
+                            } else {
+                                R.drawable.fav_outlined
+                            }
+                        ),
+                        contentDescription = null,
+                    )
+                }
+            }
+            if (playbackProgress != null) {
+                val animatedProgress by androidx.compose.animation.core.animateFloatAsState(
+                    targetValue = playbackProgress.coerceIn(0f, 1f),
+                    animationSpec = androidx.compose.animation.core.tween(durationMillis = 100),
+                    label = "playback_progress",
+                )
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .fillMaxWidth(animatedProgress)
+                        .height(2.dp)
+                        .background(androidx.wear.compose.material.MaterialTheme.colors.primary),
                 )
             }
         }

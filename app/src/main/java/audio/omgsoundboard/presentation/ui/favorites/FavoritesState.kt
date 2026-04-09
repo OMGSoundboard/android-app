@@ -10,4 +10,5 @@ data class FavoritesState(
     val textFieldValue: String = "",
     val textFieldError: Boolean = false,
     val showConfirmDeleteDialog: Boolean = false,
+    val playbackProgress: Map<Int, Float> = emptyMap(),
 )

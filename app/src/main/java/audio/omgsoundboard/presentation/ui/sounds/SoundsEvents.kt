@@ -37,4 +37,7 @@ sealed class SoundsEvents {
     object OnShowHideThemePicker : SoundsEvents()
     data class OnChangeTheme(val theme: ThemeType) : SoundsEvents()
     data class OnNavigate(val route: String) : SoundsEvents()
+    object OnShowHidePlaybackBehaviorDialog : SoundsEvents()
+    object OnToggleStopOnRetap : SoundsEvents()
+    object OnToggleStopOnNewSound : SoundsEvents()
 }

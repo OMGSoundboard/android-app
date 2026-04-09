@@ -22,6 +22,7 @@ import audio.omgsoundboard.core.utils.Constants
 import audio.omgsoundboard.presentation.composables.Chip
 import audio.omgsoundboard.presentation.navigation.DrawerParams
 import audio.omgsoundboard.presentation.navigation.Screens
+import audio.omgsoundboard.core.utils.Constants.OPTIONS_PLAYBACK_BEHAVIOR
 import kotlinx.coroutines.launch
 
 @Composable
@@ -75,6 +76,10 @@ fun MainScreen(
             items(DrawerParams.drawerOptions) {
                 Chip(icon = it.drawableId, title = stringResource(it.title)) {
                     when (it.action) {
+                        OPTIONS_PLAYBACK_BEHAVIOR -> {
+                            onNavigate(Screens.PlaybackBehaviorScreen.route)
+                        }
+
                         Constants.OPTIONS_ABOUT -> {
                             onNavigate(Screens.AboutScreen.route)
                         }

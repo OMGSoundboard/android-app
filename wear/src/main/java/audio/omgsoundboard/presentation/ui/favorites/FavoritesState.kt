@@ -5,4 +5,5 @@ import audio.omgsoundboard.core.domain.models.PlayableSound
 
 data class FavoritesState(
     val sounds : List<PlayableSound> = emptyList(),
+    val playbackProgress: Map<Int, Float> = emptyMap(),
 )

@@ -34,6 +34,8 @@ class FavoritesViewModel @Inject constructor(
         state.copy(
             sounds = sounds.map { it.toDomain() }
         )
+    }.combine(player.playbackProgress) { state, progress ->
+        state.copy(playbackProgress = progress)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), FavoritesState())
 
 

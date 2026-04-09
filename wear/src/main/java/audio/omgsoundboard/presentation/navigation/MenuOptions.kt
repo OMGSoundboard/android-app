@@ -16,6 +16,12 @@ data class DrawerItemModel(
 object DrawerParams {
     val drawerOptions = arrayListOf(
         DrawerItemModel(
+            Screens.PlaybackBehaviorScreen,
+            Constants.OPTIONS_PLAYBACK_BEHAVIOR,
+            R.string.options_playback_behavior,
+            R.drawable.tune,
+        ),
+        DrawerItemModel(
             Screens.AboutScreen,
             Constants.OPTIONS_ABOUT,
             R.string.options_about,

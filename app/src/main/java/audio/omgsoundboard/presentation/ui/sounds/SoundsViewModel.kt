@@ -15,6 +15,8 @@ import audio.omgsoundboard.core.domain.repository.MediaManager
 import audio.omgsoundboard.core.domain.repository.PlayerRepository
 import audio.omgsoundboard.core.domain.repository.StorageRepository
 import audio.omgsoundboard.core.utils.Constants.PARTICLES_STATUS
+import audio.omgsoundboard.core.utils.Constants.STOP_ON_NEW_SOUND
+import audio.omgsoundboard.core.utils.Constants.STOP_ON_RETAP
 import audio.omgsoundboard.core.utils.Constants.THEME_TYPE
 import audio.omgsoundboard.domain.repository.SharedPrefRepository
 import audio.omgsoundboard.presentation.theme.ThemeType
@@ -85,6 +87,8 @@ class SoundsViewModel @Inject constructor(
             searchTerm = search,
             wearNodes = wearNodes
         )
+    }.combine(player.playbackProgress) { state, progress ->
+        state.copy(playbackProgress = progress)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), SoundsState())
 
     private val _uiEvent = Channel<UiEvent>()
@@ -210,6 +214,18 @@ class SoundsViewModel @Inject constructor(
 
             is SoundsEvents.OnNavigate -> {
                 sendUiEvent(UiEvent.Navigate(event.route))
+            }
+
+            is SoundsEvents.OnShowHidePlaybackBehaviorDialog -> {
+                _state.value = _state.value.copy(showPlaybackBehaviorDialog = !_state.value.showPlaybackBehaviorDialog)
+            }
+
+            is SoundsEvents.OnToggleStopOnRetap -> {
+                toggleStopOnRetap()
+            }
+
+            is SoundsEvents.OnToggleStopOnNewSound -> {
+                toggleStopOnNewSound()
             }
         }
     }
@@ -380,14 +396,34 @@ class SoundsViewModel @Inject constructor(
         }
     }
 
+    private fun toggleStopOnRetap() {
+        viewModelScope.launch {
+            val new = !_state.value.stopOnRetap
+            shared.putBooleanPair(STOP_ON_RETAP, new)
+            _state.value = _state.value.copy(stopOnRetap = new)
+        }
+    }
+
+    private fun toggleStopOnNewSound() {
+        viewModelScope.launch {
+            val new = !_state.value.stopOnNewSound
+            shared.putBooleanPair(STOP_ON_NEW_SOUND, new)
+            _state.value = _state.value.copy(stopOnNewSound = new)
+        }
+    }
+
     private fun getUserPreferences() {
         viewModelScope.launch {
             val themePref = shared.getStringPair(THEME_TYPE, ThemeType.DARK.name)
             val particlesPref = shared.getBooleanPair(PARTICLES_STATUS, false)
+            val stopOnRetap = shared.getBooleanPair(STOP_ON_RETAP, false)
+            val stopOnNewSound = shared.getBooleanPair(STOP_ON_NEW_SOUND, false)
 
             _state.value = _state.value.copy(
                 pickedTheme = toThemeType(themePref),
-                areParticlesEnable = particlesPref
+                areParticlesEnable = particlesPref,
+                stopOnRetap = stopOnRetap,
+                stopOnNewSound = stopOnNewSound
             )
         }
     }

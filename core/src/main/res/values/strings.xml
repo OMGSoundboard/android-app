@@ -34,6 +34,11 @@
     <string name="options_particles">Particles</string>
     <string name="options_theme_picker">Theme Picker</string>
     <string name="options_about">About</string>
+    <string name="options_playback_behavior">Playback behavior</string>
+    <string name="stop_on_retap">Stop on re-tap</string>
+    <string name="stop_on_retap_desc">Tapping a playing sound again will stop it</string>
+    <string name="stop_on_new_sound">Stop on new sound</string>
+    <string name="stop_on_new_sound_desc">Playing a new sound will stop the current one</string>
 
     <string name="about_header">OMGSoundboard is a full soundboard app that will make your day a little brighter</string>
 

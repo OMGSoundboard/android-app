@@ -42,6 +42,8 @@ class SoundsScreenViewModel @Inject constructor(
             sounds = sounds.map { it.toDomain() },
             currentCategoryId = categoryId
         )
+    }.combine(player.playbackProgress) { state, progress ->
+        state.copy(playbackProgress = progress)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), SoundsState())
 
     fun onEvent(event: SoundsEvents){

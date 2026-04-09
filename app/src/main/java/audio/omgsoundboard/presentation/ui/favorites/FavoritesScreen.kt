@@ -104,6 +104,7 @@ fun FavoritesScreenContent(
                 SoundItem(
                     item = sound,
                     index = index,
+                    playbackProgress = state.playbackProgress[sound.id],
                     onFav = {
                         onEvents(FavoritesEvents.OnToggleFav(sound.id))
                     },

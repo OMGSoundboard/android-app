@@ -37,6 +37,7 @@ import audio.omgsoundboard.core.domain.models.Category
 import audio.omgsoundboard.core.utils.Constants
 import audio.omgsoundboard.core.utils.Constants.OPTIONS_CATEGORY
 import audio.omgsoundboard.core.utils.Constants.OPTIONS_PARTICLES
+import audio.omgsoundboard.core.utils.Constants.OPTIONS_PLAYBACK_BEHAVIOR
 import audio.omgsoundboard.core.utils.Constants.OPTIONS_THEME_PICKER
 import kotlinx.coroutines.launch
 
@@ -261,6 +262,14 @@ object DrawerParams {
             false,
             R.string.options_theme_picker,
             R.drawable.color_picker,
+        ),
+        DrawerItemModel(
+            null,
+            OPTIONS_PLAYBACK_BEHAVIOR,
+            null,
+            false,
+            R.string.options_playback_behavior,
+            R.drawable.tune,
         ),
         DrawerItemModel(
             -2,

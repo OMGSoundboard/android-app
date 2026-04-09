@@ -14,22 +14,73 @@ import audio.omgsoundboard.core.R
 import audio.omgsoundboard.core.domain.models.SoundWithUri
 import audio.omgsoundboard.core.domain.repository.MediaManager
 import audio.omgsoundboard.core.domain.repository.PlayerRepository
+import audio.omgsoundboard.core.utils.Constants.STOP_ON_NEW_SOUND
+import audio.omgsoundboard.core.utils.Constants.STOP_ON_RETAP
 import audio.omgsoundboard.core.utils.getTitleFromUri
 import audio.omgsoundboard.core.utils.getUriPath
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 
 class PlayerRepositoryImpl @Inject constructor(
     private val context: Context,
 ) : PlayerRepository {
 
+    private val sharedPref = context.getSharedPreferences("user_preferences", Context.MODE_PRIVATE)
+    private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     private val mediaPlayerList = mutableMapOf<Int, MediaPlayer>()
+    private val progressJobs = mutableMapOf<Int, Job>()
+    private val _playbackProgress = MutableStateFlow<Map<Int, Float>>(emptyMap())
+    override val playbackProgress: StateFlow<Map<Int, Float>> = _playbackProgress.asStateFlow()
+
+    private fun startProgressPolling(index: Int) {
+        progressJobs[index]?.cancel()
+        progressJobs[index] = scope.launch {
+            try {
+                while (true) {
+                    val mp = mediaPlayerList[index] ?: break
+                    try {
+                        val duration = mp.duration
+                        val position = mp.currentPosition
+                        if (duration > 0) {
+                            _playbackProgress.value += (index to position.toFloat() / duration.toFloat())
+                        }
+                    } catch (_: IllegalStateException) {
+                        break
+                    }
+                    delay(100)
+                }
+            } finally {
+                _playbackProgress.value -= index
+                progressJobs.remove(index)
+            }
+        }
+    }
+
+    private fun stopSound(index: Int) {
+        progressJobs[index]?.cancel()
+        progressJobs.remove(index)
+        mediaPlayerList[index]?.apply { reset(); release() }
+        mediaPlayerList.remove(index)
+        _playbackProgress.value -= index
+    }
 
     override fun playFile(index: Int, resourceId: Int?, uri: Uri) {
         if (uri == Uri.EMPTY && resourceId == null) return
+
+        val stopOnRetap = sharedPref.getBoolean(STOP_ON_RETAP, false)
+        val stopOnNewSound = sharedPref.getBoolean(STOP_ON_NEW_SOUND, false)
 
         val playerUri = if (uri == Uri.EMPTY) {
             getUriPath(context, resourceId!!)
@@ -38,28 +89,22 @@ class PlayerRepositoryImpl @Inject constructor(
         }
 
         if (mediaPlayerList.contains(index)) {
-            mediaPlayerList[index]?.apply {
-                reset()
-                release()
-            }
-            mediaPlayerList.remove(index)
+            stopSound(index)
+            if (stopOnRetap) return
+            // stopOnRetap is false: fall through to restart the sound
         }
 
-        if (mediaPlayerList.contains(index)) {
-            mediaPlayerList[index]?.apply {
-                reset()
-                release()
-            }
-            mediaPlayerList.remove(index)
-        } else {
-            val mediaPlayer = MediaPlayer.create(context, playerUri) ?: return
-            mediaPlayerList[index] = mediaPlayer
-            mediaPlayer.start()
-            mediaPlayer.setOnCompletionListener {
-                mediaPlayerList[index]?.reset()
-                mediaPlayerList.remove(index)
-                mediaPlayer.release()
-            }
+        if (stopOnNewSound) {
+            val indices = mediaPlayerList.keys.toList()
+            indices.forEach { stopSound(it) }
+        }
+
+        val mediaPlayer = MediaPlayer.create(context, playerUri) ?: return
+        mediaPlayerList[index] = mediaPlayer
+        mediaPlayer.start()
+        startProgressPolling(index)
+        mediaPlayer.setOnCompletionListener {
+            stopSound(index)
         }
     }
 
