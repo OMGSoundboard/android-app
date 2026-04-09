@@ -90,6 +90,9 @@ android {
      aaptOptions {
         cruncherEnabled = false
     }
+    androidResources {
+        generateLocaleConfig = true
+    }
 }
 
 dependencies {
