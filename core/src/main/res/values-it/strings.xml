@@ -72,7 +72,7 @@
     <string name="text_style_heading">Stile Testo</string>
     <string name="font_color_label">Colore Font</string>
     <string name="onboarding_text_3">Tieni premuto su un suono per condividerlo, impostarlo come suoneria, notifica o allarme</string>
-    <string name="onboarding_text_6">Di default l\'aspetto segue il tuo sistema ma sentiti libero di cambiarlo</string>
+    <string name="onboarding_text_8">Di default l\'aspetto segue il tuo sistema ma sentiti libero di cambiarlo</string>
     <string name="category_music">Musica</string>
     <string name="category_custom">Personali</string>
     <string name="theme_dark">Scuro</string>

@@ -62,11 +62,11 @@
     <string name="onboarding_back">Zurück</string>
     <string name="onboarding_skip">Überspringen</string>
     <string name="onboarding_finish">Fertig</string>
-    <string name="onboarding_text_7">Schau gerne im Menüpunkt Über vorbei, um mehr über das Soundboard sowie Möglichkeiten zum Beitragen zu erfahren</string>
+    <string name="onboarding_text_9">Schau gerne im Menüpunkt Über vorbei, um mehr über das Soundboard sowie Möglichkeiten zum Beitragen zu erfahren</string>
     <string name="onboarding_text_5">Exportiere ein Backup deiner eigenen Sounds, stelle es auf einem beliebigen Gerät wieder her oder teile es mit deiner Familie und Freunden</string>
     <string name="onboarding_text_3">Halte einen Sound lange gedrückt, um diesen zu teilen oder als Klingelton, Benachrichtigung oder Wecker einzustellen</string>
-    <string name="onboarding_text_2">Markiere deine Lieblingsmelodien mit einem Herz</string>
-    <string name="onboarding_text_6">Das Design folgt der Einstellung des Gerätes, kann aber auch angepasst werden</string>
+    <string name="onboarding_text_7">Markiere deine Lieblingsmelodien mit einem Herz</string>
+    <string name="onboarding_text_8">Das Design folgt der Einstellung des Gerätes, kann aber auch angepasst werden</string>
     <string name="permission_cancel">Abbrechen</string>
     <string name="rename">Umbenennen</string>
     <string name="delete">Löschen</string>

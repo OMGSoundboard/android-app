@@ -5,11 +5,11 @@
     <string name="onboarding_back">Geri</string>
     <string name="onboarding_next">İleri</string>
     <string name="onboarding_finish">Bitir</string>
-    <string name="onboarding_text_2">Favori melodilerinizi işaretlemek için kalp ikonuna dokunun</string>
+    <string name="onboarding_text_7">Favori melodilerinizi işaretlemek için kalp ikonuna dokunun</string>
     <string name="onboarding_text_3">Bir sesi paylaşmak için üzerine basılı tutun, zil sesi, bildirim veya alarm olarak ayarlayın</string>
     <string name="onboarding_text_4">Özel seslerinizi ses panosuna ekleyebilirsiniz</string>
-    <string name="onboarding_text_6">Varsayılan olarak uygulama teması, sisteminizi takip eder ancak bunu değiştirebilirsiniz</string>
-    <string name="onboarding_text_7">Uygulama ve yardım olanakları hakkında daha fazla bilgi edinmek için \"Hakkında\" bölümüne göz atabilirsiniz</string>
+    <string name="onboarding_text_8">Varsayılan olarak uygulama teması, sisteminizi takip eder ancak bunu değiştirebilirsiniz</string>
+    <string name="onboarding_text_9">Uygulama ve yardım olanakları hakkında daha fazla bilgi edinmek için \"Hakkında\" bölümüne göz atabilirsiniz</string>
     <string name="favorites_title">Favoriler</string>
     <string name="about_title">Hakkında</string>
     <string name="custom_title">Varsayılan</string>

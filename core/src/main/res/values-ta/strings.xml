@@ -3,10 +3,10 @@
     <string name="app_name">ௐஒலிஅட்டை</string>
     <string name="onboarding_skip">தவிர்</string>
     <string name="onboarding_text_1">அவற்றை விளையாட/நிறுத்த ஒலிகளைத் தட்டவும், ஒலிகளை ஒன்றுடன் ஒன்று தட்டவும்</string>
-    <string name="onboarding_text_2">உங்களுக்கு பிடித்த தாளங்களைக் குறிக்க இதயத்தை அழுத்தவும்</string>
+    <string name="onboarding_text_7">உங்களுக்கு பிடித்த தாளங்களைக் குறிக்க இதயத்தை அழுத்தவும்</string>
     <string name="onboarding_text_4">உங்கள் தனிப்பயன் ஒலிகளை சவுண்ட்போர்டில் சேர்க்கலாம்</string>
     <string name="onboarding_text_5">உங்கள் தனிப்பயன் ஒலிகளின் காப்புப்பிரதியை ஏற்றுமதி செய்து அவற்றை எந்த சாதனத்திலும் மீட்டெடுக்கவும் அல்லது அவற்றை உங்கள் குடும்பத்தினருடனும் நண்பர்களுடனும் பகிர்ந்து கொள்ளுங்கள்</string>
-    <string name="onboarding_text_6">இயல்பாகவே வடிவமைப்பு உங்கள் கணினியைப் பின்பற்றுகிறது, ஆனால் அதை மாற்ற வரவேற்கப்படுகிறது</string>
+    <string name="onboarding_text_8">இயல்பாகவே வடிவமைப்பு உங்கள் கணினியைப் பின்பற்றுகிறது, ஆனால் அதை மாற்ற வரவேற்கப்படுகிறது</string>
     <string name="favorites_title">பிடித்தவை</string>
     <string name="about_title">பற்றி</string>
     <string name="custom_title">தனிப்பயன்</string>
@@ -87,7 +87,7 @@
     <string name="onboarding_next">அடுத்தது</string>
     <string name="onboarding_finish">முடிக்க</string>
     <string name="onboarding_text_3">அதைப் பகிர ஒரு ஒலியைப் பிடித்துக் கொள்ளுங்கள், அதை அழைப்புத்தொனி, அறிவிப்பு அல்லது எழுப்பொலியென அமை</string>
-    <string name="onboarding_text_7">சவுண்ட்போர்டு மற்றும் உதவுவதற்கான சாத்தியக்கூறுகள் பற்றி மேலும் அறிய திரையை சரிபார்க்க வரவேற்பைப் பாருங்கள்</string>
+    <string name="onboarding_text_9">சவுண்ட்போர்டு மற்றும் உதவுவதற்கான சாத்தியக்கூறுகள் பற்றி மேலும் அறிய திரையை சரிபார்க்க வரவேற்பைப் பாருங்கள்</string>
     <string name="notification_set">அறிவிப்பாக ஒலி அமைக்கப்படுகிறது</string>
     <string name="sounds_added">ஒலிகள் வெற்றிகரமாக சேர்க்கப்பட்டுள்ளன.</string>
     <string name="sync">ஒத்திசைவு</string>

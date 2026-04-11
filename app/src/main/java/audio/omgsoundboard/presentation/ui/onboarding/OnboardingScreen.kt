@@ -54,7 +54,8 @@ fun OnboardingScreen(
                 Text(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     text = stringResource(id = OnboardingElements.elements[index].description),
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onBackground,
                 )
                 if (OnboardingElements.elements[index].showPermissionButton){
                     Button(onClick = {
@@ -80,6 +81,7 @@ fun OnboardingScreen(
                 Text(
                     modifier = Modifier.padding(8.dp),
                     text = stringResource(id = R.string.onboarding_skip),
+                    color = MaterialTheme.colorScheme.onBackground,
                     textAlign = TextAlign.Center
                 )
             }
@@ -103,6 +105,7 @@ fun OnboardingScreen(
                             }
                         },
                     text = stringResource(id = R.string.onboarding_back),
+                    color = MaterialTheme.colorScheme.onBackground,
                     textAlign = TextAlign.Center
                 )
             }
@@ -134,7 +137,8 @@ fun OnboardingScreen(
                         R.string.onboarding_finish
                     }
                 ),
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onBackground
             )
         }
     }
@@ -219,6 +223,14 @@ object OnboardingElements {
         OnboardingModel(
             description = R.string.onboarding_text_7,
             drawableId = audio.omgsoundboard.R.drawable.onboarding_img_7
+        ),
+        OnboardingModel(
+            description = R.string.onboarding_text_8,
+            drawableId = audio.omgsoundboard.R.drawable.onboarding_img_8
+        ),
+        OnboardingModel(
+            description = R.string.onboarding_text_9,
+            drawableId = audio.omgsoundboard.R.drawable.onboarding_img_9
         )
     )
 }

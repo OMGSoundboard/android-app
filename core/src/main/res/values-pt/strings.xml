@@ -5,12 +5,12 @@
     <string name="onboarding_back">Voltar</string>
     <string name="onboarding_next">Próximo</string>
     <string name="onboarding_text_1">Toque nos sons para tocá-los/pará-los, toque em mais de um para sobrepor os sons</string>
-    <string name="onboarding_text_2">Pressione o ícone de coração para marcar seus sons favoritos</string>
+    <string name="onboarding_text_7">Pressione o ícone de coração para marcar seus sons favoritos</string>
     <string name="onboarding_text_3">Mantenha um som pressionado para compartilhá-lo, definir como toque do telefone, som de notificação ou alarme</string>
     <string name="onboarding_text_4">Você pode adicionar seus próprios sons personalizados à mesa de som</string>
     <string name="onboarding_text_5">Exporte uma cópia de segurança dos seus sons personalizados e restaure-os em qualquer dispositivo ou compartilhe-os com sua família e amigos</string>
-    <string name="onboarding_text_6">Por padrão, a aparência do aplicativo segue seu sistema, mas sinta-se livre para alterá-la</string>
-    <string name="onboarding_text_7">Sinta-se livre para olhar a página Sobre para saber mais sobre a mesa de som e possibilidades para ajudar</string>
+    <string name="onboarding_text_8">Por padrão, a aparência do aplicativo segue seu sistema, mas sinta-se livre para alterá-la</string>
+    <string name="onboarding_text_9">Sinta-se livre para olhar a página Sobre para saber mais sobre a mesa de som e possibilidades para ajudar</string>
     <string name="favorites_title">Favoritos</string>
     <string name="custom_title">Personalizado</string>
     <string name="category_all">Tudo</string>
