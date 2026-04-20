@@ -92,4 +92,23 @@
     <string name="sync_wearable">Wearable synchronisieren</string>
     <string name="data_synced">Kategorien und Töne wurde an das Wearable übermittelt. Um die Synchronisierung abzuschließen, tippe bitte auf \'Synchronisieren\' auf dem Wearable. So wird sichergestellt, dass alles aktuell und einsatzbereit ist.</string>
     <string name="data_synced_confirm">Daten erfolgreich synchronisiert.</string>
+    <string name="options_playback_behavior">Wiedergabeverhalten</string>
+    <string name="stop_on_retap">Bei erneutem Antippen anhalten</string>
+    <string name="stop_on_retap_desc">Wenn erneut auf den abgespielten Ton getippt wird, wird er pausiert</string>
+    <string name="stop_on_new_sound">Bei neuem Ton anhalten</string>
+    <string name="stop_on_new_sound_desc">Abspielen eines neuen Tons stoppt den aktuellen Ton</string>
+    <string name="tap_to_configure">Zum Konfigurieren antippen</string>
+    <string name="widget_config_title">Widget anpassen</string>
+    <string name="action_done">Erledigt</string>
+    <string name="tab_sound">Ton</string>
+    <string name="select_sound_heading">Ton für das Widget auswählen</string>
+    <string name="widget_preview_heading">Widget-Vorschau</string>
+    <string name="background_heading">Hintergrund</string>
+    <string name="background_color">Farbe</string>
+    <string name="background_image">Bild</string>
+    <string name="text_style_heading">Textformat</string>
+    <string name="font_size_label">Schriftgröße: %1$d sp</string>
+    <string name="font_color_label">Schriftfarbe</string>
+    <string name="onboarding_text_6">Füge Widgets zum Startbildschirm hinzu, um die Töne abzuspielen</string>
+    <string name="onboarding_text_2">Oder konfiguriere das gewünschte Wiedergabeverhalten</string>
 </resources>
