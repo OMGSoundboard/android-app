@@ -84,6 +84,11 @@ class StorageRepositoryImpl @Inject constructor(
 
                         entry.name.endsWith(".mp3") -> {
                             val extractedFile = File(privateFolder, entry.name)
+                            val normalizedPath = extractedFile.toPath().normalize()
+                            val targetDirPath = privateFolder.toPath().normalize()
+                            if (!normalizedPath.startsWith(targetDirPath)) {
+                                throw IllegalArgumentException("Bad zip entry: ${entry.name}")
+                            }
                             FileOutputStream(extractedFile).use { output ->
                                 zipIn.copyTo(output)
                             }
