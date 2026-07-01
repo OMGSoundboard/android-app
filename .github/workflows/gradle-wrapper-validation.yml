@@ -15,6 +15,6 @@ jobs:
       contents: read
     steps:
       - name: Checkout latest code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Validate Gradle Wrapper
         uses: gradle/actions/wrapper-validation@v6
