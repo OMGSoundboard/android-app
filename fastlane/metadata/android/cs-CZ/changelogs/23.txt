@@ -1,0 +1,8 @@
+- 🛑 Novinka: tlačítko Zastavit pro delší zvuky
+- 🐛 Opravy chyb
+- ⚙️ Aktualizace závislostí
+- 🗺️ Aktualizace překladů
+
+Mnohokrát děkujeme všem přispěvatelům, překladatelům, IzzyOnDroidu, týmu F-Droidu a @Rashxz! 😘
+Budeme rádi, když pomůžete s překlady na https://hosted.weblate.org/engage/omgsoundboard/. 👍
+Více o reprodukovatelných sestaveních: https://reproducible-builds.org/. 💌

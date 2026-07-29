@@ -1,0 +1,6 @@
+- Podmínky používání byly z aplikace odstraněny, aby bylo jasné, že aplikace je hrdě svobodná a FOSS 🥰
+- Aktualizace závislostí ⚙️
+- Aktualizace překladů 🗺️
+
+Mnohokrát děkujeme všem přispěvatelům a týmu F-Droidu! 😘
+Budeme rádi, když pomůžete s překlady na https://hosted.weblate.org/engage/omgsoundboard/. 👍
