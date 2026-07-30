@@ -1,0 +1,2 @@
+- Cíl: Android 13 🤖
+- Aktualizace závislostí ⚙️

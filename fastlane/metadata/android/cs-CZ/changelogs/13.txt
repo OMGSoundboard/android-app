@@ -1,0 +1,6 @@
+- 🗺️ Aktualizace překladů
+- ⚙️ Aktualizace sestavení (např. Gradle Wrapper pro reprodukovatelná sestavení, varianta `foss` a pojmenované výstupy)
+- 🎨 Vylepšení rozhraní Wear OS od Googlu
+
+Mnohokrát děkujeme všem přispěvatelům, překladatelům, IzzyOnDroidu, týmu F-Droidu a @Rashxz! 😘
+Budeme rádi, když pomůžete s překlady na https://hosted.weblate.org/engage/omgsoundboard/. 👍

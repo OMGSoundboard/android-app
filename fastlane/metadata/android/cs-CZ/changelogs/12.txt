@@ -1,0 +1,10 @@
+- 📁 Import více souborů (nebo složky) najednou
+- 🎨 Úprava kategorií a přejmenování zvuků (název souboru je ve výchozím nastavení názvem zvuku)
+- 🚮 Nyní lze odstranit zvuky
+- 🤖 Cíl: Android 15
+- 🐛 Opravy chyb
+- ⚙️ Aktualizace závislostí
+- 🗺️ Aktualizace překladů
+
+Mnohokrát děkujeme všem přispěvatelům, IzzyOnDroidu a týmu F-Droidu! 😘
+Budeme rádi, když pomůžete s překlady na https://hosted.weblate.org/engage/omgsoundboard/. 👍

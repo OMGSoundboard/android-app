@@ -1,0 +1,1 @@
+- Odstraněno nepotřebné oprávnění k internetu
