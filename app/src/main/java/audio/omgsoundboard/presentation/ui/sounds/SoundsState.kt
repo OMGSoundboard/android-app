@@ -20,6 +20,7 @@ data class SoundsState(
     val showChangeCategoryDialog: Boolean = false,
     val isRenaming: Boolean = false,
     val addedSoundUri: Uri? = Uri.EMPTY,
+    /** Selected file extension for a sound being added. */
     val addedSoundExtension: String = DEFAULT_AUDIO_EXTENSION,
     val textFieldValue: String = "",
     val textFieldError: Boolean = false,

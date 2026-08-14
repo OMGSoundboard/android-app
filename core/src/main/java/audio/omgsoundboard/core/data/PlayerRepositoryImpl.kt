@@ -200,6 +200,23 @@ class PlayerRepositoryImpl @Inject constructor(
         knownSoundKeys: MutableSet<String>,
         addedInBatch: MutableSet<String>,
     ): SoundWithUri? {
+        val candidate = parseImportCandidate(uri) ?: return null
+        if (shouldSkipImport(candidate, knownSoundKeys, addedInBatch)) {
+            return null
+        }
+
+        val outputFile = File(
+            context.filesDir,
+            buildSoundFileName(candidate.title, candidate.extension)
+        )
+        if (outputFile.exists()) {
+            return null
+        }
+
+        return persistImportedSound(uri, candidate, outputFile, knownSoundKeys, addedInBatch)
+    }
+
+    private fun parseImportCandidate(uri: Uri): SoundImportCandidate? {
         val title = getTitleFromUri(context, uri) ?: ""
         val extension = getExtensionFromUri(context, uri) ?: return null
         val normalizedTitle = normalizeSoundTitle(title)
@@ -209,42 +226,55 @@ class PlayerRepositoryImpl @Inject constructor(
             return null
         }
 
-        val soundKey = soundFileKey(normalizedTitle, normalizedExtension)
-        if (isDuplicateSoundFile(normalizedTitle, normalizedExtension, knownSoundKeys) ||
-            !addedInBatch.add(soundKey)
-        ) {
-            return null
-        }
-
-        val outputFile = File(
-            context.filesDir,
-            buildSoundFileName(normalizedTitle, normalizedExtension)
+        return SoundImportCandidate(
+            title = normalizedTitle,
+            extension = normalizedExtension,
+            soundKey = soundFileKey(normalizedTitle, normalizedExtension),
         )
-        if (outputFile.exists()) {
-            return null
-        }
+    }
 
+    private fun shouldSkipImport(
+        candidate: SoundImportCandidate,
+        knownSoundKeys: Set<String>,
+        addedInBatch: MutableSet<String>,
+    ): Boolean {
+        return isDuplicateSoundFile(candidate.title, candidate.extension, knownSoundKeys) ||
+            !addedInBatch.add(candidate.soundKey)
+    }
+
+    private fun persistImportedSound(
+        uri: Uri,
+        candidate: SoundImportCandidate,
+        outputFile: File,
+        knownSoundKeys: MutableSet<String>,
+        addedInBatch: MutableSet<String>,
+    ): SoundWithUri? {
         val inputStream = context.contentResolver.openInputStream(uri) ?: run {
-            addedInBatch.remove(soundKey)
+            addedInBatch.remove(candidate.soundKey)
             return null
         }
 
         return inputStream.use { stream ->
             if (!copyStreamToFile(stream, outputFile)) {
-                addedInBatch.remove(soundKey)
+                addedInBatch.remove(candidate.soundKey)
                 return null
             }
 
-            knownSoundKeys.add(soundKey)
-            FileProvider.getUriForFile(
+            knownSoundKeys.add(candidate.soundKey)
+            val fileUri = FileProvider.getUriForFile(
                 context,
                 "audio.omgsoundboard.provider",
                 outputFile
-            ).let { fileUri ->
-                SoundWithUri(normalizedTitle, fileUri, normalizedExtension)
-            }
+            )
+            SoundWithUri(candidate.title, fileUri, candidate.extension)
         }
     }
+
+    private data class SoundImportCandidate(
+        val title: String,
+        val extension: String,
+        val soundKey: String,
+    )
 
     private fun resolveSoundMediaUri(
         cUri: Uri,
@@ -266,6 +296,17 @@ class PlayerRepositoryImpl @Inject constructor(
         uri: Uri,
         mediaType: Int,
     ) {
+        val values = createLegacyMediaValues(type, fileName, extension, uri)
+        val mediaUri = insertLegacyMediaUri(uri, values)
+        RingtoneManager.setActualDefaultRingtoneUri(context, mediaType, mediaUri)
+    }
+
+    private fun createLegacyMediaValues(
+        type: MediaManager,
+        fileName: String,
+        extension: String,
+        uri: Uri,
+    ): ContentValues {
         val values = ContentValues().apply {
             put(MediaStore.MediaColumns.DATA, uri.path)
             put(MediaStore.MediaColumns.TITLE, fileName)
@@ -274,15 +315,17 @@ class PlayerRepositoryImpl @Inject constructor(
             put(AudioColumns.IS_MUSIC, false)
         }
         applyLegacyMediaTypeFlags(type, values)
+        return values
+    }
 
+    private fun insertLegacyMediaUri(uri: Uri, values: ContentValues): Uri? {
         val url = MediaStore.Audio.Media.getContentUriForPath(uri.path!!)
         context.contentResolver.delete(
             url!!,
             MediaStore.MediaColumns.DATA + "=\"" + uri.path + "\"",
             null
         )
-        val mediaUri = context.contentResolver.insert(url, values)
-        RingtoneManager.setActualDefaultRingtoneUri(context, mediaType, mediaUri)
+        return context.contentResolver.insert(url, values)
     }
 
     private fun applyLegacyMediaTypeFlags(type: MediaManager, values: ContentValues) {

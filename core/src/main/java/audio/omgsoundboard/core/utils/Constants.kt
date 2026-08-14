@@ -20,6 +20,8 @@ object Constants {
     const val WEAR_CAPABILITY = "omgsoundboard_wear"
     const val METADATA_PATH = "/metadata"
     const val METADATA_KEY = "metadata_key"
+    /** Wear channel prefix for transferring audio files. */
     const val AUDIO_TRANSFER_PREFIX = "/audio_transfer"
+    /** Legacy Wear channel prefix retained for older phone builds. */
     const val LEGACY_MP3_TRANSFER_PREFIX = "/mp3_transfer"
 }

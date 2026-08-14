@@ -21,10 +21,12 @@ sealed class SoundsEvents {
     data class OnSetAsNotification(val sound: PlayableSound) : SoundsEvents()
     object OnShowHideChangeCategoryDialog: SoundsEvents()
     data class OnConfirmSoundCategoryChange(val soundId: Int, val categoryId: Int): SoundsEvents()
+    /** Opens the add/rename dialog for a picked sound. */
     data class OnShowHideAddRenameSoundDialog(
         val initialText: String,
         val isRenaming: Boolean,
         val uri: Uri = Uri.EMPTY,
+        /** File extension without a leading dot. */
         val extension: String = DEFAULT_AUDIO_EXTENSION,
     ) : SoundsEvents()
 

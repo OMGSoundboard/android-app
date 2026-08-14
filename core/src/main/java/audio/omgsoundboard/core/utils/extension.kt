@@ -10,6 +10,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 
+/** Reads the display name for a content [uri], when available. */
 fun getDisplayNameFromUri(context: Context, uri: Uri): String? {
     val cursor = context.contentResolver.query(
         uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null
