@@ -34,6 +34,7 @@ inline fun <T1, T2, T3, T4, T5, T6, T7, R> combine(
     }
 }
 
+/** Combines six flows into a single transformed flow. */
 inline fun <T1, T2, T3, T4, T5, T6, R> combine(
     flow: Flow<T1>,
     flow2: Flow<T2>,

@@ -17,6 +17,7 @@ import audio.omgsoundboard.core.R
 import audio.omgsoundboard.presentation.theme.ThemeType
 
 @Composable
+/** Dialog for choosing the app theme. */
 fun ThemePicker(
     selectedThemeType: ThemeType,
     pickTheme: (ThemeType) -> Unit,
@@ -76,6 +77,7 @@ fun ThemePicker(
 
 
 @Composable
+/** Shared single-choice row used by picker dialogs. */
 fun Radio(text: String, isSelected: Boolean, onClick: () -> Unit) {
     Row(
         modifier = Modifier

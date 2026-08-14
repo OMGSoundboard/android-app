@@ -34,6 +34,8 @@ data class SoundsState(
     val stopOnRetap: Boolean = false,
     val stopOnNewSound: Boolean = false,
     val showPlaybackBehaviorDialog: Boolean = false,
+    /** Whether the sort picker dialog is visible. */
     val showSortPicker: Boolean = false,
+    /** Current sort order applied to the sound list. */
     val soundSortOrder: SoundSortOrder = SoundSortOrder.TITLE_ASC,
 )

@@ -3,6 +3,7 @@ package audio.omgsoundboard.core.domain.models
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
+/** Unit tests for [SoundSortOrder]. */
 class SoundSortOrderTest {
 
     @Test

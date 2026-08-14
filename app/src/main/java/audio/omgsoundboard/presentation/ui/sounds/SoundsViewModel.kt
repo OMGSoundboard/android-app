@@ -120,6 +120,7 @@ class SoundsViewModel @Inject constructor(
         ::dispatchSoundCrudEvent,
         ::dispatchMenuPreferenceEvent,
         ::dispatchPlaybackPreferenceEvent,
+        ::dispatchSortEvent,
         ::dispatchNavigationEvent,
     )
 
@@ -286,6 +287,18 @@ class SoundsViewModel @Inject constructor(
         else -> false
     }
 
+    private fun dispatchSortEvent(event: SoundsEvents): Boolean = when (event) {
+        is SoundsEvents.OnShowHideSortPicker -> {
+            _state.value = _state.value.copy(showSortPicker = !_state.value.showSortPicker)
+            true
+        }
+        is SoundsEvents.OnChangeSortOrder -> {
+            changeSortOrder(event.sortOrder)
+            true
+        }
+        else -> false
+    }
+
     private fun dispatchNavigationEvent(event: SoundsEvents): Boolean = when (event) {
         is SoundsEvents.OnNavigate -> {
             sendUiEvent(UiEvent.Navigate(event.route))
@@ -432,10 +445,13 @@ class SoundsViewModel @Inject constructor(
 
     private fun playSound(index: Int, resourceId: Int?, uri: Uri) {
         player.playFile(index, resourceId, uri)
-        if (index > 0) {
-            viewModelScope.launch {
-                soundsDao.incrementPlayCount(index)
-            }
+        trackPlayCount(index)
+    }
+
+    private fun trackPlayCount(index: Int) {
+        if (index <= 0) return
+        viewModelScope.launch {
+            soundsDao.incrementPlayCount(index)
         }
     }
 
@@ -515,6 +531,9 @@ class SoundsViewModel @Inject constructor(
             val particlesPref = shared.getBooleanPair(PARTICLES_STATUS, false)
             val stopOnRetap = shared.getBooleanPair(STOP_ON_RETAP, false)
             val stopOnNewSound = shared.getBooleanPair(STOP_ON_NEW_SOUND, false)
+            val sortOrderPref = shared.getStringPair(SOUND_SORT_ORDER, SoundSortOrder.TITLE_ASC.name)
+
+            _sortOrder.value = toSoundSortOrder(sortOrderPref)
             _state.value = _state.value.copy(
                 pickedTheme = toThemeType(themePref),
                 areParticlesEnable = particlesPref,
