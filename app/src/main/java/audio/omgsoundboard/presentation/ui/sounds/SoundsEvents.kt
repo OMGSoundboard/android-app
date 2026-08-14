@@ -6,6 +6,7 @@ import audio.omgsoundboard.core.utils.DEFAULT_AUDIO_EXTENSION
 import audio.omgsoundboard.presentation.theme.ThemeType
 
 
+/** Events emitted by the sounds screen UI. */
 sealed class SoundsEvents {
     data class OnRestoreBackup(val uri: Uri) : SoundsEvents()
     data class OnBackupFiles(val uri: Uri) : SoundsEvents()

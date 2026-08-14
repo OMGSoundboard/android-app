@@ -106,7 +106,8 @@ class SoundsViewModel @Inject constructor(
             dispatchBackupEvent(event) -> Unit
             dispatchSearchEvent(event) -> Unit
             dispatchSoundPlaybackEvent(event) -> Unit
-            dispatchSoundManagementEvent(event) -> Unit
+            dispatchSoundDialogEvent(event) -> Unit
+            dispatchSoundCrudEvent(event) -> Unit
             dispatchUiPreferenceEvent(event) -> Unit
             dispatchNavigationEvent(event) -> Unit
         }
@@ -176,15 +177,11 @@ class SoundsViewModel @Inject constructor(
         else -> false
     }
 
-    private fun dispatchSoundManagementEvent(event: SoundsEvents): Boolean = when (event) {
+    private fun dispatchSoundDialogEvent(event: SoundsEvents): Boolean = when (event) {
         is SoundsEvents.OnShowHideChangeCategoryDialog -> {
             _state.value = _state.value.copy(
                 showChangeCategoryDialog = !_state.value.showChangeCategoryDialog,
             )
-            true
-        }
-        is SoundsEvents.OnConfirmSoundCategoryChange -> {
-            changeCategory(event.soundId, event.categoryId)
             true
         }
         is SoundsEvents.OnShowHideAddRenameSoundDialog -> {
@@ -201,6 +198,20 @@ class SoundsViewModel @Inject constructor(
             _state.value = _state.value.copy(textFieldValue = event.text, textFieldError = false)
             true
         }
+        is SoundsEvents.OnShowHideDeleteSoundDialog -> {
+            _state.value = _state.value.copy(
+                showConfirmDeleteDialog = !_state.value.showConfirmDeleteDialog
+            )
+            true
+        }
+        else -> false
+    }
+
+    private fun dispatchSoundCrudEvent(event: SoundsEvents): Boolean = when (event) {
+        is SoundsEvents.OnConfirmSoundCategoryChange -> {
+            changeCategory(event.soundId, event.categoryId)
+            true
+        }
         is SoundsEvents.OnConfirmRename -> {
             renameSound(event.sound)
             true
@@ -211,12 +222,6 @@ class SoundsViewModel @Inject constructor(
         }
         is SoundsEvents.OnAddMultipleSounds -> {
             addMultipleSounds(event.uris)
-            true
-        }
-        is SoundsEvents.OnShowHideDeleteSoundDialog -> {
-            _state.value = _state.value.copy(
-                showConfirmDeleteDialog = !_state.value.showConfirmDeleteDialog
-            )
             true
         }
         is SoundsEvents.OnConfirmDelete -> {
@@ -271,28 +276,35 @@ class SoundsViewModel @Inject constructor(
     private fun restoreBackup(uri: Uri) {
         viewModelScope.launch {
             when (val result = storage.restoreBackup(uri)) {
-                is BackupResult.Error -> {
-                    val errorMessage = result.exception.message ?: "Unknown error"
-                    sendUiEvent(
-                        UiEvent.ShowInfoDialog(
-                            UiText.StringResource(
-                                R.string.restore_backup_error,
-                                arrayOf(errorMessage)
-                            )
-                        )
-                    )
-                }
-
-                is BackupResult.Success -> {
-                    val message = result.message
-                    if (message != null) {
-                        sendUiEvent(UiEvent.ShowInfoDialog(UiText.StringResource(R.string.backup_restored_2, arrayOf(message))))
-                        return@launch
-                    }
-                    sendUiEvent(UiEvent.ShowInfoDialog(UiText.StringResource(R.string.backup_restored)))
-                }
+                is BackupResult.Error -> showRestoreError(result)
+                is BackupResult.Success -> showRestoreSuccess(result)
             }
         }
+    }
+
+    private fun showRestoreError(result: BackupResult.Error) {
+        val errorMessage = result.exception.message ?: "Unknown error"
+        sendUiEvent(
+            UiEvent.ShowInfoDialog(
+                UiText.StringResource(
+                    R.string.restore_backup_error,
+                    arrayOf(errorMessage)
+                )
+            )
+        )
+    }
+
+    private fun showRestoreSuccess(result: BackupResult.Success) {
+        val message = result.message
+        if (message != null) {
+            sendUiEvent(
+                UiEvent.ShowInfoDialog(
+                    UiText.StringResource(R.string.backup_restored_2, arrayOf(message))
+                )
+            )
+            return
+        }
+        sendUiEvent(UiEvent.ShowInfoDialog(UiText.StringResource(R.string.backup_restored)))
     }
 
     private fun backupFiles(uri: Uri) {

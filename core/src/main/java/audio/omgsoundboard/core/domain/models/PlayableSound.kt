@@ -4,9 +4,12 @@ import android.net.Uri
 import audio.omgsoundboard.core.data.local.entities.SoundsEntity
 import audio.omgsoundboard.core.utils.DEFAULT_AUDIO_EXTENSION
 
+/** Domain model for a sound that can be played in the UI. */
 data class PlayableSound(
     val id: Int = 0,
+    /** Display title shown in the sound list. */
     val title: String = "",
+    /** Content or file URI used for playback. */
     val uri: Uri = Uri.EMPTY,
     val date: Long = 0L,
     val isFav: Boolean = false,

@@ -4,6 +4,7 @@ import android.net.Uri
 import audio.omgsoundboard.core.domain.models.SoundWithUri
 import kotlinx.coroutines.flow.StateFlow
 
+/** Supported media types for ringtone, alarm, and notification assignment. */
 enum class MediaManager {
     Ringtone,
     Alarm,
