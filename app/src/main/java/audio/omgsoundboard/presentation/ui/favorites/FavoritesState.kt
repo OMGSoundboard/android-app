@@ -3,6 +3,7 @@ package audio.omgsoundboard.presentation.ui.favorites
 
 import audio.omgsoundboard.core.domain.models.PlayableSound
 
+/** UI state for the favorites screen. */
 data class FavoritesState(
     val sounds: List<PlayableSound> = emptyList(),
     val showDropMenu: Boolean = false,
@@ -10,5 +11,4 @@ data class FavoritesState(
     val textFieldValue: String = "",
     val textFieldError: Boolean = false,
     val showConfirmDeleteDialog: Boolean = false,
-    val playbackProgress: Map<Int, Float> = emptyMap(),
 )

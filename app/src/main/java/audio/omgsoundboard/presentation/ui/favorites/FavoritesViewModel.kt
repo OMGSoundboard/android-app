@@ -31,8 +31,12 @@ class FavoritesViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     private val _state = MutableStateFlow(FavoritesState())
-    val state = combine(_state, _sounds, player.playbackProgress, ::buildFavoritesState)
+    val state = combine(_state, _sounds, ::buildFavoritesState)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), FavoritesState())
+
+    /** Playback progress keyed by sound id; kept separate from [state] to avoid list recompositions. */
+    val playbackProgress = player.playbackProgress
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyMap())
 
 
     fun onEvent(event: FavoritesEvents) {
@@ -126,10 +130,8 @@ class FavoritesViewModel @Inject constructor(
     private fun buildFavoritesState(
         state: FavoritesState,
         sounds: List<SoundsEntity>,
-        progress: Map<Int, Float>,
     ): FavoritesState = state.copy(
         sounds = sounds.map { it.toDomain() },
-        playbackProgress = progress,
     )
 
     private fun playSound(index: Int, resourceId: Int?, uri: Uri) {

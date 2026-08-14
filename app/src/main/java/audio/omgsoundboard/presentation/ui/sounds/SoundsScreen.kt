@@ -18,11 +18,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Menu
@@ -75,6 +77,7 @@ import audio.omgsoundboard.presentation.composables.PlaybackBehaviorDialog
 import audio.omgsoundboard.presentation.composables.SoundItem
 import audio.omgsoundboard.presentation.composables.SortPicker
 import audio.omgsoundboard.presentation.composables.ThemePicker
+import audio.omgsoundboard.presentation.composables.rememberSoundPlaybackProgress
 import audio.omgsoundboard.presentation.navigation.DrawerContent
 import audio.omgsoundboard.presentation.navigation.Screens
 import audio.omgsoundboard.presentation.utils.UiEvent
@@ -82,6 +85,7 @@ import audio.omgsoundboard.core.utils.AUDIO_PICKER_MIME_TYPE
 import audio.omgsoundboard.core.utils.DEFAULT_AUDIO_EXTENSION
 import audio.omgsoundboard.core.utils.getExtensionFromUri
 import audio.omgsoundboard.core.utils.getTitleFromUri
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 
@@ -137,7 +141,12 @@ fun SoundsScreen(
         Box(
             modifier = Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing)
         ) {
-            SoundsScreenContent(state, drawerState, viewModel::onEvent)
+            SoundsScreenContent(
+                state = state,
+                playbackProgress = viewModel.playbackProgress,
+                drawerState = drawerState,
+                onEvents = viewModel::onEvent,
+            )
             AnimatedVisibility(
                 modifier = Modifier.align(Alignment.BottomEnd),
                 visible = state.currentCategory?.id != -1,
@@ -206,9 +215,11 @@ fun SoundsScreen(
 
 }
 
+/** Main sounds list and chrome, excluding playback progress to limit list recompositions. */
 @Composable
 fun SoundsScreenContent(
     state: SoundsState,
+    playbackProgress: StateFlow<Map<Int, Float>>,
     drawerState: DrawerState,
     onEvents: (SoundsEvents) -> Unit,
 ) {
@@ -238,8 +249,9 @@ fun SoundsScreenContent(
     var pickedSound by remember { mutableStateOf(PlayableSound()) }
 
     var showBackupOptions by remember { mutableStateOf(false) }
+    val listState = rememberLazyListState()
 
-    Column {
+    Column(Modifier.fillMaxSize()) {
         Crossfade(state.showSearchField, label = "TopBar") { show ->
             when (show) {
                 true -> {
@@ -361,6 +373,7 @@ fun SoundsScreenContent(
         }
 
         LazyColumn(
+            state = listState,
             modifier = Modifier
                 .weight(1f)
                 .padding(horizontal = 12.dp, vertical = 8.dp)
@@ -372,17 +385,21 @@ fun SoundsScreenContent(
                         textAlign = TextAlign.Center,
                         color = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier
-                            .fillMaxSize()
+                            .fillMaxWidth()
                             .padding(top = 32.dp)
                     )
                 }
             }
 
             itemsIndexed(state.sounds, key = { _, sound -> sound.id }) { index, sound ->
+                val itemProgress = rememberSoundPlaybackProgress(
+                    soundId = sound.id,
+                    playbackProgress = playbackProgress,
+                )
                 SoundItem(
                     item = sound,
                     index = index,
-                    playbackProgress = state.playbackProgress[sound.id],
+                    playbackProgress = itemProgress,
                     onFav = {
                         onEvents(SoundsEvents.OnToggleFav(sound.id))
                     },

@@ -96,9 +96,11 @@ class SoundsViewModel @Inject constructor(
             wearNodes = wearNodes,
             sortOrder = sortOrder,
         )
-    }.combine(player.playbackProgress) { state, progress ->
-        state.copy(playbackProgress = progress)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), SoundsState())
+
+    /** Playback progress keyed by sound id; kept separate from [state] to avoid list recompositions. */
+    val playbackProgress = player.playbackProgress
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyMap())
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()

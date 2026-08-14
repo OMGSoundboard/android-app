@@ -30,7 +30,6 @@ data class SoundsState(
     val showThemePicker: Boolean = false,
     val pickedTheme: ThemeType = ThemeType.DARK,
     val areParticlesEnable: Boolean = false,
-    val playbackProgress: Map<Int, Float> = emptyMap(),
     val stopOnRetap: Boolean = false,
     val stopOnNewSound: Boolean = false,
     val showPlaybackBehaviorDialog: Boolean = false,

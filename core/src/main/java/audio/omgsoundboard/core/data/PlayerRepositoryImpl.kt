@@ -224,17 +224,14 @@ class PlayerRepositoryImpl @Inject constructor(
         addedInBatch: MutableSet<String>,
     ): SoundWithUri? {
         val candidate = parseImportCandidate(uri) ?: return null
-        if (shouldSkipImport(candidate, knownSoundKeys, addedInBatch)) {
+        if (isDuplicateImport(candidate, knownSoundKeys, addedInBatch)) {
             return null
         }
 
         val outputFile = File(
             context.filesDir,
-            buildSoundFileName(candidate.title, candidate.extension)
+            buildSoundFileName(candidate.title, candidate.extension),
         )
-        if (outputFile.exists()) {
-            return null
-        }
 
         return persistImportedSound(uri, candidate, outputFile, knownSoundKeys, addedInBatch)
     }
@@ -259,13 +256,16 @@ class PlayerRepositoryImpl @Inject constructor(
         )
     }
 
-    private fun shouldSkipImport(
+    /** Returns true when the candidate is already known or reserved in the current batch. */
+    private fun isDuplicateImport(
         candidate: SoundImportCandidate,
         knownSoundKeys: Set<String>,
         addedInBatch: MutableSet<String>,
     ): Boolean {
-        return isDuplicateSoundFile(candidate.title, candidate.extension, knownSoundKeys) ||
-            !addedInBatch.add(candidate.soundKey)
+        if (isDuplicateSoundFile(candidate.title, candidate.extension, knownSoundKeys)) {
+            return true
+        }
+        return !addedInBatch.add(candidate.soundKey)
     }
 
     private fun persistImportedSound(
@@ -380,6 +380,7 @@ class PlayerRepositoryImpl @Inject constructor(
         MediaManager.Alarm -> RingtoneManager.TYPE_ALARM
     }
 
+    /** Copies [inputStream] into [outputFile], deleting [outputFile] when the copy fails. */
     private fun copyStreamToFile(inputStream: InputStream, outputFile: File): Boolean {
         var outputStream: FileOutputStream? = null
         return try {
@@ -389,6 +390,7 @@ class PlayerRepositoryImpl @Inject constructor(
             true
         } catch (e: IOException) {
             e.printStackTrace()
+            outputFile.delete()
             false
         } finally {
             closeQuietly(outputStream)
