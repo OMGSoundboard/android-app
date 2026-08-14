@@ -71,16 +71,16 @@ fun decodeSampledBitmapFromFile(file: File, reqWidth: Int, reqHeight: Int): Bitm
 }
 
 private fun calculateInSampleSizeForCrop(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
-    val height = options.outHeight
-    val width = options.outWidth
-    var inSampleSize = 1
+    if (options.outHeight <= reqHeight && options.outWidth <= reqWidth) {
+        return 1
+    }
+    return calculateDownsampleSize(options.outHeight, options.outWidth, reqHeight, reqWidth)
+}
 
-    if (height > reqHeight || width > reqWidth) {
-        // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-        // height and width larger than the requested height and width.
-        while ((height / (inSampleSize * 2)) >= reqHeight && (width / (inSampleSize * 2)) >= reqWidth) {
-            inSampleSize *= 2
-        }
+private fun calculateDownsampleSize(height: Int, width: Int, reqHeight: Int, reqWidth: Int): Int {
+    var inSampleSize = 1
+    while ((height / (inSampleSize * 2)) >= reqHeight && (width / (inSampleSize * 2)) >= reqWidth) {
+        inSampleSize *= 2
     }
     return inSampleSize
 }
