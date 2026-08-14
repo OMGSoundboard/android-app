@@ -5,8 +5,10 @@ import android.net.Uri
 import audio.omgsoundboard.core.domain.models.Category
 import audio.omgsoundboard.core.domain.models.PlayableSound
 import audio.omgsoundboard.core.domain.models.WearNode
+import audio.omgsoundboard.core.utils.DEFAULT_AUDIO_EXTENSION
 import audio.omgsoundboard.presentation.theme.ThemeType
 
+/** UI state for the main sounds screen. */
 data class SoundsState(
     val categories : List<Category> = emptyList(),
     val sounds: List<PlayableSound> = emptyList(),
@@ -19,6 +21,8 @@ data class SoundsState(
     val showChangeCategoryDialog: Boolean = false,
     val isRenaming: Boolean = false,
     val addedSoundUri: Uri? = Uri.EMPTY,
+    /** Selected file extension for a sound being added. */
+    val addedSoundExtension: String = DEFAULT_AUDIO_EXTENSION,
     val textFieldValue: String = "",
     val textFieldError: Boolean = false,
     val showConfirmDeleteDialog: Boolean = false,

@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import audio.omgsoundboard.core.data.local.daos.SoundsDao
+import audio.omgsoundboard.core.data.local.entities.SoundsEntity
 import audio.omgsoundboard.core.data.local.entities.toEntity
 import audio.omgsoundboard.core.domain.models.PlayableSound
 import audio.omgsoundboard.core.domain.models.toDomain
@@ -30,61 +31,107 @@ class FavoritesViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     private val _state = MutableStateFlow(FavoritesState())
-    val state = combine(_state, _sounds) { state, sounds ->
-        state.copy(
-            sounds = sounds.map { it.toDomain() }
-        )
-    }.combine(player.playbackProgress) { state, progress ->
-        state.copy(playbackProgress = progress)
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), FavoritesState())
+    val state = combine(_state, _sounds, player.playbackProgress, ::buildFavoritesState)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), FavoritesState())
 
 
     fun onEvent(event: FavoritesEvents) {
-        when (event) {
-            is FavoritesEvents.OnPlaySound -> {
-                playSound(event.index, event.resourceId, event.uri)
-            }
-            is FavoritesEvents.OnToggleFav -> {
-                toggleFav(event.id)
-            }
-            is FavoritesEvents.OnShareSound -> {
-                shareSound(event.sound)
-            }
-            is FavoritesEvents.OnSetAsRingtone -> {
-                setMedia(MediaManager.Ringtone, event.sound)
-            }
-            is FavoritesEvents.OnSetAsAlarm -> {
-                setMedia(MediaManager.Alarm, event.sound)
-            }
-            is FavoritesEvents.OnSetAsNotification -> {
-                setMedia(MediaManager.Notification, event.sound)
-            }
-            is FavoritesEvents.OnShowHideRenameSoundDialog -> {
-                _state.value = _state.value.copy(
-                    showRenameSoundDialog = !_state.value.showRenameSoundDialog,
-                    textFieldValue = event.initialText,
-                )
-            }
-            is FavoritesEvents.OnTextFieldChange -> {
-                _state.value = _state.value.copy(textFieldValue = event.text, textFieldError = false)
-            }
-            is FavoritesEvents.OnConfirmRename -> {
-                renameSound(event.sound)
-            }
-            is FavoritesEvents.OnShowHideDeleteSoundDialog -> {
-                _state.value = _state.value.copy(showConfirmDeleteDialog = !_state.value.showConfirmDeleteDialog)
-            }
-            is FavoritesEvents.OnConfirmDelete -> {
-                deleteSound(event.soundId)
-            }
-            is FavoritesEvents.OnToggleDropMenu -> {
-                _state.value = _state.value.copy(showDropMenu = !_state.value.showDropMenu)
-            }
-            is FavoritesEvents.OnNavigateUp -> {
-                sendUiEvent(UiEvent.NavigateUp)
-            }
-        }
+        favoritesEventHandlers.any { it(event) }
     }
+
+    private val favoritesEventHandlers: List<(FavoritesEvents) -> Boolean> = listOf(
+        ::dispatchPlaybackEvent,
+        ::dispatchDialogEvent,
+        ::dispatchCrudEvent,
+        ::dispatchNavigationEvent,
+    )
+
+    private fun dispatchPlaybackEvent(event: FavoritesEvents): Boolean =
+        dispatchCorePlaybackEvent(event) || dispatchMediaAssignmentEvent(event)
+
+    private fun dispatchCorePlaybackEvent(event: FavoritesEvents): Boolean = when (event) {
+        is FavoritesEvents.OnPlaySound -> {
+            playSound(event.index, event.resourceId, event.uri)
+            true
+        }
+        is FavoritesEvents.OnToggleFav -> {
+            toggleFav(event.id)
+            true
+        }
+        is FavoritesEvents.OnShareSound -> {
+            shareSound(event.sound)
+            true
+        }
+        else -> false
+    }
+
+    private fun dispatchMediaAssignmentEvent(event: FavoritesEvents): Boolean = when (event) {
+        is FavoritesEvents.OnSetAsRingtone -> {
+            setMedia(MediaManager.Ringtone, event.sound)
+            true
+        }
+        is FavoritesEvents.OnSetAsAlarm -> {
+            setMedia(MediaManager.Alarm, event.sound)
+            true
+        }
+        is FavoritesEvents.OnSetAsNotification -> {
+            setMedia(MediaManager.Notification, event.sound)
+            true
+        }
+        else -> false
+    }
+
+    private fun dispatchDialogEvent(event: FavoritesEvents): Boolean = when (event) {
+        is FavoritesEvents.OnShowHideRenameSoundDialog -> {
+            _state.value = _state.value.copy(
+                showRenameSoundDialog = !_state.value.showRenameSoundDialog,
+                textFieldValue = event.initialText,
+            )
+            true
+        }
+        is FavoritesEvents.OnTextFieldChange -> {
+            _state.value = _state.value.copy(textFieldValue = event.text, textFieldError = false)
+            true
+        }
+        is FavoritesEvents.OnShowHideDeleteSoundDialog -> {
+            _state.value = _state.value.copy(showConfirmDeleteDialog = !_state.value.showConfirmDeleteDialog)
+            true
+        }
+        is FavoritesEvents.OnToggleDropMenu -> {
+            _state.value = _state.value.copy(showDropMenu = !_state.value.showDropMenu)
+            true
+        }
+        else -> false
+    }
+
+    private fun dispatchCrudEvent(event: FavoritesEvents): Boolean = when (event) {
+        is FavoritesEvents.OnConfirmRename -> {
+            renameSound(event.sound)
+            true
+        }
+        is FavoritesEvents.OnConfirmDelete -> {
+            deleteSound(event.soundId)
+            true
+        }
+        else -> false
+    }
+
+    private fun dispatchNavigationEvent(event: FavoritesEvents): Boolean = when (event) {
+        is FavoritesEvents.OnNavigateUp -> {
+            sendUiEvent(UiEvent.NavigateUp)
+            true
+        }
+        else -> false
+    }
+
+    private fun buildFavoritesState(
+        state: FavoritesState,
+        sounds: List<SoundsEntity>,
+        progress: Map<Int, Float>,
+    ): FavoritesState = state.copy(
+        sounds = sounds.map { it.toDomain() },
+        playbackProgress = progress,
+    )
 
     private fun playSound(index: Int, resourceId: Int?, uri: Uri) {
         player.playFile(index, resourceId, uri)
@@ -95,7 +142,7 @@ class FavoritesViewModel @Inject constructor(
     }
 
     private fun setMedia(type: MediaManager, sound: PlayableSound){
-        player.setMedia(type, sound.title, sound.resId, sound.uri)
+        player.setMedia(type, sound.title, sound.resId, sound.uri, sound.fileExtension)
     }
 
     private fun toggleFav(id: Int){

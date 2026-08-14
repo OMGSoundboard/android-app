@@ -2,6 +2,8 @@
 
 package audio.omgsoundboard.presentation.ui.sounds
 
+import android.content.Context
+import android.net.Uri
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -74,6 +76,9 @@ import audio.omgsoundboard.presentation.composables.ThemePicker
 import audio.omgsoundboard.presentation.navigation.DrawerContent
 import audio.omgsoundboard.presentation.navigation.Screens
 import audio.omgsoundboard.presentation.utils.UiEvent
+import audio.omgsoundboard.core.utils.AUDIO_PICKER_MIME_TYPE
+import audio.omgsoundboard.core.utils.DEFAULT_AUDIO_EXTENSION
+import audio.omgsoundboard.core.utils.getExtensionFromUri
 import audio.omgsoundboard.core.utils.getTitleFromUri
 import kotlinx.coroutines.launch
 
@@ -105,21 +110,7 @@ fun SoundsScreen(
     val soundPicker = rememberLauncherForActivityResult(
         ActivityResultContracts.GetMultipleContents()
     ) { soundUris ->
-        if (soundUris.isNotEmpty()) {
-            if (soundUris.size == 1){
-                val uri = soundUris.first()
-                val pickedSoundTitle = getTitleFromUri(context, uri) ?: ""
-                viewModel.onEvent(
-                    SoundsEvents.OnShowHideAddRenameSoundDialog(
-                        pickedSoundTitle,
-                        false,
-                        uri
-                    )
-                )
-            } else {
-                viewModel.onEvent(SoundsEvents.OnAddMultipleSounds(soundUris))
-            }
-        }
+        handleSoundPickerResult(soundUris, viewModel::onEvent, context)
     }
 
     val state by viewModel.state.collectAsState()
@@ -135,28 +126,8 @@ fun SoundsScreen(
                 onCategory = { category ->
                     viewModel.onEvent(SoundsEvents.OnSetCategoryId(category.id))
                 },
-                onAction = {
-                    when (it) {
-                        OPTIONS_CATEGORY -> {
-                            viewModel.onEvent(SoundsEvents.OnNavigate(Screens.CategoriesScreen.route))
-                        }
-
-                        OPTIONS_ABOUT -> {
-                            viewModel.onEvent(SoundsEvents.OnNavigate(Screens.AboutScreen.route))
-                        }
-
-                        OPTIONS_PARTICLES -> {
-                            viewModel.onEvent(SoundsEvents.OnToggleParticles)
-                        }
-
-                        OPTIONS_THEME_PICKER -> {
-                            viewModel.onEvent(SoundsEvents.OnShowHideThemePicker)
-                        }
-
-                        OPTIONS_PLAYBACK_BEHAVIOR -> {
-                            viewModel.onEvent(SoundsEvents.OnShowHidePlaybackBehaviorDialog)
-                        }
-                    }
+                onAction = { action ->
+                    handleDrawerAction(action, viewModel::onEvent)
                 }
             )
         }
@@ -178,7 +149,7 @@ fun SoundsScreen(
                 Fab(
                     modifier = Modifier.padding(12.dp),
                 ) {
-                    soundPicker.launch("audio/mpeg")
+                    soundPicker.launch(AUDIO_PICKER_MIME_TYPE)
                 }
             }
 
@@ -218,6 +189,7 @@ fun SoundsScreen(
             onDismiss = { viewModel.onEvent(SoundsEvents.OnShowHidePlaybackBehaviorDialog) }
         )
     }
+
 }
 
 @Composable
@@ -503,6 +475,40 @@ fun SoundsScreenContent(
         )
     }
 }
+
+private fun handleSoundPickerResult(
+    soundUris: List<Uri>,
+    onEvent: (SoundsEvents) -> Unit,
+    context: Context,
+) {
+    when {
+        soundUris.isEmpty() -> return
+        soundUris.size == 1 -> onEvent(buildSingleSoundPickerEvent(soundUris.first(), context))
+        else -> onEvent(SoundsEvents.OnAddMultipleSounds(soundUris))
+    }
+}
+
+private fun buildSingleSoundPickerEvent(uri: Uri, context: Context): SoundsEvents {
+    return SoundsEvents.OnShowHideAddRenameSoundDialog(
+        initialText = getTitleFromUri(context, uri) ?: "",
+        isRenaming = false,
+        uri = uri,
+        extension = getExtensionFromUri(context, uri) ?: DEFAULT_AUDIO_EXTENSION,
+    )
+}
+
+private fun handleDrawerAction(action: String, onEvent: (SoundsEvents) -> Unit) {
+    val event = drawerActions[action] ?: return
+    onEvent(event())
+}
+
+private val drawerActions: Map<String, () -> SoundsEvents> = mapOf(
+    OPTIONS_CATEGORY to { SoundsEvents.OnNavigate(Screens.CategoriesScreen.route) },
+    OPTIONS_ABOUT to { SoundsEvents.OnNavigate(Screens.AboutScreen.route) },
+    OPTIONS_PARTICLES to { SoundsEvents.OnToggleParticles },
+    OPTIONS_THEME_PICKER to { SoundsEvents.OnShowHideThemePicker },
+    OPTIONS_PLAYBACK_BEHAVIOR to { SoundsEvents.OnShowHidePlaybackBehaviorDialog },
+)
 
 
 

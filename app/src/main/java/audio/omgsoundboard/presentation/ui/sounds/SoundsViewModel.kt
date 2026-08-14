@@ -18,6 +18,8 @@ import audio.omgsoundboard.core.utils.Constants.PARTICLES_STATUS
 import audio.omgsoundboard.core.utils.Constants.STOP_ON_NEW_SOUND
 import audio.omgsoundboard.core.utils.Constants.STOP_ON_RETAP
 import audio.omgsoundboard.core.utils.Constants.THEME_TYPE
+import audio.omgsoundboard.core.utils.DEFAULT_AUDIO_EXTENSION
+import audio.omgsoundboard.core.utils.existingSoundFileKeys
 import audio.omgsoundboard.domain.repository.SharedPrefRepository
 import audio.omgsoundboard.presentation.theme.ThemeType
 import audio.omgsoundboard.presentation.theme.toThemeType
@@ -85,7 +87,7 @@ class SoundsViewModel @Inject constructor(
             currentCategory = currentCategory,
             sounds = sounds.map { it.toDomain() },
             searchTerm = search,
-            wearNodes = wearNodes
+            wearNodes = wearNodes,
         )
     }.combine(player.playbackProgress) { state, progress ->
         state.copy(playbackProgress = progress)
@@ -100,161 +102,223 @@ class SoundsViewModel @Inject constructor(
 
 
     fun onEvent(event: SoundsEvents) {
-        when (event) {
-            is SoundsEvents.OnRestoreBackup -> {
-                restoreBackup(event.uri)
-            }
+        soundsEventHandlers.any { it(event) }
+    }
 
-            is SoundsEvents.OnBackupFiles -> {
-                backupFiles(event.uri)
-            }
+    private val soundsEventHandlers: List<(SoundsEvents) -> Boolean> = listOf(
+        ::dispatchBackupEvent,
+        ::dispatchSearchEvent,
+        ::dispatchSoundPlaybackEvent,
+        ::dispatchSoundDialogEvent,
+        ::dispatchSoundCrudEvent,
+        ::dispatchMenuPreferenceEvent,
+        ::dispatchPlaybackPreferenceEvent,
+        ::dispatchNavigationEvent,
+    )
 
-            is SoundsEvents.OnSyncWear -> {
-                syncWear(event.nodeId)
-            }
-
-            is SoundsEvents.OnSetCategoryId -> {
-                _categoryId.value = event.id
-            }
-
-            is SoundsEvents.OnToggleSearch -> {
-                _state.value = _state.value.copy(
-                    searchTerm = "",
-                    showSearchField = !_state.value.showSearchField
-                )
-                _searchTerm.value = ""
-            }
-
-            is SoundsEvents.OnSearchTerm -> {
-                _searchTerm.value = event.term
-            }
-
-            is SoundsEvents.OnPlaySound -> {
-                playSound(event.index, event.resourceId, event.uri)
-            }
-
-            is SoundsEvents.OnToggleFav -> {
-                toggleFav(event.id)
-            }
-
-            is SoundsEvents.OnShareSound -> {
-                shareSound(event.sound)
-            }
-
-            is SoundsEvents.OnSetAsRingtone -> {
-                setMedia(MediaManager.Ringtone, event.sound)
-            }
-
-            is SoundsEvents.OnSetAsAlarm -> {
-                setMedia(MediaManager.Alarm, event.sound)
-            }
-
-            is SoundsEvents.OnSetAsNotification -> {
-                setMedia(MediaManager.Notification, event.sound)
-            }
-
-            is SoundsEvents.OnShowHideChangeCategoryDialog -> {
-                _state.value = _state.value.copy(showChangeCategoryDialog = !_state.value.showChangeCategoryDialog,)
-            }
-
-            is SoundsEvents.OnConfirmSoundCategoryChange -> {
-                changeCategory(event.soundId, event.categoryId)
-            }
-
-            is SoundsEvents.OnShowHideAddRenameSoundDialog -> {
-                _state.value = _state.value.copy(
-                    showAddRenameSoundDialog = !_state.value.showAddRenameSoundDialog,
-                    textFieldValue = event.initialText,
-                    isRenaming = event.isRenaming,
-                    addedSoundUri = event.uri
-                )
-            }
-
-            is SoundsEvents.OnTextFieldChange -> {
-                _state.value =
-                    _state.value.copy(textFieldValue = event.text, textFieldError = false)
-            }
-
-            is SoundsEvents.OnConfirmRename -> {
-                renameSound(event.sound)
-            }
-
-            is SoundsEvents.OnConfirmAdd -> {
-                addSound()
-            }
-
-            is SoundsEvents.OnAddMultipleSounds -> {
-                addMultipleSounds(event.uris)
-            }
-
-            is SoundsEvents.OnShowHideDeleteSoundDialog -> {
-                _state.value =
-                    _state.value.copy(showConfirmDeleteDialog = !_state.value.showConfirmDeleteDialog)
-            }
-
-            is SoundsEvents.OnConfirmDelete -> {
-                deleteSound(event.soundId)
-            }
-
-            is SoundsEvents.OnToggleDropMenu -> {
-                _state.value = _state.value.copy(showDropMenu = !_state.value.showDropMenu)
-            }
-
-            is SoundsEvents.OnToggleParticles -> {
-                toggleParticles()
-            }
-
-            is SoundsEvents.OnShowHideThemePicker -> {
-                _state.value = _state.value.copy(showThemePicker = !_state.value.showThemePicker)
-            }
-
-            is SoundsEvents.OnChangeTheme -> {
-                changeTheme(event.theme)
-            }
-
-            is SoundsEvents.OnNavigate -> {
-                sendUiEvent(UiEvent.Navigate(event.route))
-            }
-
-            is SoundsEvents.OnShowHidePlaybackBehaviorDialog -> {
-                _state.value = _state.value.copy(showPlaybackBehaviorDialog = !_state.value.showPlaybackBehaviorDialog)
-            }
-
-            is SoundsEvents.OnToggleStopOnRetap -> {
-                toggleStopOnRetap()
-            }
-
-            is SoundsEvents.OnToggleStopOnNewSound -> {
-                toggleStopOnNewSound()
-            }
+    private fun dispatchBackupEvent(event: SoundsEvents): Boolean = when (event) {
+        is SoundsEvents.OnRestoreBackup -> {
+            restoreBackup(event.uri)
+            true
         }
+        is SoundsEvents.OnBackupFiles -> {
+            backupFiles(event.uri)
+            true
+        }
+        is SoundsEvents.OnSyncWear -> {
+            syncWear(event.nodeId)
+            true
+        }
+        else -> false
+    }
+
+    private fun dispatchSearchEvent(event: SoundsEvents): Boolean = when (event) {
+        is SoundsEvents.OnSetCategoryId -> {
+            _categoryId.value = event.id
+            true
+        }
+        is SoundsEvents.OnToggleSearch -> {
+            _state.value = _state.value.copy(
+                searchTerm = "",
+                showSearchField = !_state.value.showSearchField
+            )
+            _searchTerm.value = ""
+            true
+        }
+        is SoundsEvents.OnSearchTerm -> {
+            _searchTerm.value = event.term
+            true
+        }
+        else -> false
+    }
+
+    private fun dispatchSoundPlaybackEvent(event: SoundsEvents): Boolean =
+        dispatchCorePlaybackEvent(event) || dispatchMediaAssignmentEvent(event)
+
+    private fun dispatchCorePlaybackEvent(event: SoundsEvents): Boolean = when (event) {
+        is SoundsEvents.OnPlaySound -> {
+            playSound(event.index, event.resourceId, event.uri)
+            true
+        }
+        is SoundsEvents.OnToggleFav -> {
+            toggleFav(event.id)
+            true
+        }
+        is SoundsEvents.OnShareSound -> {
+            shareSound(event.sound)
+            true
+        }
+        else -> false
+    }
+
+    private fun dispatchMediaAssignmentEvent(event: SoundsEvents): Boolean = when (event) {
+        is SoundsEvents.OnSetAsRingtone -> {
+            setMedia(MediaManager.Ringtone, event.sound)
+            true
+        }
+        is SoundsEvents.OnSetAsAlarm -> {
+            setMedia(MediaManager.Alarm, event.sound)
+            true
+        }
+        is SoundsEvents.OnSetAsNotification -> {
+            setMedia(MediaManager.Notification, event.sound)
+            true
+        }
+        else -> false
+    }
+
+    private fun dispatchSoundDialogEvent(event: SoundsEvents): Boolean = when (event) {
+        is SoundsEvents.OnShowHideChangeCategoryDialog -> {
+            _state.value = _state.value.copy(
+                showChangeCategoryDialog = !_state.value.showChangeCategoryDialog,
+            )
+            true
+        }
+        is SoundsEvents.OnShowHideAddRenameSoundDialog -> {
+            _state.value = _state.value.copy(
+                showAddRenameSoundDialog = !_state.value.showAddRenameSoundDialog,
+                textFieldValue = event.initialText,
+                isRenaming = event.isRenaming,
+                addedSoundUri = event.uri,
+                addedSoundExtension = event.extension,
+            )
+            true
+        }
+        is SoundsEvents.OnTextFieldChange -> {
+            _state.value = _state.value.copy(textFieldValue = event.text, textFieldError = false)
+            true
+        }
+        is SoundsEvents.OnShowHideDeleteSoundDialog -> {
+            _state.value = _state.value.copy(
+                showConfirmDeleteDialog = !_state.value.showConfirmDeleteDialog
+            )
+            true
+        }
+        else -> false
+    }
+
+    private fun dispatchSoundCrudEvent(event: SoundsEvents): Boolean = when (event) {
+        is SoundsEvents.OnConfirmSoundCategoryChange -> {
+            changeCategory(event.soundId, event.categoryId)
+            true
+        }
+        is SoundsEvents.OnConfirmRename -> {
+            renameSound(event.sound)
+            true
+        }
+        is SoundsEvents.OnConfirmAdd -> {
+            addSound()
+            true
+        }
+        is SoundsEvents.OnAddMultipleSounds -> {
+            addMultipleSounds(event.uris)
+            true
+        }
+        is SoundsEvents.OnConfirmDelete -> {
+            deleteSound(event.soundId)
+            true
+        }
+        else -> false
+    }
+
+    private fun dispatchMenuPreferenceEvent(event: SoundsEvents): Boolean = when (event) {
+        is SoundsEvents.OnToggleDropMenu -> {
+            _state.value = _state.value.copy(showDropMenu = !_state.value.showDropMenu)
+            true
+        }
+        is SoundsEvents.OnToggleParticles -> {
+            toggleParticles()
+            true
+        }
+        is SoundsEvents.OnShowHideThemePicker -> {
+            _state.value = _state.value.copy(showThemePicker = !_state.value.showThemePicker)
+            true
+        }
+        is SoundsEvents.OnChangeTheme -> {
+            changeTheme(event.theme)
+            true
+        }
+        else -> false
+    }
+
+    private fun dispatchPlaybackPreferenceEvent(event: SoundsEvents): Boolean = when (event) {
+        is SoundsEvents.OnShowHidePlaybackBehaviorDialog -> {
+            _state.value = _state.value.copy(
+                showPlaybackBehaviorDialog = !_state.value.showPlaybackBehaviorDialog
+            )
+            true
+        }
+        is SoundsEvents.OnToggleStopOnRetap -> {
+            toggleStopOnRetap()
+            true
+        }
+        is SoundsEvents.OnToggleStopOnNewSound -> {
+            toggleStopOnNewSound()
+            true
+        }
+        else -> false
+    }
+
+    private fun dispatchNavigationEvent(event: SoundsEvents): Boolean = when (event) {
+        is SoundsEvents.OnNavigate -> {
+            sendUiEvent(UiEvent.Navigate(event.route))
+            true
+        }
+        else -> false
     }
 
     private fun restoreBackup(uri: Uri) {
         viewModelScope.launch {
             when (val result = storage.restoreBackup(uri)) {
-                is BackupResult.Error -> {
-                    val errorMessage = result.exception.message ?: "Unknown error"
-                    sendUiEvent(
-                        UiEvent.ShowInfoDialog(
-                            UiText.StringResource(
-                                R.string.restore_backup_error,
-                                arrayOf(errorMessage)
-                            )
-                        )
-                    )
-                }
-
-                is BackupResult.Success -> {
-                    val message = result.message
-                    if (message != null) {
-                        sendUiEvent(UiEvent.ShowInfoDialog(UiText.StringResource(R.string.backup_restored_2, arrayOf(message))))
-                        return@launch
-                    }
-                    sendUiEvent(UiEvent.ShowInfoDialog(UiText.StringResource(R.string.backup_restored)))
-                }
+                is BackupResult.Error -> showRestoreError(result)
+                is BackupResult.Success -> showRestoreSuccess(result)
             }
         }
+    }
+
+    private fun showRestoreError(result: BackupResult.Error) {
+        val errorMessage = result.exception.message ?: "Unknown error"
+        sendUiEvent(
+            UiEvent.ShowInfoDialog(
+                UiText.StringResource(
+                    R.string.restore_backup_error,
+                    arrayOf(errorMessage)
+                )
+            )
+        )
+    }
+
+    private fun showRestoreSuccess(result: BackupResult.Success) {
+        val message = result.message
+        if (message != null) {
+            sendUiEvent(
+                UiEvent.ShowInfoDialog(
+                    UiText.StringResource(R.string.backup_restored_2, arrayOf(message))
+                )
+            )
+            return
+        }
+        sendUiEvent(UiEvent.ShowInfoDialog(UiText.StringResource(R.string.backup_restored)))
     }
 
     private fun backupFiles(uri: Uri) {
@@ -295,6 +359,13 @@ class SoundsViewModel @Inject constructor(
         viewModelScope.launch {
             val title = _state.value.textFieldValue.trim()
             val uri = _state.value.addedSoundUri!!
+            val extension = _state.value.addedSoundExtension
+
+            if (soundsDao.countByTitleAndExtension(title, extension) > 0) {
+                _state.value = _state.value.copy(textFieldError = true)
+                sendUiEvent(UiEvent.ShowInfoDialog(UiText.StringResource(R.string.sound_already_exists)))
+                return@launch
+            }
 
             val sound = PlayableSound(
                 title = title,
@@ -302,10 +373,11 @@ class SoundsViewModel @Inject constructor(
                 date = System.currentTimeMillis(),
                 isFav = false,
                 categoryId = _categoryId.value,
-                resId = null
+                resId = null,
+                fileExtension = extension,
             )
 
-            val newSoundUri = player.addSound(title, uri)
+            val newSoundUri = player.addSound(title, uri, extension)
 
             if (newSoundUri != null) {
                 soundsDao.insertSound(sound.copy(uri = newSoundUri).toEntity())
@@ -316,14 +388,18 @@ class SoundsViewModel @Inject constructor(
             _state.value = _state.value.copy(
                 showAddRenameSoundDialog = false,
                 textFieldValue = "",
-                addedSoundUri = Uri.EMPTY
+                addedSoundUri = Uri.EMPTY,
+                addedSoundExtension = DEFAULT_AUDIO_EXTENSION,
             )
         }
     }
 
     private fun addMultipleSounds(uris: List<Uri>) {
         viewModelScope.launch {
-            val result = player.addMultipleSounds(uris)
+            val existingSoundKeys = existingSoundFileKeys(
+                soundsDao.getAllSoundIdentities().map { it.title to it.fileExtension }
+            )
+            val result = player.addMultipleSounds(uris, existingSoundKeys)
             val sounds = result.map {
                 PlayableSound(
                     title = it.title,
@@ -331,7 +407,8 @@ class SoundsViewModel @Inject constructor(
                     date = System.currentTimeMillis(),
                     isFav = false,
                     categoryId = _categoryId.value,
-                    resId = null
+                    resId = null,
+                    fileExtension = it.extension,
                 )
             }
 
@@ -355,7 +432,7 @@ class SoundsViewModel @Inject constructor(
     }
 
     private fun setMedia(type: MediaManager, sound: PlayableSound) {
-        player.setMedia(type, sound.title, sound.resId, sound.uri)
+        player.setMedia(type, sound.title, sound.resId, sound.uri, sound.fileExtension)
     }
 
     private fun toggleFav(id: Int) {
@@ -396,6 +473,7 @@ class SoundsViewModel @Inject constructor(
         }
     }
 
+
     private fun toggleStopOnRetap() {
         viewModelScope.launch {
             val new = !_state.value.stopOnRetap
@@ -418,7 +496,6 @@ class SoundsViewModel @Inject constructor(
             val particlesPref = shared.getBooleanPair(PARTICLES_STATUS, false)
             val stopOnRetap = shared.getBooleanPair(STOP_ON_RETAP, false)
             val stopOnNewSound = shared.getBooleanPair(STOP_ON_NEW_SOUND, false)
-
             _state.value = _state.value.copy(
                 pickedTheme = toThemeType(themePref),
                 areParticlesEnable = particlesPref,

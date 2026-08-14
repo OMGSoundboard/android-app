@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import audio.omgsoundboard.core.data.local.entities.SoundFileIdentity
 import audio.omgsoundboard.core.data.local.entities.SoundsEntity
 import audio.omgsoundboard.core.utils.Constants.SOUNDS_TABLE
 import kotlinx.coroutines.flow.Flow
@@ -23,6 +24,7 @@ interface SoundsDao {
 
     @Query("UPDATE $SOUNDS_TABLE SET isFavorite = NOT isFavorite WHERE id = :id")
     suspend fun toggleFav(id: Int)
+
 
     @Update
     suspend fun updateSound(sound: SoundsEntity)
@@ -47,6 +49,14 @@ interface SoundsDao {
 
     @Query("SELECT * FROM $SOUNDS_TABLE")
     suspend fun getAllSoundsOnce(): List<SoundsEntity>
+
+    /** Returns all stored sound titles and extensions for duplicate detection. */
+    @Query("SELECT title, file_extension FROM $SOUNDS_TABLE")
+    suspend fun getAllSoundIdentities(): List<SoundFileIdentity>
+
+    /** Returns whether a sound with the same title and extension already exists. */
+    @Query("SELECT COUNT(*) FROM $SOUNDS_TABLE WHERE LOWER(title) = LOWER(:title) AND file_extension = :extension")
+    suspend fun countByTitleAndExtension(title: String, extension: String): Int
 
     @Query("SELECT * FROM $SOUNDS_TABLE WHERE isFavorite = 1")
     fun getAllFavorites(): Flow<List<SoundsEntity>>

@@ -10,6 +10,7 @@ import audio.omgsoundboard.core.data.local.SoundsDatabase
 import audio.omgsoundboard.core.data.local.entities.CategoryEntity
 import audio.omgsoundboard.core.data.local.entities.SoundsEntity
 import audio.omgsoundboard.core.data.local.migrations.Migration1To2
+import audio.omgsoundboard.core.data.local.migrations.Migration2To3
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,7 +35,7 @@ object RoomModule {
             SoundsDatabase::class.java,
             OMG_SOUNDBOARD_DATABASE
         )
-            .addMigrations(Migration1To2(context))
+            .addMigrations(Migration1To2(context), Migration2To3)
             .addCallback(object : RoomDatabase.Callback() {
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     super.onCreate(db)
