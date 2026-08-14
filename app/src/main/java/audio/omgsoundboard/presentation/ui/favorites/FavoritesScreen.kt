@@ -5,9 +5,11 @@ package audio.omgsoundboard.presentation.ui.favorites
 import android.provider.Settings
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,7 +33,9 @@ import audio.omgsoundboard.presentation.composables.DropMenu
 import audio.omgsoundboard.presentation.composables.InfoDialog
 import audio.omgsoundboard.presentation.composables.PermissionDialog
 import audio.omgsoundboard.presentation.composables.SoundItem
+import audio.omgsoundboard.presentation.composables.rememberSoundPlaybackProgress
 import audio.omgsoundboard.presentation.utils.UiEvent
+import kotlinx.coroutines.flow.StateFlow
 
 
 @Composable
@@ -50,12 +54,18 @@ fun FavoritesScreen(
     }
 
     val state by viewModel.state.collectAsState()
-    FavoritesScreenContent(state, viewModel::onEvent)
+    FavoritesScreenContent(
+        state = state,
+        playbackProgress = viewModel.playbackProgress,
+        onEvents = viewModel::onEvent,
+    )
 }
 
+/** Favorites list content, excluding playback progress to limit list recompositions. */
 @Composable
 fun FavoritesScreenContent(
     state: FavoritesState,
+    playbackProgress: StateFlow<Map<Int, Float>>,
     onEvents: (FavoritesEvents) -> Unit
 ){
     val context = LocalContext.current
@@ -64,8 +74,9 @@ fun FavoritesScreenContent(
 
     var touchPoint: Offset by remember { mutableStateOf(Offset.Zero) }
     var pickedSound by remember { mutableStateOf(PlayableSound()) }
+    val listState = rememberLazyListState()
 
-    Column {
+    Column(Modifier.fillMaxSize()) {
         TopAppBar(
             title = {
                 Text(text = stringResource(R.string.favorites_title))
@@ -82,8 +93,9 @@ fun FavoritesScreenContent(
             },
         )
         LazyColumn(
+            state = listState,
             modifier = Modifier
-                .fillMaxSize()
+                .weight(1f)
                 .padding(horizontal = 12.dp, vertical = 8.dp)
         ){
 
@@ -94,17 +106,21 @@ fun FavoritesScreenContent(
                         textAlign = TextAlign.Center,
                         color = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier
-                            .fillMaxSize()
+                            .fillMaxWidth()
                             .padding(top = 32.dp)
                     )
                 }
             }
 
             itemsIndexed(state.sounds, key = { _, sound -> sound.id }) { index, sound ->
+                val itemProgress = rememberSoundPlaybackProgress(
+                    soundId = sound.id,
+                    playbackProgress = playbackProgress,
+                )
                 SoundItem(
                     item = sound,
                     index = index,
-                    playbackProgress = state.playbackProgress[sound.id],
+                    playbackProgress = itemProgress,
                     onFav = {
                         onEvents(FavoritesEvents.OnToggleFav(sound.id))
                     },

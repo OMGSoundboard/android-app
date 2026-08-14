@@ -2,6 +2,8 @@
 
 package audio.omgsoundboard.presentation.ui.sounds
 
+import android.content.Context
+import android.net.Uri
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -16,16 +18,19 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenu
@@ -70,11 +75,17 @@ import audio.omgsoundboard.presentation.composables.MyTextField
 import audio.omgsoundboard.presentation.composables.PermissionDialog
 import audio.omgsoundboard.presentation.composables.PlaybackBehaviorDialog
 import audio.omgsoundboard.presentation.composables.SoundItem
+import audio.omgsoundboard.presentation.composables.SortPicker
 import audio.omgsoundboard.presentation.composables.ThemePicker
+import audio.omgsoundboard.presentation.composables.rememberSoundPlaybackProgress
 import audio.omgsoundboard.presentation.navigation.DrawerContent
 import audio.omgsoundboard.presentation.navigation.Screens
 import audio.omgsoundboard.presentation.utils.UiEvent
+import audio.omgsoundboard.core.utils.AUDIO_PICKER_MIME_TYPE
+import audio.omgsoundboard.core.utils.DEFAULT_AUDIO_EXTENSION
+import audio.omgsoundboard.core.utils.getExtensionFromUri
 import audio.omgsoundboard.core.utils.getTitleFromUri
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 
@@ -105,21 +116,7 @@ fun SoundsScreen(
     val soundPicker = rememberLauncherForActivityResult(
         ActivityResultContracts.GetMultipleContents()
     ) { soundUris ->
-        if (soundUris.isNotEmpty()) {
-            if (soundUris.size == 1){
-                val uri = soundUris.first()
-                val pickedSoundTitle = getTitleFromUri(context, uri) ?: ""
-                viewModel.onEvent(
-                    SoundsEvents.OnShowHideAddRenameSoundDialog(
-                        pickedSoundTitle,
-                        false,
-                        uri
-                    )
-                )
-            } else {
-                viewModel.onEvent(SoundsEvents.OnAddMultipleSounds(soundUris))
-            }
-        }
+        handleSoundPickerResult(soundUris, viewModel::onEvent, context)
     }
 
     val state by viewModel.state.collectAsState()
@@ -135,28 +132,8 @@ fun SoundsScreen(
                 onCategory = { category ->
                     viewModel.onEvent(SoundsEvents.OnSetCategoryId(category.id))
                 },
-                onAction = {
-                    when (it) {
-                        OPTIONS_CATEGORY -> {
-                            viewModel.onEvent(SoundsEvents.OnNavigate(Screens.CategoriesScreen.route))
-                        }
-
-                        OPTIONS_ABOUT -> {
-                            viewModel.onEvent(SoundsEvents.OnNavigate(Screens.AboutScreen.route))
-                        }
-
-                        OPTIONS_PARTICLES -> {
-                            viewModel.onEvent(SoundsEvents.OnToggleParticles)
-                        }
-
-                        OPTIONS_THEME_PICKER -> {
-                            viewModel.onEvent(SoundsEvents.OnShowHideThemePicker)
-                        }
-
-                        OPTIONS_PLAYBACK_BEHAVIOR -> {
-                            viewModel.onEvent(SoundsEvents.OnShowHidePlaybackBehaviorDialog)
-                        }
-                    }
+                onAction = { action ->
+                    handleDrawerAction(action, viewModel::onEvent)
                 }
             )
         }
@@ -164,7 +141,12 @@ fun SoundsScreen(
         Box(
             modifier = Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing)
         ) {
-            SoundsScreenContent(state, drawerState, viewModel::onEvent)
+            SoundsScreenContent(
+                state = state,
+                playbackProgress = viewModel.playbackProgress,
+                drawerState = drawerState,
+                onEvents = viewModel::onEvent,
+            )
             AnimatedVisibility(
                 modifier = Modifier.align(Alignment.BottomEnd),
                 visible = state.currentCategory?.id != -1,
@@ -178,7 +160,7 @@ fun SoundsScreen(
                 Fab(
                     modifier = Modifier.padding(12.dp),
                 ) {
-                    soundPicker.launch("audio/mpeg")
+                    soundPicker.launch(AUDIO_PICKER_MIME_TYPE)
                 }
             }
 
@@ -218,11 +200,26 @@ fun SoundsScreen(
             onDismiss = { viewModel.onEvent(SoundsEvents.OnShowHidePlaybackBehaviorDialog) }
         )
     }
+
+    if (state.showSortPicker) {
+        SortPicker(
+            selectedSortOrder = state.soundSortOrder,
+            onSortSelected = { sortOrder ->
+                viewModel.onEvent(SoundsEvents.OnChangeSortOrder(sortOrder))
+            },
+            onDismiss = {
+                viewModel.onEvent(SoundsEvents.OnShowHideSortPicker)
+            }
+        )
+    }
+
 }
 
+/** Main sounds list and chrome, excluding playback progress to limit list recompositions. */
 @Composable
 fun SoundsScreenContent(
     state: SoundsState,
+    playbackProgress: StateFlow<Map<Int, Float>>,
     drawerState: DrawerState,
     onEvents: (SoundsEvents) -> Unit,
 ) {
@@ -252,8 +249,9 @@ fun SoundsScreenContent(
     var pickedSound by remember { mutableStateOf(PlayableSound()) }
 
     var showBackupOptions by remember { mutableStateOf(false) }
+    val listState = rememberLazyListState()
 
-    Column {
+    Column(Modifier.fillMaxSize()) {
         Crossfade(state.showSearchField, label = "TopBar") { show ->
             when (show) {
                 true -> {
@@ -294,6 +292,16 @@ fun SoundsScreenContent(
                                 Icon(
                                     imageVector = Icons.Default.Favorite,
                                     contentDescription = null,
+                                )
+                            }
+                            IconButton(
+                                onClick = {
+                                    onEvents(SoundsEvents.OnShowHideSortPicker)
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Sort,
+                                    contentDescription = stringResource(id = R.string.sort_button),
                                 )
                             }
                             IconButton(onClick = {
@@ -365,6 +373,7 @@ fun SoundsScreenContent(
         }
 
         LazyColumn(
+            state = listState,
             modifier = Modifier
                 .weight(1f)
                 .padding(horizontal = 12.dp, vertical = 8.dp)
@@ -376,17 +385,21 @@ fun SoundsScreenContent(
                         textAlign = TextAlign.Center,
                         color = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier
-                            .fillMaxSize()
+                            .fillMaxWidth()
                             .padding(top = 32.dp)
                     )
                 }
             }
 
             itemsIndexed(state.sounds, key = { _, sound -> sound.id }) { index, sound ->
+                val itemProgress = rememberSoundPlaybackProgress(
+                    soundId = sound.id,
+                    playbackProgress = playbackProgress,
+                )
                 SoundItem(
                     item = sound,
                     index = index,
-                    playbackProgress = state.playbackProgress[sound.id],
+                    playbackProgress = itemProgress,
                     onFav = {
                         onEvents(SoundsEvents.OnToggleFav(sound.id))
                     },
@@ -503,6 +516,40 @@ fun SoundsScreenContent(
         )
     }
 }
+
+private fun handleSoundPickerResult(
+    soundUris: List<Uri>,
+    onEvent: (SoundsEvents) -> Unit,
+    context: Context,
+) {
+    when {
+        soundUris.isEmpty() -> return
+        soundUris.size == 1 -> onEvent(buildSingleSoundPickerEvent(soundUris.first(), context))
+        else -> onEvent(SoundsEvents.OnAddMultipleSounds(soundUris))
+    }
+}
+
+private fun buildSingleSoundPickerEvent(uri: Uri, context: Context): SoundsEvents {
+    return SoundsEvents.OnShowHideAddRenameSoundDialog(
+        initialText = getTitleFromUri(context, uri) ?: "",
+        isRenaming = false,
+        uri = uri,
+        extension = getExtensionFromUri(context, uri) ?: DEFAULT_AUDIO_EXTENSION,
+    )
+}
+
+private fun handleDrawerAction(action: String, onEvent: (SoundsEvents) -> Unit) {
+    val event = drawerActions[action] ?: return
+    onEvent(event())
+}
+
+private val drawerActions: Map<String, () -> SoundsEvents> = mapOf(
+    OPTIONS_CATEGORY to { SoundsEvents.OnNavigate(Screens.CategoriesScreen.route) },
+    OPTIONS_ABOUT to { SoundsEvents.OnNavigate(Screens.AboutScreen.route) },
+    OPTIONS_PARTICLES to { SoundsEvents.OnToggleParticles },
+    OPTIONS_THEME_PICKER to { SoundsEvents.OnShowHideThemePicker },
+    OPTIONS_PLAYBACK_BEHAVIOR to { SoundsEvents.OnShowHidePlaybackBehaviorDialog },
+)
 
 
 

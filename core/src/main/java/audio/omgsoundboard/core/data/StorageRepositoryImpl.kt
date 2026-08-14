@@ -11,6 +11,11 @@ import audio.omgsoundboard.core.domain.models.BackupMetadata
 import audio.omgsoundboard.core.domain.models.BackupResult
 import audio.omgsoundboard.core.domain.models.toBackup
 import audio.omgsoundboard.core.domain.repository.StorageRepository
+import audio.omgsoundboard.core.utils.DEFAULT_AUDIO_EXTENSION
+import audio.omgsoundboard.core.utils.buildSoundFileName
+import audio.omgsoundboard.core.utils.extensionFromStorageFileName
+import audio.omgsoundboard.core.utils.isAudioStorageFileName
+import audio.omgsoundboard.core.utils.titleFromStorageFileName
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -49,7 +54,7 @@ class StorageRepositoryImpl @Inject constructor(
                 zipOut.closeEntry()
 
                 privateFolder.listFiles()?.forEach { file ->
-                    if (file.name.endsWith(".mp3")) {
+                    if (isAudioStorageFileName(file.name)) {
                         val entry = ZipEntry(file.name)
                         zipOut.putNextEntry(entry)
                         file.inputStream().use { input ->
@@ -78,31 +83,10 @@ class StorageRepositoryImpl @Inject constructor(
                 while (entry != null) {
                     when {
                         entry.name == "metadata.json" -> {
-                            val metadataJson = zipIn.bufferedReader().readText()
-                            metadata = gson.fromJson(metadataJson, BackupMetadata::class.java)
+                            metadata = readMetadataEntry(zipIn)
                         }
-
-                        entry.name.endsWith(".mp3") -> {
-                            val extractedFile = File(privateFolder, entry.name)
-                            val normalizedPath = extractedFile.toPath().normalize()
-                            val targetDirPath = privateFolder.toPath().normalize()
-                            if (!normalizedPath.startsWith(targetDirPath)) {
-                                throw IllegalArgumentException("Bad zip entry: ${entry.name}")
-                            }
-                            FileOutputStream(extractedFile).use { output ->
-                                zipIn.copyTo(output)
-                            }
-
-                            val soundEntity = SoundsEntity(
-                                title = entry.name.removeSuffix(".mp3"),
-                                uri = Uri.EMPTY,
-                                date = System.currentTimeMillis(),
-                                isFavorite = false,
-                                categoryId = 0,
-                                resId = null
-                            )
-
-                            restoredSounds.add(soundEntity)
+                        isRestorableAudioEntry(entry.name) -> {
+                            restoredSounds += extractAudioZipEntry(entry, zipIn, privateFolder)
                         }
                     }
                     zipIn.closeEntry()
@@ -111,7 +95,7 @@ class StorageRepositoryImpl @Inject constructor(
             }
 
             if (metadata != null) {
-                restoreMetadata(metadata)
+                restoreMetadata(metadata!!)
                 BackupResult.Success()
             } else {
                 val catName = restoredWithoutMetadata(restoredSounds)
@@ -151,20 +135,19 @@ class StorageRepositoryImpl @Inject constructor(
         try {
             val privateFolder = File(context.filesDir.absolutePath)
             privateFolder.listFiles()?.forEach { file ->
-                if (file.name.endsWith(".mp3")) {
-                    val fileId = file.name.removeSuffix(".mp3")
+                if (!isAudioStorageFileName(file.name)) return@forEach
 
-                    val uri = FileProvider.getUriForFile(
-                        context,
-                        "audio.omgsoundboard.provider",
-                        file
-                    )
+                val fileId = file.name.substringBeforeLast('.')
+                val uri = FileProvider.getUriForFile(
+                    context,
+                    "audio.omgsoundboard.provider",
+                    file
+                )
 
-                    val sound = soundsDao.getSoundById(fileId.toInt())
-                    if (sound != null){
-                        val newSound = sound.copy(uri = uri)
-                        soundsDao.updateSound(newSound)
-                    }
+                val sound = soundsDao.getSoundById(fileId.toIntOrNull() ?: return@forEach)
+                if (sound != null){
+                    val newSound = sound.copy(uri = uri)
+                    soundsDao.updateSound(newSound)
                 }
             }
         } catch (e: Exception) {
@@ -176,13 +159,10 @@ class StorageRepositoryImpl @Inject constructor(
         val category = categoryDao.getRandomCategory()
 
         val restoredSounds = sounds.map { soundBackup ->
-            val file = File(context.filesDir, "${soundBackup.title}.mp3")
-            val uri = FileProvider.getUriForFile(
-                context,
-                "audio.omgsoundboard.provider",
-                file
+            soundBackup.copy(
+                categoryId = category.id,
+                uri = soundProviderUri(soundBackup.title, soundBackup.fileExtension),
             )
-            soundBackup.copy(categoryId = category.id, uri = uri)
         }
         soundsDao.insertSounds(restoredSounds)
         return category.name
@@ -192,21 +172,67 @@ class StorageRepositoryImpl @Inject constructor(
         categoryDao.insertCategories(metadata.categories)
 
         val restoredSounds = metadata.sounds.map { soundBackup ->
-            val file = File(context.filesDir, "${soundBackup.title}.mp3")
-            val uri = FileProvider.getUriForFile(
-                context,
-                "audio.omgsoundboard.provider",
-                file
-            )
+            val extension = soundBackup.fileExtension.ifBlank { DEFAULT_AUDIO_EXTENSION }
             SoundsEntity(
                 title = soundBackup.title,
-                uri = uri,
+                uri = soundProviderUri(soundBackup.title, extension),
                 date = soundBackup.date,
                 isFavorite = soundBackup.isFavorite,
                 categoryId = soundBackup.categoryId,
-                resId = soundBackup.resId
+                resId = soundBackup.resId,
+                fileExtension = extension,
+                playCount = soundBackup.playCount,
             )
         }
         soundsDao.insertSounds(restoredSounds)
+    }
+
+    private fun readMetadataEntry(zipIn: ZipInputStream): BackupMetadata {
+        val metadataJson = zipIn.bufferedReader().readText()
+        return gson.fromJson(metadataJson, BackupMetadata::class.java)
+    }
+
+    private fun isRestorableAudioEntry(entryName: String): Boolean {
+        return entryName.endsWith(".mp3") || isAudioStorageFileName(entryName)
+    }
+
+    private fun extractAudioZipEntry(
+        entry: ZipEntry,
+        zipIn: ZipInputStream,
+        privateFolder: File,
+    ): SoundsEntity {
+        val extractedFile = File(privateFolder, entry.name)
+        val normalizedPath = extractedFile.toPath().normalize()
+        val targetDirPath = privateFolder.toPath().normalize()
+        if (!normalizedPath.startsWith(targetDirPath)) {
+            throw IllegalArgumentException("Bad zip entry: ${entry.name}")
+        }
+        FileOutputStream(extractedFile).use { output ->
+            zipIn.copyTo(output)
+        }
+
+        val title = titleFromStorageFileName(entry.name)
+            ?: entry.name.removeSuffix(".mp3")
+        val extension = extensionFromStorageFileName(entry.name)
+            ?: DEFAULT_AUDIO_EXTENSION
+
+        return SoundsEntity(
+            title = title,
+            uri = Uri.EMPTY,
+            date = System.currentTimeMillis(),
+            isFavorite = false,
+            categoryId = 0,
+            resId = null,
+            fileExtension = extension,
+        )
+    }
+
+    private fun soundProviderUri(title: String, extension: String): Uri {
+        val file = File(context.filesDir, buildSoundFileName(title, extension))
+        return FileProvider.getUriForFile(
+            context,
+            "audio.omgsoundboard.provider",
+            file
+        )
     }
 }

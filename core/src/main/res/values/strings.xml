@@ -35,6 +35,13 @@
     <string name="options_theme_picker">Theme Picker</string>
     <string name="options_about">About</string>
     <string name="options_playback_behavior">Playback behavior</string>
+    <string name="options_sort">Sort</string>
+    <string name="sort_button">Sort sounds</string>
+    <string name="sort_title">Sort sounds</string>
+    <string name="sort_alpha_asc">A to Z</string>
+    <string name="sort_alpha_desc">Z to A</string>
+    <string name="sort_most_used">Most used</string>
+    <string name="sort_recently_added">Recently added</string>
     <string name="stop_on_retap">Stop on re-tap</string>
     <string name="stop_on_retap_desc">Tapping a playing sound again will stop it</string>
     <string name="stop_on_new_sound">Stop on new sound</string>
@@ -100,6 +107,7 @@
     <string name="ok">Ok</string>
     <string name="continue_dialog">Continue</string>
     <string name="can_not_add_sound">The sound could not be added</string>
+    <string name="sound_already_exists">A sound with this name already exists</string>
     <string name="category_add_title">Add category</string>
     <string name="update_category">Update category</string>
     <string name="category_add_placeholder">New category title</string>
@@ -110,7 +118,7 @@
     <string name="restore_backup_error">Failed to restore backup: %1$s</string>
     <string name="change_category">Change category</string>
     <string name="sounds_added">Sounds have been successfully added.</string>
-    <string name="sounds_added_2">Some sounds were added, but %1$s sound(s) were skipped. Please try adding the skipped sounds individually.</string>
+    <string name="sounds_added_2">Some sounds were added, but %1$s sound(s) were skipped because they already exist or could not be imported.</string>
     <string name="sync">Sync</string>
     <string name="sync_wearable">Sync wearable device</string>
     <string name="data_synced">Categories and sounds have been sent to your Wear device. To complete the sync, please tap the \'Sync\' button on your Wear device to ensure everything is updated and ready to use.</string>

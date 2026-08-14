@@ -1,6 +1,7 @@
 package audio.omgsoundboard.presentation.composables
 
 import android.os.Build
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.RadioButton
@@ -15,6 +16,7 @@ import androidx.compose.ui.window.Dialog
 import audio.omgsoundboard.core.R
 import audio.omgsoundboard.presentation.theme.ThemeType
 
+/** Dialog for choosing the app theme. */
 @Composable
 fun ThemePicker(
     selectedThemeType: ThemeType,
@@ -74,15 +76,18 @@ fun ThemePicker(
 }
 
 
+/** Shared single-choice row used by picker dialogs. */
 @Composable
 fun Radio(text: String, isSelected: Boolean, onClick: () -> Unit) {
     Row(
-        modifier = Modifier.padding(horizontal = 16.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(horizontal = 8.dp, vertical = 4.dp),
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = text)
+        Text(text = text, modifier = Modifier.weight(1f))
         RadioButton(selected = isSelected, onClick = onClick)
     }
-
 }

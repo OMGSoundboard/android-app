@@ -10,6 +10,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,15 +29,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import audio.omgsoundboard.core.R
 import audio.omgsoundboard.core.domain.models.PlayableSound
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 
+/** Row UI for a single sound, including playback progress and favorite actions. */
 @Composable
 fun SoundItem(
     item: PlayableSound,
@@ -55,83 +60,132 @@ fun SoundItem(
             .height(60.dp)
             .padding(bottom = 6.dp)
             .indication(interactionSource, LocalIndication.current)
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onTap = { offset ->
-                        scope.launch {
-                            val press = PressInteraction.Press(offset)
-                            interactionSource.emit(press)
-                            interactionSource.emit(PressInteraction.Release(press))
-                        }
-                        onPlay()
-                    },
-                    onLongPress = { offset ->
-                        scope.launch {
-                            // Start the ripple effect on long press
-                            val press = PressInteraction.Press(offset)
-                            interactionSource.emit(press)
-                            onDropMenu(offset)
-                            // End the ripple effect after the long press is handled
-                            interactionSource.emit(PressInteraction.Release(press))
-                        }
-                    }
-                )
-            },
+            .soundItemGestures(
+                interactionSource = interactionSource,
+                scope = scope,
+                onPlay = onPlay,
+                onDropMenu = onDropMenu,
+            ),
         color = MaterialTheme.colorScheme.surfaceVariant,
         shape = RoundedCornerShape(0.dp),
     ) {
-        val accentColor = if (index % 2 == 0) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary
-        Box(modifier = Modifier.fillMaxSize()) {
+        SoundItemContent(
+            item = item,
+            index = index,
+            playbackProgress = playbackProgress,
+            onFav = onFav,
+        )
+    }
+}
+
+@Composable
+private fun SoundItemContent(
+    item: PlayableSound,
+    index: Int,
+    playbackProgress: Float?,
+    onFav: () -> Unit,
+) {
+    val accentColor = soundItemAccentColor(index)
+    Box(modifier = Modifier.fillMaxSize()) {
+        Row(
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            Box(
+                modifier = Modifier
+                    .background(accentColor)
+                    .width(3.dp)
+                    .height(60.dp)
+            )
             Row(
-                horizontalArrangement = Arrangement.Start,
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxSize(),
             ) {
-                Box(
+                Text(
                     modifier = Modifier
-                        .background(accentColor)
-                        .width(3.dp)
-                        .height(60.dp)
+                        .weight(1f)
+                        .padding(start = 16.dp, end = 8.dp, top = 8.dp, bottom = 8.dp),
+                    text = item.title,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
-                        text = item.title,
+                IconButton(onClick = onFav) {
+                    Icon(
+                        painter = painterResource(
+                            id = if (item.isFav) {
+                                R.drawable.fav
+                            } else {
+                                R.drawable.fav_outlined
+                            }
+                        ),
+                        tint = MaterialTheme.colorScheme.primary,
+                        contentDescription = null,
                     )
-                    IconButton(onClick = onFav) {
-                        Icon(
-                            painter = painterResource(
-                                id = if (item.isFav) {
-                                    R.drawable.fav
-                                } else {
-                                    R.drawable.fav_outlined
-                                }
-                            ),
-                            tint = MaterialTheme.colorScheme.primary,
-                            contentDescription = null,
-                        )
-                    }
                 }
             }
+        }
 
-            if (playbackProgress != null) {
-                val animatedProgress by animateFloatAsState(
-                    targetValue = playbackProgress.coerceIn(0f, 1f),
-                    animationSpec = tween(durationMillis = 100),
-                    label = "playback_progress",
-                )
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .fillMaxWidth(animatedProgress)
-                        .height(3.dp)
-                        .background(accentColor),
-                )
-            }
+        if (playbackProgress != null) {
+            SoundItemProgressBar(
+                progress = playbackProgress,
+                accentColor = accentColor,
+            )
         }
     }
 }
+
+@Composable
+private fun BoxScope.SoundItemProgressBar(
+    progress: Float,
+    accentColor: Color,
+) {
+    val animatedProgress by animateFloatAsState(
+        targetValue = progress.coerceIn(0f, 1f),
+        animationSpec = tween(durationMillis = 100),
+        label = "playback_progress",
+    )
+    Box(
+        modifier = Modifier
+            .align(Alignment.BottomStart)
+            .fillMaxWidth(animatedProgress)
+            .height(3.dp)
+            .background(accentColor),
+    )
+}
+
+private fun Modifier.soundItemGestures(
+    interactionSource: MutableInteractionSource,
+    scope: CoroutineScope,
+    onPlay: () -> Unit,
+    onDropMenu: (Offset) -> Unit,
+): Modifier = pointerInput(Unit) {
+    detectTapGestures(
+        onTap = { offset ->
+            scope.launch {
+                interactionSource.emitTapFeedback(offset)
+            }
+            onPlay()
+        },
+        onLongPress = { offset ->
+            scope.launch {
+                val press = PressInteraction.Press(offset)
+                interactionSource.emit(press)
+                onDropMenu(offset)
+                interactionSource.emit(PressInteraction.Release(press))
+            }
+        },
+    )
+}
+
+private suspend fun MutableInteractionSource.emitTapFeedback(offset: Offset) {
+    val press = PressInteraction.Press(offset)
+    emit(press)
+    emit(PressInteraction.Release(press))
+}
+
+@Composable
+private fun soundItemAccentColor(index: Int) =
+    if (index % 2 == 0) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary
