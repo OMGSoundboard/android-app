@@ -80,7 +80,6 @@ class FavoritesViewModel @Inject constructor(
         }
         else -> false
     }
-
     private fun dispatchDialogEvent(event: FavoritesEvents): Boolean = when (event) {
         is FavoritesEvents.OnShowHideRenameSoundDialog -> {
             _state.value = _state.value.copy(

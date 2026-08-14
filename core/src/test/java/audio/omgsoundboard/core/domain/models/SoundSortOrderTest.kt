@@ -6,6 +6,7 @@ import org.junit.Test
 /** Unit tests for [SoundSortOrder]. */
 class SoundSortOrderTest {
 
+    /** Sorts sounds alphabetically from A to Z. */
     @Test
     fun `sorts by title ascending`() {
         val sounds = listOf(
@@ -19,6 +20,7 @@ class SoundSortOrderTest {
         assertEquals(listOf("alpha", "Beta", "Zebra"), sorted.map { it.title })
     }
 
+    /** Breaks ties by most recent date when play counts match. */
     @Test
     fun `sorts by most used then recently added`() {
         val sounds = listOf(
