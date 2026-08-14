@@ -10,6 +10,7 @@ import androidx.room.TypeConverters
 import audio.omgsoundboard.core.data.local.UriTypeConverter
 import audio.omgsoundboard.core.domain.models.PlayableSound
 import audio.omgsoundboard.core.utils.Constants.SOUNDS_TABLE
+import audio.omgsoundboard.core.utils.DEFAULT_AUDIO_EXTENSION
 
 @Entity(
     tableName = SOUNDS_TABLE,
@@ -31,7 +32,8 @@ data class SoundsEntity(
     @ColumnInfo(name = "date") val date: Long,
     @ColumnInfo(name = "isFavorite") val isFavorite: Boolean = false,
     @ColumnInfo(name = "category_id") val categoryId: Int?,
-    @ColumnInfo(name = "res_id") val resId: Int? = null
+    @ColumnInfo(name = "res_id") val resId: Int? = null,
+    @ColumnInfo(name = "file_extension") val fileExtension: String = DEFAULT_AUDIO_EXTENSION,
 )
 
 fun PlayableSound.toEntity() = SoundsEntity(
@@ -41,5 +43,6 @@ fun PlayableSound.toEntity() = SoundsEntity(
     date = date,
     isFavorite = isFav,
     categoryId = categoryId,
-    resId = resId
+    resId = resId,
+    fileExtension = fileExtension
 )

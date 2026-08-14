@@ -11,6 +11,11 @@ import audio.omgsoundboard.core.domain.models.BackupMetadata
 import audio.omgsoundboard.core.domain.models.BackupResult
 import audio.omgsoundboard.core.domain.models.toBackup
 import audio.omgsoundboard.core.domain.repository.StorageRepository
+import audio.omgsoundboard.core.utils.DEFAULT_AUDIO_EXTENSION
+import audio.omgsoundboard.core.utils.buildSoundFileName
+import audio.omgsoundboard.core.utils.extensionFromStorageFileName
+import audio.omgsoundboard.core.utils.isAudioStorageFileName
+import audio.omgsoundboard.core.utils.titleFromStorageFileName
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -49,7 +54,7 @@ class StorageRepositoryImpl @Inject constructor(
                 zipOut.closeEntry()
 
                 privateFolder.listFiles()?.forEach { file ->
-                    if (file.name.endsWith(".mp3")) {
+                    if (isAudioStorageFileName(file.name)) {
                         val entry = ZipEntry(file.name)
                         zipOut.putNextEntry(entry)
                         file.inputStream().use { input ->
@@ -82,7 +87,7 @@ class StorageRepositoryImpl @Inject constructor(
                             metadata = gson.fromJson(metadataJson, BackupMetadata::class.java)
                         }
 
-                        entry.name.endsWith(".mp3") -> {
+                        entry.name.endsWith(".mp3") || isAudioStorageFileName(entry.name) -> {
                             val extractedFile = File(privateFolder, entry.name)
                             val normalizedPath = extractedFile.toPath().normalize()
                             val targetDirPath = privateFolder.toPath().normalize()
@@ -93,13 +98,19 @@ class StorageRepositoryImpl @Inject constructor(
                                 zipIn.copyTo(output)
                             }
 
+                            val title = titleFromStorageFileName(entry.name)
+                                ?: entry.name.removeSuffix(".mp3")
+                            val extension = extensionFromStorageFileName(entry.name)
+                                ?: DEFAULT_AUDIO_EXTENSION
+
                             val soundEntity = SoundsEntity(
-                                title = entry.name.removeSuffix(".mp3"),
+                                title = title,
                                 uri = Uri.EMPTY,
                                 date = System.currentTimeMillis(),
                                 isFavorite = false,
                                 categoryId = 0,
-                                resId = null
+                                resId = null,
+                                fileExtension = extension,
                             )
 
                             restoredSounds.add(soundEntity)
@@ -151,20 +162,19 @@ class StorageRepositoryImpl @Inject constructor(
         try {
             val privateFolder = File(context.filesDir.absolutePath)
             privateFolder.listFiles()?.forEach { file ->
-                if (file.name.endsWith(".mp3")) {
-                    val fileId = file.name.removeSuffix(".mp3")
+                if (!isAudioStorageFileName(file.name)) return@forEach
 
-                    val uri = FileProvider.getUriForFile(
-                        context,
-                        "audio.omgsoundboard.provider",
-                        file
-                    )
+                val fileId = file.name.substringBeforeLast('.')
+                val uri = FileProvider.getUriForFile(
+                    context,
+                    "audio.omgsoundboard.provider",
+                    file
+                )
 
-                    val sound = soundsDao.getSoundById(fileId.toInt())
-                    if (sound != null){
-                        val newSound = sound.copy(uri = uri)
-                        soundsDao.updateSound(newSound)
-                    }
+                val sound = soundsDao.getSoundById(fileId.toIntOrNull() ?: return@forEach)
+                if (sound != null){
+                    val newSound = sound.copy(uri = uri)
+                    soundsDao.updateSound(newSound)
                 }
             }
         } catch (e: Exception) {
@@ -176,7 +186,10 @@ class StorageRepositoryImpl @Inject constructor(
         val category = categoryDao.getRandomCategory()
 
         val restoredSounds = sounds.map { soundBackup ->
-            val file = File(context.filesDir, "${soundBackup.title}.mp3")
+            val file = File(
+                context.filesDir,
+                buildSoundFileName(soundBackup.title, soundBackup.fileExtension)
+            )
             val uri = FileProvider.getUriForFile(
                 context,
                 "audio.omgsoundboard.provider",
@@ -192,7 +205,8 @@ class StorageRepositoryImpl @Inject constructor(
         categoryDao.insertCategories(metadata.categories)
 
         val restoredSounds = metadata.sounds.map { soundBackup ->
-            val file = File(context.filesDir, "${soundBackup.title}.mp3")
+            val extension = soundBackup.fileExtension.ifBlank { DEFAULT_AUDIO_EXTENSION }
+            val file = File(context.filesDir, buildSoundFileName(soundBackup.title, extension))
             val uri = FileProvider.getUriForFile(
                 context,
                 "audio.omgsoundboard.provider",
@@ -204,7 +218,8 @@ class StorageRepositoryImpl @Inject constructor(
                 date = soundBackup.date,
                 isFavorite = soundBackup.isFavorite,
                 categoryId = soundBackup.categoryId,
-                resId = soundBackup.resId
+                resId = soundBackup.resId,
+                fileExtension = extension
             )
         }
         soundsDao.insertSounds(restoredSounds)

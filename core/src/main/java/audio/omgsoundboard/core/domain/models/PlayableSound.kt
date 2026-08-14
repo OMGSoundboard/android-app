@@ -2,6 +2,7 @@ package audio.omgsoundboard.core.domain.models
 
 import android.net.Uri
 import audio.omgsoundboard.core.data.local.entities.SoundsEntity
+import audio.omgsoundboard.core.utils.DEFAULT_AUDIO_EXTENSION
 
 data class PlayableSound(
     val id: Int = 0,
@@ -11,6 +12,7 @@ data class PlayableSound(
     val isFav: Boolean = false,
     val categoryId: Int? = null,
     val resId: Int? = null,
+    val fileExtension: String = DEFAULT_AUDIO_EXTENSION,
 )
 
 fun SoundsEntity.toDomain() = PlayableSound(
@@ -21,4 +23,5 @@ fun SoundsEntity.toDomain() = PlayableSound(
     isFav = isFavorite,
     categoryId = categoryId,
     resId = resId,
+    fileExtension = fileExtension
 )

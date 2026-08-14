@@ -5,6 +5,7 @@ import android.net.Uri
 import audio.omgsoundboard.core.domain.models.Category
 import audio.omgsoundboard.core.domain.models.PlayableSound
 import audio.omgsoundboard.core.domain.models.WearNode
+import audio.omgsoundboard.core.utils.DEFAULT_AUDIO_EXTENSION
 import audio.omgsoundboard.presentation.theme.ThemeType
 
 data class SoundsState(
@@ -19,6 +20,7 @@ data class SoundsState(
     val showChangeCategoryDialog: Boolean = false,
     val isRenaming: Boolean = false,
     val addedSoundUri: Uri? = Uri.EMPTY,
+    val addedSoundExtension: String = DEFAULT_AUDIO_EXTENSION,
     val textFieldValue: String = "",
     val textFieldError: Boolean = false,
     val showConfirmDeleteDialog: Boolean = false,

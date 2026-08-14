@@ -95,7 +95,7 @@ class FavoritesViewModel @Inject constructor(
     }
 
     private fun setMedia(type: MediaManager, sound: PlayableSound){
-        player.setMedia(type, sound.title, sound.resId, sound.uri)
+        player.setMedia(type, sound.title, sound.resId, sound.uri, sound.fileExtension)
     }
 
     private fun toggleFav(id: Int){

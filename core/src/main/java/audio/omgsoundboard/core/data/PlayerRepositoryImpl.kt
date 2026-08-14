@@ -16,8 +16,16 @@ import audio.omgsoundboard.core.domain.repository.MediaManager
 import audio.omgsoundboard.core.domain.repository.PlayerRepository
 import audio.omgsoundboard.core.utils.Constants.STOP_ON_NEW_SOUND
 import audio.omgsoundboard.core.utils.Constants.STOP_ON_RETAP
+import audio.omgsoundboard.core.utils.buildSoundFileName
+import audio.omgsoundboard.core.utils.getExtensionFromUri
 import audio.omgsoundboard.core.utils.getTitleFromUri
 import audio.omgsoundboard.core.utils.getUriPath
+import audio.omgsoundboard.core.utils.isDuplicateSoundFile
+import audio.omgsoundboard.core.utils.isSupportedAudioExtension
+import audio.omgsoundboard.core.utils.mimeTypeForExtension
+import audio.omgsoundboard.core.utils.normalizeAudioExtension
+import audio.omgsoundboard.core.utils.normalizeSoundTitle
+import audio.omgsoundboard.core.utils.soundFileKey
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -134,14 +142,21 @@ class PlayerRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun setMedia(type: MediaManager, fileName: String, resourceId: Int?, cUri: Uri) {
+    override fun setMedia(
+        type: MediaManager,
+        fileName: String,
+        resourceId: Int?,
+        cUri: Uri,
+        extension: String,
+    ) {
 
         var mediaType = RingtoneManager.TYPE_RINGTONE
+        val normalizedExtension = normalizeAudioExtension(extension)
 
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
 
             val mediaUri = if (cUri == Uri.EMPTY) {
-               getAudioUri(fileName, resourceId!!)
+               getAudioUri(buildSoundFileName(fileName, normalizedExtension), resourceId!!)
             } else {
                 cUri
             }
@@ -166,7 +181,7 @@ class PlayerRepositoryImpl @Inject constructor(
 
         } else {
             val uri = if (cUri == Uri.EMPTY) {
-                getAudioUri(fileName, resourceId!!)
+                getAudioUri(buildSoundFileName(fileName, normalizedExtension), resourceId!!)
             } else {
                 cUri
             }
@@ -176,7 +191,7 @@ class PlayerRepositoryImpl @Inject constructor(
             val values = ContentValues()
             values.put(MediaStore.MediaColumns.DATA, uri.path)
             values.put(MediaStore.MediaColumns.TITLE, fileName)
-            values.put(MediaStore.MediaColumns.MIME_TYPE, "audio/mp3")
+            values.put(MediaStore.MediaColumns.MIME_TYPE, mimeTypeForExtension(normalizedExtension))
             values.put(AudioColumns.ARTIST, context.getString(R.string.app_name))
             values.put(AudioColumns.IS_MUSIC, false);
 
@@ -217,11 +232,14 @@ class PlayerRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun addSound(fileName: String, uri: Uri): Uri? {
+    override fun addSound(fileName: String, uri: Uri, extension: String): Uri? {
+        val normalizedExtension = normalizeAudioExtension(extension)
+        if (!isSupportedAudioExtension(normalizedExtension)) return null
+
         val inputStream = context.contentResolver.openInputStream(uri)
 
         if (inputStream != null) {
-            val outputFile = File(context.filesDir, "$fileName.mp3")
+            val outputFile = File(context.filesDir, buildSoundFileName(fileName, normalizedExtension))
             var outputStream: FileOutputStream? = null
 
             try {
@@ -254,49 +272,76 @@ class PlayerRepositoryImpl @Inject constructor(
         return null
     }
 
-    override fun addMultipleSounds(uris: List<Uri>): List<SoundWithUri> {
+    override fun addMultipleSounds(
+        uris: List<Uri>,
+        existingSoundKeys: Set<String>,
+    ): List<SoundWithUri> {
+        val knownSoundKeys = existingSoundKeys.toMutableSet()
+        val addedInBatch = mutableSetOf<String>()
+
         return uris.mapNotNull { uri ->
             val title = getTitleFromUri(context, uri) ?: ""
+            val extension = getExtensionFromUri(context, uri) ?: return@mapNotNull null
+            val normalizedTitle = normalizeSoundTitle(title)
+            val normalizedExtension = normalizeAudioExtension(extension)
 
-            if (title.isNotEmpty()) {
-                val inputStream = context.contentResolver.openInputStream(uri)
+            if (normalizedTitle.isEmpty() || !isSupportedAudioExtension(normalizedExtension)) {
+                return@mapNotNull null
+            }
 
-                if (inputStream != null) {
-                    val outputFile = File(context.filesDir, "$title.mp3")
-                    var outputStream: FileOutputStream? = null
+            val soundKey = soundFileKey(normalizedTitle, normalizedExtension)
+            if (isDuplicateSoundFile(normalizedTitle, normalizedExtension, knownSoundKeys) ||
+                !addedInBatch.add(soundKey)
+            ) {
+                return@mapNotNull null
+            }
 
+            val outputFile = File(
+                context.filesDir,
+                buildSoundFileName(normalizedTitle, normalizedExtension)
+            )
+            if (outputFile.exists()) {
+                return@mapNotNull null
+            }
+
+            val inputStream = context.contentResolver.openInputStream(uri)
+
+            if (inputStream != null) {
+                var outputStream: FileOutputStream? = null
+
+                try {
+                    outputStream = FileOutputStream(outputFile)
+                    val bufferSize = 1024
+                    val buffer = ByteArray(bufferSize)
+                    var length: Int
+
+                    while (inputStream.read(buffer).also { length = it } > 0) {
+                        outputStream.write(buffer, 0, length)
+                    }
+
+                    knownSoundKeys.add(soundKey)
+
+                    val fileUri = FileProvider.getUriForFile(
+                        context,
+                        "audio.omgsoundboard.provider",
+                        outputFile
+                    )
+                    SoundWithUri(normalizedTitle, fileUri, normalizedExtension)
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                    addedInBatch.remove(soundKey)
+                    null
+                } finally {
                     try {
-                        outputStream = FileOutputStream(outputFile)
-                        val bufferSize = 1024
-                        val buffer = ByteArray(bufferSize)
-                        var length: Int
-
-                        while (inputStream.read(buffer).also { length = it } > 0) {
-                            outputStream.write(buffer, 0, length)
-                        }
-
-                        val fileUri = FileProvider.getUriForFile(
-                            context,
-                            "audio.omgsoundboard.provider",
-                            outputFile
-                        )
-                        SoundWithUri(title, fileUri)
+                        outputStream?.flush()
+                        inputStream.close()
+                        outputStream?.close()
                     } catch (e: IOException) {
                         e.printStackTrace()
-                        null
-                    } finally {
-                        try {
-                            outputStream?.flush()
-                            inputStream.close()
-                            outputStream?.close()
-                        } catch (e: IOException) {
-                            e.printStackTrace()
-                        }
                     }
-                } else {
-                    null
                 }
             } else {
+                addedInBatch.remove(soundKey)
                 null
             }
         }

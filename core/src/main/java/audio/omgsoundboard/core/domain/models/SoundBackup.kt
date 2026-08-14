@@ -1,6 +1,7 @@
 package audio.omgsoundboard.core.domain.models
 
 import audio.omgsoundboard.core.data.local.entities.SoundsEntity
+import audio.omgsoundboard.core.utils.DEFAULT_AUDIO_EXTENSION
 
 data class SoundBackup(
     val id: Int = 0,
@@ -8,7 +9,8 @@ data class SoundBackup(
     val date: Long,
     val isFavorite: Boolean = false,
     val categoryId: Int?,
-    val resId: Int? = null
+    val resId: Int? = null,
+    val fileExtension: String = DEFAULT_AUDIO_EXTENSION,
 )
 
 fun SoundsEntity.toBackup() = SoundBackup(
@@ -17,5 +19,6 @@ fun SoundsEntity.toBackup() = SoundBackup(
     date = date,
     isFavorite = isFavorite,
     categoryId = categoryId,
-    resId = resId
+    resId = resId,
+    fileExtension = fileExtension
 )

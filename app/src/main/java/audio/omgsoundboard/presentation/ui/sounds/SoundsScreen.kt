@@ -74,6 +74,9 @@ import audio.omgsoundboard.presentation.composables.ThemePicker
 import audio.omgsoundboard.presentation.navigation.DrawerContent
 import audio.omgsoundboard.presentation.navigation.Screens
 import audio.omgsoundboard.presentation.utils.UiEvent
+import audio.omgsoundboard.core.utils.AUDIO_PICKER_MIME_TYPE
+import audio.omgsoundboard.core.utils.DEFAULT_AUDIO_EXTENSION
+import audio.omgsoundboard.core.utils.getExtensionFromUri
 import audio.omgsoundboard.core.utils.getTitleFromUri
 import kotlinx.coroutines.launch
 
@@ -109,11 +112,13 @@ fun SoundsScreen(
             if (soundUris.size == 1){
                 val uri = soundUris.first()
                 val pickedSoundTitle = getTitleFromUri(context, uri) ?: ""
+                val pickedSoundExtension = getExtensionFromUri(context, uri) ?: DEFAULT_AUDIO_EXTENSION
                 viewModel.onEvent(
                     SoundsEvents.OnShowHideAddRenameSoundDialog(
                         pickedSoundTitle,
                         false,
-                        uri
+                        uri,
+                        pickedSoundExtension,
                     )
                 )
             } else {
@@ -178,7 +183,7 @@ fun SoundsScreen(
                 Fab(
                     modifier = Modifier.padding(12.dp),
                 ) {
-                    soundPicker.launch("audio/mpeg")
+                    soundPicker.launch(AUDIO_PICKER_MIME_TYPE)
                 }
             }
 
@@ -218,6 +223,7 @@ fun SoundsScreen(
             onDismiss = { viewModel.onEvent(SoundsEvents.OnShowHidePlaybackBehaviorDialog) }
         )
     }
+
 }
 
 @Composable

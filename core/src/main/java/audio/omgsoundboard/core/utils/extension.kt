@@ -10,17 +10,28 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 
-fun getTitleFromUri(context: Context, uri: Uri): String? {
+fun getDisplayNameFromUri(context: Context, uri: Uri): String? {
     val cursor = context.contentResolver.query(
         uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null
     )
     cursor?.use {
         if (it.moveToFirst()) {
             val titleIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-            return if (titleIndex != -1) it.getString(titleIndex).split(".")[0] else null
+            return if (titleIndex != -1) it.getString(titleIndex) else null
         }
     }
     return null
+}
+
+fun getTitleFromUri(context: Context, uri: Uri): String? {
+    val displayName = getDisplayNameFromUri(context, uri) ?: return null
+    return parseAudioFileName(displayName)?.first
+        ?: displayName.substringBeforeLast('.').trim().takeIf { it.isNotEmpty() }
+}
+
+fun getExtensionFromUri(context: Context, uri: Uri): String? {
+    val displayName = getDisplayNameFromUri(context, uri) ?: return null
+    return parseAudioFileName(displayName)?.second
 }
 
 fun getUriPath(context: Context, resourceId: Int): Uri {
@@ -31,9 +42,9 @@ fun getUriPath(context: Context, resourceId: Int): Uri {
         .build()
 }
 
-fun getFileFromUri(context: Context, uri: Uri, id: String): File? {
+fun getFileFromUri(context: Context, uri: Uri, id: String, extension: String = DEFAULT_AUDIO_EXTENSION): File? {
     return try {
-        val file = File(context.cacheDir, "$id.mp3")
+        val file = File(context.cacheDir, buildSoundFileName(id, extension))
         val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
         val outputStream = FileOutputStream(file)
 

@@ -18,6 +18,8 @@ import audio.omgsoundboard.core.utils.Constants.PARTICLES_STATUS
 import audio.omgsoundboard.core.utils.Constants.STOP_ON_NEW_SOUND
 import audio.omgsoundboard.core.utils.Constants.STOP_ON_RETAP
 import audio.omgsoundboard.core.utils.Constants.THEME_TYPE
+import audio.omgsoundboard.core.utils.DEFAULT_AUDIO_EXTENSION
+import audio.omgsoundboard.core.utils.existingSoundFileKeys
 import audio.omgsoundboard.domain.repository.SharedPrefRepository
 import audio.omgsoundboard.presentation.theme.ThemeType
 import audio.omgsoundboard.presentation.theme.toThemeType
@@ -85,7 +87,7 @@ class SoundsViewModel @Inject constructor(
             currentCategory = currentCategory,
             sounds = sounds.map { it.toDomain() },
             searchTerm = search,
-            wearNodes = wearNodes
+            wearNodes = wearNodes,
         )
     }.combine(player.playbackProgress) { state, progress ->
         state.copy(playbackProgress = progress)
@@ -166,7 +168,8 @@ class SoundsViewModel @Inject constructor(
                     showAddRenameSoundDialog = !_state.value.showAddRenameSoundDialog,
                     textFieldValue = event.initialText,
                     isRenaming = event.isRenaming,
-                    addedSoundUri = event.uri
+                    addedSoundUri = event.uri,
+                    addedSoundExtension = event.extension,
                 )
             }
 
@@ -227,6 +230,7 @@ class SoundsViewModel @Inject constructor(
             is SoundsEvents.OnToggleStopOnNewSound -> {
                 toggleStopOnNewSound()
             }
+
         }
     }
 
@@ -295,6 +299,13 @@ class SoundsViewModel @Inject constructor(
         viewModelScope.launch {
             val title = _state.value.textFieldValue.trim()
             val uri = _state.value.addedSoundUri!!
+            val extension = _state.value.addedSoundExtension
+
+            if (soundsDao.countByTitleAndExtension(title, extension) > 0) {
+                _state.value = _state.value.copy(textFieldError = true)
+                sendUiEvent(UiEvent.ShowInfoDialog(UiText.StringResource(R.string.sound_already_exists)))
+                return@launch
+            }
 
             val sound = PlayableSound(
                 title = title,
@@ -302,10 +313,11 @@ class SoundsViewModel @Inject constructor(
                 date = System.currentTimeMillis(),
                 isFav = false,
                 categoryId = _categoryId.value,
-                resId = null
+                resId = null,
+                fileExtension = extension,
             )
 
-            val newSoundUri = player.addSound(title, uri)
+            val newSoundUri = player.addSound(title, uri, extension)
 
             if (newSoundUri != null) {
                 soundsDao.insertSound(sound.copy(uri = newSoundUri).toEntity())
@@ -316,14 +328,18 @@ class SoundsViewModel @Inject constructor(
             _state.value = _state.value.copy(
                 showAddRenameSoundDialog = false,
                 textFieldValue = "",
-                addedSoundUri = Uri.EMPTY
+                addedSoundUri = Uri.EMPTY,
+                addedSoundExtension = DEFAULT_AUDIO_EXTENSION,
             )
         }
     }
 
     private fun addMultipleSounds(uris: List<Uri>) {
         viewModelScope.launch {
-            val result = player.addMultipleSounds(uris)
+            val existingSoundKeys = existingSoundFileKeys(
+                soundsDao.getAllSoundIdentities().map { it.title to it.fileExtension }
+            )
+            val result = player.addMultipleSounds(uris, existingSoundKeys)
             val sounds = result.map {
                 PlayableSound(
                     title = it.title,
@@ -331,7 +347,8 @@ class SoundsViewModel @Inject constructor(
                     date = System.currentTimeMillis(),
                     isFav = false,
                     categoryId = _categoryId.value,
-                    resId = null
+                    resId = null,
+                    fileExtension = it.extension,
                 )
             }
 
@@ -355,7 +372,7 @@ class SoundsViewModel @Inject constructor(
     }
 
     private fun setMedia(type: MediaManager, sound: PlayableSound) {
-        player.setMedia(type, sound.title, sound.resId, sound.uri)
+        player.setMedia(type, sound.title, sound.resId, sound.uri, sound.fileExtension)
     }
 
     private fun toggleFav(id: Int) {
@@ -396,6 +413,7 @@ class SoundsViewModel @Inject constructor(
         }
     }
 
+
     private fun toggleStopOnRetap() {
         viewModelScope.launch {
             val new = !_state.value.stopOnRetap
@@ -418,7 +436,6 @@ class SoundsViewModel @Inject constructor(
             val particlesPref = shared.getBooleanPair(PARTICLES_STATUS, false)
             val stopOnRetap = shared.getBooleanPair(STOP_ON_RETAP, false)
             val stopOnNewSound = shared.getBooleanPair(STOP_ON_NEW_SOUND, false)
-
             _state.value = _state.value.copy(
                 pickedTheme = toThemeType(themePref),
                 areParticlesEnable = particlesPref,

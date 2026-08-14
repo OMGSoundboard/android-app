@@ -5,7 +5,11 @@ import audio.omgsoundboard.core.data.local.daos.CategoryDao
 import audio.omgsoundboard.core.data.local.daos.SoundsDao
 import audio.omgsoundboard.core.data.local.entities.CategoryEntity
 import audio.omgsoundboard.core.data.local.entities.SoundsEntity
+import audio.omgsoundboard.core.utils.Constants.AUDIO_TRANSFER_PREFIX
+import audio.omgsoundboard.core.utils.Constants.LEGACY_MP3_TRANSFER_PREFIX
 import audio.omgsoundboard.core.utils.Constants.METADATA_KEY
+import audio.omgsoundboard.core.utils.DEFAULT_AUDIO_EXTENSION
+import audio.omgsoundboard.core.utils.buildSoundFileName
 import audio.omgsoundboard.core.utils.Constants.METADATA_PATH
 import com.google.android.gms.wearable.ChannelClient
 import com.google.android.gms.wearable.DataEventBuffer
@@ -52,7 +56,9 @@ class DataLayerListenerService : WearableListenerService() {
     }
 
     override fun onChannelOpened(channel: ChannelClient.Channel) {
-        if (channel.path.startsWith("/mp3_transfer")) {
+        if (channel.path.startsWith(AUDIO_TRANSFER_PREFIX) ||
+            channel.path.startsWith(LEGACY_MP3_TRANSFER_PREFIX)
+        ) {
             CoroutineScope(Dispatchers.IO).launch {
                 receiveFile(channel)
             }
@@ -69,7 +75,13 @@ class DataLayerListenerService : WearableListenerService() {
         try {
             withContext(Dispatchers.IO) {
                 inputStream = channelClient.getInputStream(channel).await()
-                val file = File(this@DataLayerListenerService.filesDir, "$fileId.mp3")
+                val soundId = fileId.toIntOrNull()
+                val extension = soundId?.let { soundsDao.getSoundById(it)?.fileExtension }
+                    ?: DEFAULT_AUDIO_EXTENSION
+                val file = File(
+                    this@DataLayerListenerService.filesDir,
+                    buildSoundFileName(fileId, extension)
+                )
                 fileOutputStream = FileOutputStream(file)
 
                 val buffer = ByteArray(1024)
@@ -127,7 +139,8 @@ class DataLayerListenerService : WearableListenerService() {
                         date = soundJson.getLong("date"),
                         isFavorite = soundJson.getBoolean("isFavorite"),
                         categoryId = if (soundJson.has("categoryId")) soundJson.getInt("categoryId") else null,
-                        resId = if (soundJson.has("resId")) soundJson.getInt("resId") else null
+                        resId = if (soundJson.has("resId")) soundJson.getInt("resId") else null,
+                        fileExtension = soundJson.optString("fileExtension", DEFAULT_AUDIO_EXTENSION)
                     )
                 )
             }

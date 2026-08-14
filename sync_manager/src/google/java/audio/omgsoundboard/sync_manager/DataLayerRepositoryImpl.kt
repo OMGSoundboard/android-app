@@ -9,6 +9,8 @@ import audio.omgsoundboard.core.domain.models.BackupMetadata
 import audio.omgsoundboard.core.domain.models.WearNode
 import audio.omgsoundboard.core.domain.models.toBackup
 import audio.omgsoundboard.core.domain.models.toDomain
+import audio.omgsoundboard.core.utils.Constants.AUDIO_TRANSFER_PREFIX
+import audio.omgsoundboard.core.utils.Constants.LEGACY_MP3_TRANSFER_PREFIX
 import audio.omgsoundboard.core.utils.Constants.METADATA_KEY
 import audio.omgsoundboard.core.utils.Constants.METADATA_PATH
 import audio.omgsoundboard.core.utils.Constants.WEAR_CAPABILITY
@@ -100,12 +102,12 @@ class DataLayerRepositoryImpl @Inject constructor(
             val fileUri = if (soundUri.scheme == ContentResolver.SCHEME_FILE) {
                 soundUri
             } else {
-                val tempFile = getFileFromUri(context, soundUri, it.id.toString())
+                val tempFile = getFileFromUri(context, soundUri, it.id.toString(), it.fileExtension)
                 if (tempFile != null) Uri.fromFile(tempFile) else null
             }
 
             if (fileUri != null) {
-                val channel = channelClient.openChannel(nodeId, "/mp3_transfer/${it.id}").await()
+                val channel = channelClient.openChannel(nodeId, "$AUDIO_TRANSFER_PREFIX/${it.id}").await()
                 Wearable.getChannelClient(context).sendFile(channel, fileUri).addOnSuccessListener {
                     println("File sent successfully: ${fileUri.path}")
                 }.addOnFailureListener { e ->

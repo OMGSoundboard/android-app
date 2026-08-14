@@ -11,7 +11,7 @@ import audio.omgsoundboard.core.data.local.entities.SoundsEntity
 
 @Database(
     entities = [SoundsEntity::class, CategoryEntity::class],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(UriTypeConverter::class)
