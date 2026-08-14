@@ -102,17 +102,19 @@ class SoundsViewModel @Inject constructor(
 
 
     fun onEvent(event: SoundsEvents) {
-        when {
-            dispatchBackupEvent(event) -> Unit
-            dispatchSearchEvent(event) -> Unit
-            dispatchSoundPlaybackEvent(event) -> Unit
-            dispatchSoundDialogEvent(event) -> Unit
-            dispatchSoundCrudEvent(event) -> Unit
-            dispatchMenuPreferenceEvent(event) -> Unit
-            dispatchPlaybackPreferenceEvent(event) -> Unit
-            dispatchNavigationEvent(event) -> Unit
-        }
+        soundsEventHandlers.any { it(event) }
     }
+
+    private val soundsEventHandlers: List<(SoundsEvents) -> Boolean> = listOf(
+        ::dispatchBackupEvent,
+        ::dispatchSearchEvent,
+        ::dispatchSoundPlaybackEvent,
+        ::dispatchSoundDialogEvent,
+        ::dispatchSoundCrudEvent,
+        ::dispatchMenuPreferenceEvent,
+        ::dispatchPlaybackPreferenceEvent,
+        ::dispatchNavigationEvent,
+    )
 
     private fun dispatchBackupEvent(event: SoundsEvents): Boolean = when (event) {
         is SoundsEvents.OnRestoreBackup -> {

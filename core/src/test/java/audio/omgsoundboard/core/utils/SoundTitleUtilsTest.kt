@@ -7,6 +7,7 @@ import org.junit.Test
 /** Unit tests for [SoundTitleUtils]. */
 class SoundTitleUtilsTest {
 
+    /** Treats duplicate titles as equal regardless of case or extension casing. */
     @Test
     fun `duplicate detection is case insensitive for title and extension`() {
         val existing = existingSoundFileKeys(listOf("Airhorn" to "wav"))
@@ -17,6 +18,7 @@ class SoundTitleUtilsTest {
         assertFalse(isDuplicateSoundFile("Beep", "wav", existing))
     }
 
+    /** Ignores blank titles when checking for duplicates. */
     @Test
     fun `duplicate detection ignores blank titles`() {
         val existing = existingSoundFileKeys(listOf("Beep" to "mp3"))

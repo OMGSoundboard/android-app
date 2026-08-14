@@ -89,23 +89,9 @@ class PlayerRepositoryImpl @Inject constructor(
     override fun playFile(index: Int, resourceId: Int?, uri: Uri) {
         if (uri == Uri.EMPTY && resourceId == null) return
 
-        val stopOnRetap = sharedPref.getBoolean(STOP_ON_RETAP, false)
-        val stopOnNewSound = sharedPref.getBoolean(STOP_ON_NEW_SOUND, false)
-
-        val playerUri = if (uri == Uri.EMPTY) {
-            getUriPath(context, resourceId!!)
-        } else {
-            uri
-        }
-
-        if (mediaPlayerList.contains(index)) {
-            stopSound(index)
-            if (stopOnRetap) return
-        }
-
-        if (stopOnNewSound) {
-            mediaPlayerList.keys.toList().forEach { stopSound(it) }
-        }
+        val playerUri = resolvePlaybackUri(uri, resourceId) ?: return
+        if (stopPlaybackOnRetap(index)) return
+        stopOtherPlaybackIfNeeded()
 
         val mediaPlayer = MediaPlayer.create(context, playerUri) ?: return
         mediaPlayerList[index] = mediaPlayer
@@ -114,6 +100,26 @@ class PlayerRepositoryImpl @Inject constructor(
         mediaPlayer.setOnCompletionListener {
             stopSound(index)
         }
+    }
+
+    private fun resolvePlaybackUri(uri: Uri, resourceId: Int?): Uri? {
+        return if (uri == Uri.EMPTY) {
+            resourceId?.let { getUriPath(context, it) }
+        } else {
+            uri
+        }
+    }
+
+    private fun stopPlaybackOnRetap(index: Int): Boolean {
+        if (!mediaPlayerList.contains(index)) return false
+
+        stopSound(index)
+        return sharedPref.getBoolean(STOP_ON_RETAP, false)
+    }
+
+    private fun stopOtherPlaybackIfNeeded() {
+        if (!sharedPref.getBoolean(STOP_ON_NEW_SOUND, false)) return
+        mediaPlayerList.keys.toList().forEach { stopSound(it) }
     }
 
     override fun shareFile(fileName: String, resourceId: Int?, uri: Uri) {
