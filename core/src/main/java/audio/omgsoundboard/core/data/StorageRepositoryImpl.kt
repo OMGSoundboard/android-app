@@ -83,37 +83,10 @@ class StorageRepositoryImpl @Inject constructor(
                 while (entry != null) {
                     when {
                         entry.name == "metadata.json" -> {
-                            val metadataJson = zipIn.bufferedReader().readText()
-                            metadata = gson.fromJson(metadataJson, BackupMetadata::class.java)
+                            metadata = readMetadataEntry(zipIn)
                         }
-
-                        entry.name.endsWith(".mp3") || isAudioStorageFileName(entry.name) -> {
-                            val extractedFile = File(privateFolder, entry.name)
-                            val normalizedPath = extractedFile.toPath().normalize()
-                            val targetDirPath = privateFolder.toPath().normalize()
-                            if (!normalizedPath.startsWith(targetDirPath)) {
-                                throw IllegalArgumentException("Bad zip entry: ${entry.name}")
-                            }
-                            FileOutputStream(extractedFile).use { output ->
-                                zipIn.copyTo(output)
-                            }
-
-                            val title = titleFromStorageFileName(entry.name)
-                                ?: entry.name.removeSuffix(".mp3")
-                            val extension = extensionFromStorageFileName(entry.name)
-                                ?: DEFAULT_AUDIO_EXTENSION
-
-                            val soundEntity = SoundsEntity(
-                                title = title,
-                                uri = Uri.EMPTY,
-                                date = System.currentTimeMillis(),
-                                isFavorite = false,
-                                categoryId = 0,
-                                resId = null,
-                                fileExtension = extension,
-                            )
-
-                            restoredSounds.add(soundEntity)
+                        isRestorableAudioEntry(entry.name) -> {
+                            restoredSounds += extractAudioZipEntry(entry, zipIn, privateFolder)
                         }
                     }
                     zipIn.closeEntry()
@@ -122,7 +95,7 @@ class StorageRepositoryImpl @Inject constructor(
             }
 
             if (metadata != null) {
-                restoreMetadata(metadata)
+                restoreMetadata(metadata!!)
                 BackupResult.Success()
             } else {
                 val catName = restoredWithoutMetadata(restoredSounds)
@@ -186,16 +159,10 @@ class StorageRepositoryImpl @Inject constructor(
         val category = categoryDao.getRandomCategory()
 
         val restoredSounds = sounds.map { soundBackup ->
-            val file = File(
-                context.filesDir,
-                buildSoundFileName(soundBackup.title, soundBackup.fileExtension)
+            soundBackup.copy(
+                categoryId = category.id,
+                uri = soundProviderUri(soundBackup.title, soundBackup.fileExtension),
             )
-            val uri = FileProvider.getUriForFile(
-                context,
-                "audio.omgsoundboard.provider",
-                file
-            )
-            soundBackup.copy(categoryId = category.id, uri = uri)
         }
         soundsDao.insertSounds(restoredSounds)
         return category.name
@@ -206,15 +173,9 @@ class StorageRepositoryImpl @Inject constructor(
 
         val restoredSounds = metadata.sounds.map { soundBackup ->
             val extension = soundBackup.fileExtension.ifBlank { DEFAULT_AUDIO_EXTENSION }
-            val file = File(context.filesDir, buildSoundFileName(soundBackup.title, extension))
-            val uri = FileProvider.getUriForFile(
-                context,
-                "audio.omgsoundboard.provider",
-                file
-            )
             SoundsEntity(
                 title = soundBackup.title,
-                uri = uri,
+                uri = soundProviderUri(soundBackup.title, extension),
                 date = soundBackup.date,
                 isFavorite = soundBackup.isFavorite,
                 categoryId = soundBackup.categoryId,
@@ -223,5 +184,54 @@ class StorageRepositoryImpl @Inject constructor(
             )
         }
         soundsDao.insertSounds(restoredSounds)
+    }
+
+    private fun readMetadataEntry(zipIn: ZipInputStream): BackupMetadata {
+        val metadataJson = zipIn.bufferedReader().readText()
+        return gson.fromJson(metadataJson, BackupMetadata::class.java)
+    }
+
+    private fun isRestorableAudioEntry(entryName: String): Boolean {
+        return entryName.endsWith(".mp3") || isAudioStorageFileName(entryName)
+    }
+
+    private fun extractAudioZipEntry(
+        entry: ZipEntry,
+        zipIn: ZipInputStream,
+        privateFolder: File,
+    ): SoundsEntity {
+        val extractedFile = File(privateFolder, entry.name)
+        val normalizedPath = extractedFile.toPath().normalize()
+        val targetDirPath = privateFolder.toPath().normalize()
+        if (!normalizedPath.startsWith(targetDirPath)) {
+            throw IllegalArgumentException("Bad zip entry: ${entry.name}")
+        }
+        FileOutputStream(extractedFile).use { output ->
+            zipIn.copyTo(output)
+        }
+
+        val title = titleFromStorageFileName(entry.name)
+            ?: entry.name.removeSuffix(".mp3")
+        val extension = extensionFromStorageFileName(entry.name)
+            ?: DEFAULT_AUDIO_EXTENSION
+
+        return SoundsEntity(
+            title = title,
+            uri = Uri.EMPTY,
+            date = System.currentTimeMillis(),
+            isFavorite = false,
+            categoryId = 0,
+            resId = null,
+            fileExtension = extension,
+        )
+    }
+
+    private fun soundProviderUri(title: String, extension: String): Uri {
+        val file = File(context.filesDir, buildSoundFileName(title, extension))
+        return FileProvider.getUriForFile(
+            context,
+            "audio.omgsoundboard.provider",
+            file
+        )
     }
 }

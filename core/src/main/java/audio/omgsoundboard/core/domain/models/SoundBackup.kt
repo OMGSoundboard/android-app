@@ -10,6 +10,7 @@ data class SoundBackup(
     val isFavorite: Boolean = false,
     val categoryId: Int?,
     val resId: Int? = null,
+    /** Persisted file extension for user-imported sounds. */
     val fileExtension: String = DEFAULT_AUDIO_EXTENSION,
 )
 

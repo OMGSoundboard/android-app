@@ -33,6 +33,7 @@ data class SoundsEntity(
     @ColumnInfo(name = "isFavorite") val isFavorite: Boolean = false,
     @ColumnInfo(name = "category_id") val categoryId: Int?,
     @ColumnInfo(name = "res_id") val resId: Int? = null,
+    /** Persisted file extension for user-imported sounds. */
     @ColumnInfo(name = "file_extension") val fileExtension: String = DEFAULT_AUDIO_EXTENSION,
 )
 

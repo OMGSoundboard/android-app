@@ -23,12 +23,14 @@ fun getDisplayNameFromUri(context: Context, uri: Uri): String? {
     return null
 }
 
+/** Returns the normalized title parsed from a content [uri], when available. */
 fun getTitleFromUri(context: Context, uri: Uri): String? {
     val displayName = getDisplayNameFromUri(context, uri) ?: return null
     return parseAudioFileName(displayName)?.first
         ?: displayName.substringBeforeLast('.').trim().takeIf { it.isNotEmpty() }
 }
 
+/** Returns the supported file extension parsed from a content [uri], when available. */
 fun getExtensionFromUri(context: Context, uri: Uri): String? {
     val displayName = getDisplayNameFromUri(context, uri) ?: return null
     return parseAudioFileName(displayName)?.second

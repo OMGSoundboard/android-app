@@ -12,6 +12,7 @@ data class PlayableSound(
     val isFav: Boolean = false,
     val categoryId: Int? = null,
     val resId: Int? = null,
+    /** Persisted file extension for user-imported sounds. */
     val fileExtension: String = DEFAULT_AUDIO_EXTENSION,
 )
 

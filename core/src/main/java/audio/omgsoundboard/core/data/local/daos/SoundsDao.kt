@@ -50,9 +50,11 @@ interface SoundsDao {
     @Query("SELECT * FROM $SOUNDS_TABLE")
     suspend fun getAllSoundsOnce(): List<SoundsEntity>
 
+    /** Returns all stored sound titles and extensions for duplicate detection. */
     @Query("SELECT title, file_extension FROM $SOUNDS_TABLE")
     suspend fun getAllSoundIdentities(): List<SoundFileIdentity>
 
+    /** Returns whether a sound with the same title and extension already exists. */
     @Query("SELECT COUNT(*) FROM $SOUNDS_TABLE WHERE LOWER(title) = LOWER(:title) AND file_extension = :extension")
     suspend fun countByTitleAndExtension(title: String, extension: String): Int
 
