@@ -39,23 +39,12 @@ class DataLayerRepositoryImpl @Inject constructor(
 
     override fun getConnectedWearNodesAsFlow(): Flow<List<WearNode>> = callbackFlow {
         try {
-            val nodeClient = Wearable.getNodeClient(context)
             val capabilityClient = Wearable.getCapabilityClient(context)
-
-            val capabilities =
-                capabilityClient.getAllCapabilities(CapabilityClient.FILTER_REACHABLE).await()
-            val nodes = nodeClient.connectedNodes.await()
-            val installedWatchNodes = capabilities[WEAR_CAPABILITY]?.nodes?.map { it.id } ?: setOf()
-            trySend(mapNodesToStatus(nodes, installedWatchNodes))
-
-            val capabilityListener = CapabilityClient.OnCapabilityChangedListener { capabilityInfo ->
-                val updatedNodes = capabilityInfo.nodes.toList()
-                val updatedInstalledWatchNodes = capabilityInfo.nodes.map { it.id }
-                trySend(mapNodesToStatus(updatedNodes, updatedInstalledWatchNodes))
+            trySend(fetchInstalledWearNodes())
+            val capabilityListener = createCapabilityListener { nodes, installedWatchNodes ->
+                trySend(mapNodesToStatus(nodes, installedWatchNodes))
             }
-
             capabilityClient.addListener(capabilityListener, WEAR_CAPABILITY)
-
             awaitClose {
                 capabilityClient.removeListener(capabilityListener)
             }
@@ -66,6 +55,27 @@ class DataLayerRepositoryImpl @Inject constructor(
         }
     }.catch { _ ->
         emit(emptyList())
+    }
+
+    private suspend fun fetchInstalledWearNodes(): List<WearNode> {
+        val nodeClient = Wearable.getNodeClient(context)
+        val capabilityClient = Wearable.getCapabilityClient(context)
+        val capabilities =
+            capabilityClient.getAllCapabilities(CapabilityClient.FILTER_REACHABLE).await()
+        val nodes = nodeClient.connectedNodes.await()
+        val installedWatchNodes = capabilities[WEAR_CAPABILITY]?.nodes?.map { it.id } ?: setOf()
+        return mapNodesToStatus(nodes, installedWatchNodes)
+    }
+
+    private fun createCapabilityListener(
+        onNodesChanged: (List<Node>, List<String>) -> Unit,
+    ): CapabilityClient.OnCapabilityChangedListener {
+        return CapabilityClient.OnCapabilityChangedListener { capabilityInfo ->
+            onNodesChanged(
+                capabilityInfo.nodes.toList(),
+                capabilityInfo.nodes.map { it.id },
+            )
+        }
     }
 
     override suspend fun syncDataToWearable(nodeId: String) {

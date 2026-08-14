@@ -4,7 +4,10 @@ import androidx.annotation.StringRes
 import audio.omgsoundboard.core.R
 
 /** Supported sort orders for the sound list. */
-enum class SoundSortOrder(@StringRes val labelResId: Int) {
+enum class SoundSortOrder(
+    /** String resource for the sort option label. */
+    @StringRes val labelResId: Int,
+) {
     TITLE_ASC(R.string.sort_alpha_asc),
     TITLE_DESC(R.string.sort_alpha_desc),
     MOST_USED(R.string.sort_most_used),

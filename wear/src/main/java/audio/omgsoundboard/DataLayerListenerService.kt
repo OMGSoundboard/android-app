@@ -132,22 +132,23 @@ class DataLayerListenerService : WearableListenerService() {
     private fun parseSounds(soundsArray: JSONArray): List<SoundsEntity> {
         return buildList {
             for (index in 0 until soundsArray.length()) {
-                val soundJson = soundsArray.getJSONObject(index)
-                add(
-                    SoundsEntity(
-                        id = soundJson.getInt("id"),
-                        title = soundJson.getString("title"),
-                        uri = Uri.EMPTY,
-                        date = soundJson.getLong("date"),
-                        isFavorite = soundJson.getBoolean("isFavorite"),
-                        categoryId = if (soundJson.has("categoryId")) soundJson.getInt("categoryId") else null,
-                        resId = if (soundJson.has("resId")) soundJson.getInt("resId") else null,
-                        fileExtension = soundJson.optString("fileExtension", DEFAULT_AUDIO_EXTENSION),
-                        playCount = soundJson.optInt("playCount", 0),
-                    )
-                )
+                add(parseSoundEntity(soundsArray.getJSONObject(index)))
             }
         }
+    }
+
+    private fun parseSoundEntity(soundJson: JSONObject): SoundsEntity {
+        return SoundsEntity(
+            id = soundJson.getInt("id"),
+            title = soundJson.getString("title"),
+            uri = Uri.EMPTY,
+            date = soundJson.getLong("date"),
+            isFavorite = soundJson.getBoolean("isFavorite"),
+            categoryId = if (soundJson.has("categoryId")) soundJson.getInt("categoryId") else null,
+            resId = if (soundJson.has("resId")) soundJson.getInt("resId") else null,
+            fileExtension = soundJson.optString("fileExtension", DEFAULT_AUDIO_EXTENSION),
+            playCount = soundJson.optInt("playCount", 0),
+        )
     }
 
     private fun copyStream(inputStream: InputStream, outputStream: OutputStream) {
