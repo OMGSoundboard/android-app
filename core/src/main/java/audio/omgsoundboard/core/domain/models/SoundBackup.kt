@@ -3,6 +3,7 @@ package audio.omgsoundboard.core.domain.models
 import audio.omgsoundboard.core.data.local.entities.SoundsEntity
 import audio.omgsoundboard.core.utils.DEFAULT_AUDIO_EXTENSION
 
+/** Backup payload for a single sound. */
 data class SoundBackup(
     val id: Int = 0,
     val title: String,

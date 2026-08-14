@@ -38,6 +38,7 @@ import audio.omgsoundboard.core.domain.models.PlayableSound
 import kotlinx.coroutines.launch
 
 
+/** Row UI for a single sound, including playback progress and favorite actions. */
 @Composable
 fun SoundItem(
     item: PlayableSound,
