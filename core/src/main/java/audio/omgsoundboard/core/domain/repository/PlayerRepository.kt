@@ -11,9 +11,13 @@ enum class MediaManager {
     Notification
 }
 
+/** Plays sounds and manages imported audio files. */
 interface PlayerRepository {
+    /** Playback progress keyed by sound list index. */
     val playbackProgress: StateFlow<Map<Int, Float>>
+    /** Starts playback for the sound at [index]. */
     fun playFile(index: Int, resourceId: Int?, uri: Uri)
+    /** Shares a sound file through the system share sheet. */
     fun shareFile(fileName: String, resourceId: Int?, uri: Uri)
     /** Sets a sound as the device ringtone, alarm, or notification sound. */
     fun setMedia(type: MediaManager, fileName: String, resourceId: Int?, cUri: Uri, extension: String = "mp3")

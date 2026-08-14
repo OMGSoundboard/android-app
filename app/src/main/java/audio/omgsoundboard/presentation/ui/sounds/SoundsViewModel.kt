@@ -108,7 +108,8 @@ class SoundsViewModel @Inject constructor(
             dispatchSoundPlaybackEvent(event) -> Unit
             dispatchSoundDialogEvent(event) -> Unit
             dispatchSoundCrudEvent(event) -> Unit
-            dispatchUiPreferenceEvent(event) -> Unit
+            dispatchMenuPreferenceEvent(event) -> Unit
+            dispatchPlaybackPreferenceEvent(event) -> Unit
             dispatchNavigationEvent(event) -> Unit
         }
     }
@@ -149,7 +150,10 @@ class SoundsViewModel @Inject constructor(
         else -> false
     }
 
-    private fun dispatchSoundPlaybackEvent(event: SoundsEvents): Boolean = when (event) {
+    private fun dispatchSoundPlaybackEvent(event: SoundsEvents): Boolean =
+        dispatchCorePlaybackEvent(event) || dispatchMediaAssignmentEvent(event)
+
+    private fun dispatchCorePlaybackEvent(event: SoundsEvents): Boolean = when (event) {
         is SoundsEvents.OnPlaySound -> {
             playSound(event.index, event.resourceId, event.uri)
             true
@@ -162,6 +166,10 @@ class SoundsViewModel @Inject constructor(
             shareSound(event.sound)
             true
         }
+        else -> false
+    }
+
+    private fun dispatchMediaAssignmentEvent(event: SoundsEvents): Boolean = when (event) {
         is SoundsEvents.OnSetAsRingtone -> {
             setMedia(MediaManager.Ringtone, event.sound)
             true
@@ -231,7 +239,7 @@ class SoundsViewModel @Inject constructor(
         else -> false
     }
 
-    private fun dispatchUiPreferenceEvent(event: SoundsEvents): Boolean = when (event) {
+    private fun dispatchMenuPreferenceEvent(event: SoundsEvents): Boolean = when (event) {
         is SoundsEvents.OnToggleDropMenu -> {
             _state.value = _state.value.copy(showDropMenu = !_state.value.showDropMenu)
             true
@@ -248,6 +256,10 @@ class SoundsViewModel @Inject constructor(
             changeTheme(event.theme)
             true
         }
+        else -> false
+    }
+
+    private fun dispatchPlaybackPreferenceEvent(event: SoundsEvents): Boolean = when (event) {
         is SoundsEvents.OnShowHidePlaybackBehaviorDialog -> {
             _state.value = _state.value.copy(
                 showPlaybackBehaviorDialog = !_state.value.showPlaybackBehaviorDialog
