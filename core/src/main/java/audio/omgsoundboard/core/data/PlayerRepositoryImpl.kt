@@ -58,23 +58,34 @@ class PlayerRepositoryImpl @Inject constructor(
         progressJobs[index]?.cancel()
         progressJobs[index] = scope.launch {
             try {
-                while (true) {
-                    val mp = mediaPlayerList[index] ?: break
-                    try {
-                        val duration = mp.duration
-                        val position = mp.currentPosition
-                        if (duration > 0) {
-                            _playbackProgress.value += (index to position.toFloat() / duration.toFloat())
-                        }
-                    } catch (_: IllegalStateException) {
-                        break
-                    }
-                    delay(100)
-                }
+                pollPlaybackProgress(index)
             } finally {
                 _playbackProgress.value -= index
                 progressJobs.remove(index)
             }
+        }
+    }
+
+    private suspend fun pollPlaybackProgress(index: Int) {
+        while (true) {
+            val mediaPlayer = mediaPlayerList[index] ?: break
+            if (!updatePlaybackProgress(index, mediaPlayer)) {
+                break
+            }
+            delay(100)
+        }
+    }
+
+    private fun updatePlaybackProgress(index: Int, mediaPlayer: MediaPlayer): Boolean {
+        return try {
+            val duration = mediaPlayer.duration
+            val position = mediaPlayer.currentPosition
+            if (duration > 0) {
+                _playbackProgress.value += (index to position.toFloat() / duration.toFloat())
+            }
+            true
+        } catch (_: IllegalStateException) {
+            false
         }
     }
 
@@ -231,9 +242,12 @@ class PlayerRepositoryImpl @Inject constructor(
     private fun parseImportCandidate(uri: Uri): SoundImportCandidate? {
         val title = getTitleFromUri(context, uri) ?: ""
         val extension = getExtensionFromUri(context, uri) ?: return null
+        return buildImportCandidate(title, extension)
+    }
+
+    private fun buildImportCandidate(title: String, extension: String): SoundImportCandidate? {
         val normalizedTitle = normalizeSoundTitle(title)
         val normalizedExtension = normalizeAudioExtension(extension)
-
         if (normalizedTitle.isEmpty() || !isSupportedAudioExtension(normalizedExtension)) {
             return null
         }

@@ -44,15 +44,16 @@ private fun splitAudioFileName(displayName: String): Pair<String, String>? {
         normalizeAudioExtension(normalizedName.substring(dotIndex + 1))
 }
 
+private val EXTENSION_MIME_TYPES = mapOf(
+    "mp3" to "audio/mpeg",
+    "wav" to "audio/wav",
+    "ogg" to "audio/ogg",
+    "m4a" to "audio/mp4",
+)
+
 /** Returns the MIME type for a supported [extension]. */
 fun mimeTypeForExtension(extension: String): String {
-    return when (normalizeAudioExtension(extension)) {
-        "mp3" -> "audio/mpeg"
-        "wav" -> "audio/wav"
-        "ogg" -> "audio/ogg"
-        "m4a" -> "audio/mp4"
-        else -> "audio/*"
-    }
+    return EXTENSION_MIME_TYPES[normalizeAudioExtension(extension)] ?: "audio/*"
 }
 
 /** Returns whether [fileName] matches a supported stored audio file name. */
