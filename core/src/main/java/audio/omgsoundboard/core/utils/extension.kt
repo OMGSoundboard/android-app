@@ -7,8 +7,6 @@ import android.provider.OpenableColumns
 import audio.omgsoundboard.core.domain.models.BackupMetadata
 import com.google.gson.Gson
 import java.io.File
-import java.io.FileOutputStream
-import java.io.InputStream
 
 /** Reads the display name for a content [uri], when available. */
 fun getDisplayNameFromUri(context: Context, uri: Uri): String? {
@@ -37,6 +35,7 @@ fun getExtensionFromUri(context: Context, uri: Uri): String? {
     return parseAudioFileName(displayName)?.second
 }
 
+/** Builds an Android resource [Uri] for a bundled sound. */
 fun getUriPath(context: Context, resourceId: Int): Uri {
     return Uri.Builder()
         .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
@@ -45,22 +44,16 @@ fun getUriPath(context: Context, resourceId: Int): Uri {
         .build()
 }
 
+/** Copies a content [uri] into cache using [id] and [extension] for the file name. */
 fun getFileFromUri(context: Context, uri: Uri, id: String, extension: String = DEFAULT_AUDIO_EXTENSION): File? {
     return try {
         val file = File(context.cacheDir, buildSoundFileName(id, extension))
-        val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
-        val outputStream = FileOutputStream(file)
-
-        inputStream?.use { input ->
-            outputStream.use { output ->
-                val buffer = ByteArray(1024)
-                var bytesRead: Int
-                while (input.read(buffer).also { bytesRead = it } != -1) {
-                    output.write(buffer, 0, bytesRead)
-                }
+        context.contentResolver.openInputStream(uri)?.use { input ->
+            file.outputStream().use { output ->
+                input.copyTo(output)
                 output.flush()
             }
-        }
+        } ?: return null
         file
     } catch (e: Exception) {
         e.printStackTrace()
@@ -68,6 +61,7 @@ fun getFileFromUri(context: Context, uri: Uri, id: String, extension: String = D
     }
 }
 
+/** Serializes backup metadata to JSON. */
 fun makeMetadataJson(
     metadata: BackupMetadata
 ): String {

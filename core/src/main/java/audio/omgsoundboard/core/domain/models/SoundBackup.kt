@@ -14,6 +14,7 @@ data class SoundBackup(
     val fileExtension: String = DEFAULT_AUDIO_EXTENSION,
 )
 
+/** Converts a Room entity into backup metadata. */
 fun SoundsEntity.toBackup() = SoundBackup(
     id = id,
     title = title,

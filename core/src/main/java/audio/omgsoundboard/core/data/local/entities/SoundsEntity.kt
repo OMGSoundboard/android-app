@@ -37,6 +37,7 @@ data class SoundsEntity(
     @ColumnInfo(name = "file_extension") val fileExtension: String = DEFAULT_AUDIO_EXTENSION,
 )
 
+/** Converts a domain sound into a Room entity. */
 fun PlayableSound.toEntity() = SoundsEntity(
     id = id,
     title = title,

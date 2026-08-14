@@ -33,6 +33,7 @@ sealed class SoundsEvents {
     data class OnTextFieldChange(val text: String) : SoundsEvents()
     data class OnConfirmRename(val sound: PlayableSound) : SoundsEvents()
     object OnConfirmAdd : SoundsEvents()
+    /** Imports multiple picked audio files at once. */
     data class OnAddMultipleSounds(val uris: List<Uri>) : SoundsEvents()
     object OnShowHideDeleteSoundDialog : SoundsEvents()
     data class OnConfirmDelete(val soundId: Int) : SoundsEvents()

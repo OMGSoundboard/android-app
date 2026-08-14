@@ -16,6 +16,7 @@ data class PlayableSound(
     val fileExtension: String = DEFAULT_AUDIO_EXTENSION,
 )
 
+/** Converts a Room entity into a domain sound. */
 fun SoundsEntity.toDomain() = PlayableSound(
     id = id,
     title = title,

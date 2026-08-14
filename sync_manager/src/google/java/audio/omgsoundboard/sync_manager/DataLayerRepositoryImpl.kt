@@ -6,6 +6,7 @@ import android.net.Uri
 import audio.omgsoundboard.core.data.local.daos.CategoryDao
 import audio.omgsoundboard.core.data.local.daos.SoundsDao
 import audio.omgsoundboard.core.domain.models.BackupMetadata
+import audio.omgsoundboard.core.domain.models.PlayableSound
 import audio.omgsoundboard.core.domain.models.WearNode
 import audio.omgsoundboard.core.domain.models.toBackup
 import audio.omgsoundboard.core.domain.models.toDomain
@@ -68,55 +69,57 @@ class DataLayerRepositoryImpl @Inject constructor(
     }
 
     override suspend fun syncDataToWearable(nodeId: String) {
+        uploadWearMetadata()
+        soundsDao.getAllSoundsOnce()
+            .map { it.toDomain() }
+            .forEach { sendSoundToWear(nodeId, it) }
+    }
+
+    private suspend fun uploadWearMetadata() {
         val dataClient = Wearable.getDataClient(context)
-        val channelClient = Wearable.getChannelClient(context)
-
-        val categories = categoryDao.getAllCategoriesOnce()
-        val soundsEntities = soundsDao.getAllSoundsOnce()
-        val soundsBackup = soundsEntities.map { it.toBackup() }
-
-        val sounds = soundsEntities.map { it.toDomain() }
-
         val metadata = BackupMetadata(
-            sounds = soundsBackup,
-            categories = categories
+            sounds = soundsDao.getAllSoundsOnce().map { it.toBackup() },
+            categories = categoryDao.getAllCategoriesOnce()
         )
-        val metadataJson = makeMetadataJson(metadata)
-
         val request = PutDataMapRequest.create(METADATA_PATH).apply {
-            dataMap.putString(METADATA_KEY, metadataJson)
+            dataMap.putString(METADATA_KEY, makeMetadataJson(metadata))
         }
             .asPutDataRequest()
             .setUrgent()
 
         dataClient.putDataItem(request).await()
+    }
 
-
-        sounds.forEach {
-            val soundUri = if (it.uri == Uri.EMPTY) {
-                getUriPath(context, it.resId!!)
-            } else {
-                it.uri
-            }
-
-            val fileUri = if (soundUri.scheme == ContentResolver.SCHEME_FILE) {
-                soundUri
-            } else {
-                val tempFile = getFileFromUri(context, soundUri, it.id.toString(), it.fileExtension)
-                if (tempFile != null) Uri.fromFile(tempFile) else null
-            }
-
-            if (fileUri != null) {
-                val channel = channelClient.openChannel(nodeId, "$AUDIO_TRANSFER_PREFIX/${it.id}").await()
-                Wearable.getChannelClient(context).sendFile(channel, fileUri).addOnSuccessListener {
-                    println("File sent successfully: ${fileUri.path}")
-                }.addOnFailureListener { e ->
-                    println("Failed to send file: ${e.message}")
-                }
-            } else {
-                println("Failed to convert URI to file for sound ${it.id}")
-            }
+    private suspend fun sendSoundToWear(nodeId: String, sound: PlayableSound) {
+        val fileUri = resolveWearFileUri(sound) ?: run {
+            println("Failed to convert URI to file for sound ${sound.id}")
+            return
         }
+
+        val channelClient = Wearable.getChannelClient(context)
+        val channel = channelClient.openChannel(nodeId, "$AUDIO_TRANSFER_PREFIX/${sound.id}").await()
+        Wearable.getChannelClient(context).sendFile(channel, fileUri)
+            .addOnSuccessListener {
+                println("File sent successfully: ${fileUri.path}")
+            }
+            .addOnFailureListener { error ->
+                println("Failed to send file: ${error.message}")
+            }
+    }
+
+    private suspend fun resolveWearFileUri(sound: PlayableSound): Uri? {
+        val soundUri = if (sound.uri == Uri.EMPTY) {
+            getUriPath(context, sound.resId!!)
+        } else {
+            sound.uri
+        }
+
+        if (soundUri.scheme == ContentResolver.SCHEME_FILE) {
+            return soundUri
+        }
+
+        val tempFile = getFileFromUri(context, soundUri, sound.id.toString(), sound.fileExtension)
+        return tempFile?.let { Uri.fromFile(it) }
     }
 
     private fun mapNodesToStatus(
