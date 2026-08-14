@@ -16,8 +16,8 @@ import androidx.compose.ui.window.Dialog
 import audio.omgsoundboard.core.R
 import audio.omgsoundboard.presentation.theme.ThemeType
 
-@Composable
 /** Dialog for choosing the app theme. */
+@Composable
 fun ThemePicker(
     selectedThemeType: ThemeType,
     pickTheme: (ThemeType) -> Unit,
@@ -76,8 +76,8 @@ fun ThemePicker(
 }
 
 
-@Composable
 /** Shared single-choice row used by picker dialogs. */
+@Composable
 fun Radio(text: String, isSelected: Boolean, onClick: () -> Unit) {
     Row(
         modifier = Modifier

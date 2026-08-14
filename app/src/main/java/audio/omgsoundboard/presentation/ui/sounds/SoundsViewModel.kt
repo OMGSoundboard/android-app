@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import audio.omgsoundboard.core.R
 import audio.omgsoundboard.core.data.local.daos.CategoryDao
 import audio.omgsoundboard.core.data.local.daos.SoundsDao
+import audio.omgsoundboard.core.data.local.entities.CategoryEntity
+import audio.omgsoundboard.core.data.local.entities.SoundsEntity
 import audio.omgsoundboard.core.data.local.entities.toEntity
 import audio.omgsoundboard.core.domain.models.BackupResult
 import audio.omgsoundboard.core.domain.models.Category
@@ -84,17 +86,14 @@ class SoundsViewModel @Inject constructor(
         _wearNodes,
         _sortOrder,
     ) { state, categories, categoryId, sounds, search, wearNodes, sortOrder ->
-        val allCategory = Category(id = -1, name = "All")
-        val categoriesWithAll = listOf(allCategory) + categories.map { it.toDomain() }
-
-        val currentCategory = categoriesWithAll.find { it.id == categoryId }
-        state.copy(
-            categories = categoriesWithAll,
-            currentCategory = currentCategory,
-            sounds = sounds.map { it.toDomain() }.sortedBy(sortOrder),
-            searchTerm = search,
+        buildSoundsScreenState(
+            state = state,
+            categories = categories,
+            categoryId = categoryId,
+            sounds = sounds,
+            search = search,
             wearNodes = wearNodes,
-            soundSortOrder = sortOrder,
+            sortOrder = sortOrder,
         )
     }.combine(player.playbackProgress) { state, progress ->
         state.copy(playbackProgress = progress)
@@ -305,6 +304,28 @@ class SoundsViewModel @Inject constructor(
             true
         }
         else -> false
+    }
+
+    private fun buildSoundsScreenState(
+        state: SoundsState,
+        categories: List<CategoryEntity>,
+        categoryId: Int,
+        sounds: List<SoundsEntity>,
+        search: String,
+        wearNodes: List<WearNode>,
+        sortOrder: SoundSortOrder,
+    ): SoundsState {
+        val allCategory = Category(id = -1, name = "All")
+        val categoriesWithAll = listOf(allCategory) + categories.map { it.toDomain() }
+        val currentCategory = categoriesWithAll.find { it.id == categoryId }
+        return state.copy(
+            categories = categoriesWithAll,
+            currentCategory = currentCategory,
+            sounds = sounds.map { it.toDomain() }.sortedBy(sortOrder),
+            searchTerm = search,
+            wearNodes = wearNodes,
+            soundSortOrder = sortOrder,
+        )
     }
 
     private fun restoreBackup(uri: Uri) {
