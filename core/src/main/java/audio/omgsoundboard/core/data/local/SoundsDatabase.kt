@@ -12,7 +12,7 @@ import audio.omgsoundboard.core.data.local.entities.SoundsEntity
 /** Room database for locally stored sounds and categories. */
 @Database(
     entities = [SoundsEntity::class, CategoryEntity::class],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 @TypeConverters(UriTypeConverter::class)

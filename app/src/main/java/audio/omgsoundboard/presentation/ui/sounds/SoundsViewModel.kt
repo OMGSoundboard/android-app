@@ -15,11 +15,15 @@ import audio.omgsoundboard.core.domain.repository.MediaManager
 import audio.omgsoundboard.core.domain.repository.PlayerRepository
 import audio.omgsoundboard.core.domain.repository.StorageRepository
 import audio.omgsoundboard.core.utils.Constants.PARTICLES_STATUS
+import audio.omgsoundboard.core.utils.Constants.SOUND_SORT_ORDER
 import audio.omgsoundboard.core.utils.Constants.STOP_ON_NEW_SOUND
 import audio.omgsoundboard.core.utils.Constants.STOP_ON_RETAP
 import audio.omgsoundboard.core.utils.Constants.THEME_TYPE
 import audio.omgsoundboard.core.utils.DEFAULT_AUDIO_EXTENSION
 import audio.omgsoundboard.core.utils.existingSoundFileKeys
+import audio.omgsoundboard.core.domain.models.SoundSortOrder
+import audio.omgsoundboard.core.domain.models.sortedBy
+import audio.omgsoundboard.core.domain.models.toSoundSortOrder
 import audio.omgsoundboard.domain.repository.SharedPrefRepository
 import audio.omgsoundboard.presentation.theme.ThemeType
 import audio.omgsoundboard.presentation.theme.toThemeType
@@ -52,6 +56,7 @@ class SoundsViewModel @Inject constructor(
 
     private val _searchTerm = MutableStateFlow("")
     private val _categoryId = MutableStateFlow(-1)
+    private val _sortOrder = MutableStateFlow(SoundSortOrder.TITLE_ASC)
     private val _categories = categoriesDao.getAllCategories()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
     private val _wearNodes = dataLayer.getConnectedWearNodesAsFlow().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
@@ -76,8 +81,9 @@ class SoundsViewModel @Inject constructor(
         _categoryId,
         _sounds,
         _searchTerm,
-        _wearNodes
-    ) { state, categories, categoryId, sounds, search, wearNodes ->
+        _wearNodes,
+        _sortOrder,
+    ) { state, categories, categoryId, sounds, search, wearNodes, sortOrder ->
         val allCategory = Category(id = -1, name = "All")
         val categoriesWithAll = listOf(allCategory) + categories.map { it.toDomain() }
 
@@ -85,9 +91,10 @@ class SoundsViewModel @Inject constructor(
         state.copy(
             categories = categoriesWithAll,
             currentCategory = currentCategory,
-            sounds = sounds.map { it.toDomain() },
+            sounds = sounds.map { it.toDomain() }.sortedBy(sortOrder),
             searchTerm = search,
             wearNodes = wearNodes,
+            soundSortOrder = sortOrder,
         )
     }.combine(player.playbackProgress) { state, progress ->
         state.copy(playbackProgress = progress)
@@ -425,6 +432,11 @@ class SoundsViewModel @Inject constructor(
 
     private fun playSound(index: Int, resourceId: Int?, uri: Uri) {
         player.playFile(index, resourceId, uri)
+        if (index > 0) {
+            viewModelScope.launch {
+                soundsDao.incrementPlayCount(index)
+            }
+        }
     }
 
     private fun shareSound(sound: PlayableSound) {
@@ -473,6 +485,13 @@ class SoundsViewModel @Inject constructor(
         }
     }
 
+
+    private fun changeSortOrder(sortOrder: SoundSortOrder) {
+        viewModelScope.launch {
+            shared.putStringPair(SOUND_SORT_ORDER, sortOrder.name)
+            _sortOrder.value = sortOrder
+        }
+    }
 
     private fun toggleStopOnRetap() {
         viewModelScope.launch {

@@ -2,6 +2,7 @@ package audio.omgsoundboard.presentation.ui.sounds
 
 import android.net.Uri
 import audio.omgsoundboard.core.domain.models.PlayableSound
+import audio.omgsoundboard.core.domain.models.SoundSortOrder
 import audio.omgsoundboard.core.utils.DEFAULT_AUDIO_EXTENSION
 import audio.omgsoundboard.presentation.theme.ThemeType
 
@@ -46,4 +47,6 @@ sealed class SoundsEvents {
     object OnShowHidePlaybackBehaviorDialog : SoundsEvents()
     object OnToggleStopOnRetap : SoundsEvents()
     object OnToggleStopOnNewSound : SoundsEvents()
+    object OnShowHideSortPicker : SoundsEvents()
+    data class OnChangeSortOrder(val sortOrder: SoundSortOrder) : SoundsEvents()
 }

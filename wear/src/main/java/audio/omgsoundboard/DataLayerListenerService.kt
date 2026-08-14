@@ -142,7 +142,8 @@ class DataLayerListenerService : WearableListenerService() {
                         isFavorite = soundJson.getBoolean("isFavorite"),
                         categoryId = if (soundJson.has("categoryId")) soundJson.getInt("categoryId") else null,
                         resId = if (soundJson.has("resId")) soundJson.getInt("resId") else null,
-                        fileExtension = soundJson.optString("fileExtension", DEFAULT_AUDIO_EXTENSION)
+                        fileExtension = soundJson.optString("fileExtension", DEFAULT_AUDIO_EXTENSION),
+                        playCount = soundJson.optInt("playCount", 0),
                     )
                 )
             }

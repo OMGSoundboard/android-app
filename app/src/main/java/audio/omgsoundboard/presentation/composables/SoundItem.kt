@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import audio.omgsoundboard.core.R
 import audio.omgsoundboard.core.domain.models.PlayableSound
@@ -94,13 +95,18 @@ fun SoundItem(
                         .height(60.dp)
                 )
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(start = 16.dp, end = 8.dp, top = 8.dp, bottom = 8.dp),
                         text = item.title,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                     )
                     IconButton(onClick = onFav) {
                         Icon(

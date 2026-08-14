@@ -180,7 +180,8 @@ class StorageRepositoryImpl @Inject constructor(
                 isFavorite = soundBackup.isFavorite,
                 categoryId = soundBackup.categoryId,
                 resId = soundBackup.resId,
-                fileExtension = extension
+                fileExtension = extension,
+                playCount = soundBackup.playCount,
             )
         }
         soundsDao.insertSounds(restoredSounds)

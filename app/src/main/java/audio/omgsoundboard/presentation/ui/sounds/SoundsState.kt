@@ -4,6 +4,7 @@ package audio.omgsoundboard.presentation.ui.sounds
 import android.net.Uri
 import audio.omgsoundboard.core.domain.models.Category
 import audio.omgsoundboard.core.domain.models.PlayableSound
+import audio.omgsoundboard.core.domain.models.SoundSortOrder
 import audio.omgsoundboard.core.domain.models.WearNode
 import audio.omgsoundboard.core.utils.DEFAULT_AUDIO_EXTENSION
 import audio.omgsoundboard.presentation.theme.ThemeType
@@ -33,4 +34,6 @@ data class SoundsState(
     val stopOnRetap: Boolean = false,
     val stopOnNewSound: Boolean = false,
     val showPlaybackBehaviorDialog: Boolean = false,
+    val showSortPicker: Boolean = false,
+    val soundSortOrder: SoundSortOrder = SoundSortOrder.TITLE_ASC,
 )

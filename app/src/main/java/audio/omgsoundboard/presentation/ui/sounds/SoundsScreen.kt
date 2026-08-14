@@ -28,6 +28,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenu
@@ -72,6 +73,7 @@ import audio.omgsoundboard.presentation.composables.MyTextField
 import audio.omgsoundboard.presentation.composables.PermissionDialog
 import audio.omgsoundboard.presentation.composables.PlaybackBehaviorDialog
 import audio.omgsoundboard.presentation.composables.SoundItem
+import audio.omgsoundboard.presentation.composables.SortPicker
 import audio.omgsoundboard.presentation.composables.ThemePicker
 import audio.omgsoundboard.presentation.navigation.DrawerContent
 import audio.omgsoundboard.presentation.navigation.Screens
@@ -190,6 +192,18 @@ fun SoundsScreen(
         )
     }
 
+    if (state.showSortPicker) {
+        SortPicker(
+            selectedSortOrder = state.soundSortOrder,
+            onSortSelected = { sortOrder ->
+                viewModel.onEvent(SoundsEvents.OnChangeSortOrder(sortOrder))
+            },
+            onDismiss = {
+                viewModel.onEvent(SoundsEvents.OnShowHideSortPicker)
+            }
+        )
+    }
+
 }
 
 @Composable
@@ -266,6 +280,16 @@ fun SoundsScreenContent(
                                 Icon(
                                     imageVector = Icons.Default.Favorite,
                                     contentDescription = null,
+                                )
+                            }
+                            IconButton(
+                                onClick = {
+                                    onEvents(SoundsEvents.OnShowHideSortPicker)
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Sort,
+                                    contentDescription = stringResource(id = R.string.sort_button),
                                 )
                             }
                             IconButton(onClick = {

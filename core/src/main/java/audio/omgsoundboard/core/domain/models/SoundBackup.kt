@@ -12,6 +12,7 @@ data class SoundBackup(
     val resId: Int? = null,
     /** Persisted file extension for user-imported sounds. */
     val fileExtension: String = DEFAULT_AUDIO_EXTENSION,
+    val playCount: Int = 0,
 )
 
 /** Converts a Room entity into backup metadata. */
@@ -22,5 +23,6 @@ fun SoundsEntity.toBackup() = SoundBackup(
     isFavorite = isFavorite,
     categoryId = categoryId,
     resId = resId,
-    fileExtension = fileExtension
+    fileExtension = fileExtension,
+    playCount = playCount,
 )

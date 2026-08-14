@@ -35,6 +35,7 @@ data class SoundsEntity(
     @ColumnInfo(name = "res_id") val resId: Int? = null,
     /** Persisted file extension for user-imported sounds. */
     @ColumnInfo(name = "file_extension") val fileExtension: String = DEFAULT_AUDIO_EXTENSION,
+    @ColumnInfo(name = "play_count") val playCount: Int = 0,
 )
 
 /** Converts a domain sound into a Room entity. */
@@ -46,5 +47,6 @@ fun PlayableSound.toEntity() = SoundsEntity(
     isFavorite = isFav,
     categoryId = categoryId,
     resId = resId,
-    fileExtension = fileExtension
+    fileExtension = fileExtension,
+    playCount = playCount,
 )
