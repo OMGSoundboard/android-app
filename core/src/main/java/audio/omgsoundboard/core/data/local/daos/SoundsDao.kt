@@ -25,6 +25,7 @@ interface SoundsDao {
     @Query("UPDATE $SOUNDS_TABLE SET isFavorite = NOT isFavorite WHERE id = :id")
     suspend fun toggleFav(id: Int)
 
+    /** Increments the persisted play count for the given sound. */
     @Query("UPDATE $SOUNDS_TABLE SET play_count = play_count + 1 WHERE id = :soundId")
     suspend fun incrementPlayCount(soundId: Int)
 

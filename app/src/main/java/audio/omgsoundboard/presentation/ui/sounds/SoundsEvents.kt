@@ -47,6 +47,8 @@ sealed class SoundsEvents {
     object OnShowHidePlaybackBehaviorDialog : SoundsEvents()
     object OnToggleStopOnRetap : SoundsEvents()
     object OnToggleStopOnNewSound : SoundsEvents()
+    /** Opens or closes the sort picker dialog. */
     object OnShowHideSortPicker : SoundsEvents()
+    /** Persists and applies a new sort order. */
     data class OnChangeSortOrder(val sortOrder: SoundSortOrder) : SoundsEvents()
 }

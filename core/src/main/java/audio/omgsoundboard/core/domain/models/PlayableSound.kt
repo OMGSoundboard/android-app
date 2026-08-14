@@ -22,6 +22,7 @@ data class PlayableSound(
     val resId: Int? = null,
     /** Persisted file extension for user-imported sounds. */
     val fileExtension: String = DEFAULT_AUDIO_EXTENSION,
+    /** Number of times this sound has been played. */
     val playCount: Int = 0,
 )
 

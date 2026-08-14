@@ -24,6 +24,7 @@ import androidx.compose.ui.window.Dialog
 import audio.omgsoundboard.core.R
 import audio.omgsoundboard.core.domain.models.SoundSortOrder
 
+/** Dialog for choosing how sounds are ordered in the list. */
 @Composable
 fun SortPicker(
     selectedSortOrder: SoundSortOrder,
@@ -52,54 +53,16 @@ fun SortPicker(
                     text = stringResource(id = R.string.sort_title),
                     modifier = Modifier.padding(bottom = 8.dp),
                 )
-                SortRadio(
-                    text = stringResource(id = R.string.sort_alpha_asc),
-                    isSelected = selected == SoundSortOrder.TITLE_ASC,
-                ) {
-                    selected = SoundSortOrder.TITLE_ASC
-                    onSortSelected(SoundSortOrder.TITLE_ASC)
-                }
-                SortRadio(
-                    text = stringResource(id = R.string.sort_alpha_desc),
-                    isSelected = selected == SoundSortOrder.TITLE_DESC,
-                ) {
-                    selected = SoundSortOrder.TITLE_DESC
-                    onSortSelected(SoundSortOrder.TITLE_DESC)
-                }
-                SortRadio(
-                    text = stringResource(id = R.string.sort_most_used),
-                    isSelected = selected == SoundSortOrder.MOST_USED,
-                ) {
-                    selected = SoundSortOrder.MOST_USED
-                    onSortSelected(SoundSortOrder.MOST_USED)
-                }
-                SortRadio(
-                    text = stringResource(id = R.string.sort_recently_added),
-                    isSelected = selected == SoundSortOrder.RECENTLY_ADDED,
-                ) {
-                    selected = SoundSortOrder.RECENTLY_ADDED
-                    onSortSelected(SoundSortOrder.RECENTLY_ADDED)
+                SoundSortOrder.entries.forEach { order ->
+                    Radio(
+                        text = stringResource(id = order.labelResId),
+                        isSelected = selected == order,
+                    ) {
+                        selected = order
+                        onSortSelected(order)
+                    }
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun SortRadio(
-    text: String,
-    isSelected: Boolean,
-    onClick: () -> Unit,
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(horizontal = 8.dp, vertical = 4.dp),
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text(text = text, modifier = Modifier.weight(1f))
-        RadioButton(selected = isSelected, onClick = onClick)
     }
 }
