@@ -27,17 +27,21 @@ fun buildSoundFileName(title: String, extension: String): String =
  * @return `title to extension`, or `null` when the name is invalid.
  */
 fun parseAudioFileName(displayName: String): Pair<String, String>? {
+    val parsed = splitAudioFileName(displayName) ?: return null
+    val (title, extension) = parsed
+    if (title.isEmpty() || !isSupportedAudioExtension(extension)) return null
+    return title to extension
+}
+
+private fun splitAudioFileName(displayName: String): Pair<String, String>? {
     val normalizedName = displayName.trim()
     if (normalizedName.isEmpty()) return null
 
     val dotIndex = normalizedName.lastIndexOf('.')
     if (dotIndex <= 0 || dotIndex == normalizedName.lastIndex) return null
 
-    val title = normalizeSoundTitle(normalizedName.substring(0, dotIndex))
-    val extension = normalizeAudioExtension(normalizedName.substring(dotIndex + 1))
-
-    if (title.isEmpty() || !isSupportedAudioExtension(extension)) return null
-    return title to extension
+    return normalizeSoundTitle(normalizedName.substring(0, dotIndex)) to
+        normalizeAudioExtension(normalizedName.substring(dotIndex + 1))
 }
 
 /** Returns the MIME type for a supported [extension]. */

@@ -87,13 +87,18 @@ class PlayerRepositoryImpl @Inject constructor(
     }
 
     override fun playFile(index: Int, resourceId: Int?, uri: Uri) {
-        if (uri == Uri.EMPTY && resourceId == null) return
-
         val playerUri = resolvePlaybackUri(uri, resourceId) ?: return
         if (stopPlaybackOnRetap(index)) return
         stopOtherPlaybackIfNeeded()
+        beginPlayback(index, playerUri)
+    }
 
+    private fun beginPlayback(index: Int, playerUri: Uri) {
         val mediaPlayer = MediaPlayer.create(context, playerUri) ?: return
+        attachMediaPlayer(index, mediaPlayer)
+    }
+
+    private fun attachMediaPlayer(index: Int, mediaPlayer: MediaPlayer) {
         mediaPlayerList[index] = mediaPlayer
         mediaPlayer.start()
         startProgressPolling(index)
@@ -103,6 +108,7 @@ class PlayerRepositoryImpl @Inject constructor(
     }
 
     private fun resolvePlaybackUri(uri: Uri, resourceId: Int?): Uri? {
+        if (uri == Uri.EMPTY && resourceId == null) return null
         return if (uri == Uri.EMPTY) {
             resourceId?.let { getUriPath(context, it) }
         } else {
