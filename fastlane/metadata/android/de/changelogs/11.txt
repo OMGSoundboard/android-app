@@ -1,0 +1,6 @@
+- Die Nutzungsbedingungen in der App sind verschwunden, um deutlich zu machen, dass die App stolz frei und FOSS ist 🥰
+- Abhängigkeitsaktualisierungen ⚙️
+- Übersetzungsaktualisierungen 🗺️
+
+Danke an alle Mitwirkenden und das F-Droid-Team! 😘
+Wenn du willst, kannst du uns mit den Übersetzungen auf https://hosted.weblate.org/engage/omgsoundboard/ helfen. 👍

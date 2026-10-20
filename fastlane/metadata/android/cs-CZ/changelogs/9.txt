@@ -1,0 +1,1 @@
+- Změna systémových nastavení pro nastavení zvuků jako vyzvánění, budíků a oznámení je nyní volitelná.

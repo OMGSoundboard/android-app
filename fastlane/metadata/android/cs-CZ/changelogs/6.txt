@@ -1,0 +1,9 @@
+- Přidáno úvodní seznámení s aplikací pro snazší pochopení 💡
+- Podpora Wear OS od Googlu ⌚
+- Aktualizace překladů 🗺️
+- Aktualizace závislostí a interní úpravy ⚙️
+
+Bylo by skvělé, kdybyste hlásili problémy na https://github.com/OMGSoundboard/android-app/issues a pomáhali s překlady na https://hosted.weblate.org/engage/omgsoundboard/. 😅
+Dejte nám vědět, pokud máte také open-source skladby, které jste pro aplikaci sami nahráli. 🎙️
+Děkujeme! 🙏
+Přejeme hezký den! 🌞

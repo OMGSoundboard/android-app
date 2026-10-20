@@ -1,0 +1,25 @@
+Správný meme nebo zvuk ve správný okamžik může vtip zachránit! Se zvuky je spousta zábavy — a proto si potřebujete stáhnout <i>OMGSoundboard</i>.
+
+<i>OMGSoundboard</i> vám umožňuje vytvářet vlastní jedinečné zvukové nástěnky. Na této aplikaci je skvělé, že vás omezuje jen vaše představivost. Můžete použít libovolné zvuky, protože lze importovat ty, které máte rádi. Součástí aplikace je samozřejmě i zálohování, takže si můžete svou sbírku uchovat navždy. Software se používá jednoduše a přímočaře. Zvuky můžete také vrstvit: přidávat efekty a přehrávat několik zvukových efektů současně.
+
+<i>OMGSoundboard</i> funguje offline, nabízí kvalitní vyhledávání a umožňuje nastavit zvuky jako vyzvánění a/nebo budíky.
+
+Upozorňujeme, že <i>OMGSoundboard</i> nabízí ve výchozím stavu jen velmi omezené množství zvuků z důvodů autorských práv.
+
+Mezi hlavní funkce aplikace patří:
+
+* Můžete si vytvořit libovolný počet zvukových nástěnek.
+* Můžete importovat vlastní zvuky.
+* Máte úplnou kontrolu nad zahájením a ukončením přehrávání zvuku.
+* Zvuky lze přehrávat současně a podle potřeby je vrstvit.
+* <i>OMGSoundboard</i> zálohuje vaše zvuky, aby se neztratily.
+* Zvuky můžete sdílet pomocí všech aplikací, které sdílení podporují. (Bluetooth, Wi‑Fi, NFC, sociální sítě atd.)
+* Můžete vybírat zvuky pro vyzvánění, budíky a oznámení.
+* Oblíbené zvuky si můžete ukládat do záložek.
+* Umožňuje filtrování podle slov pro praktičtější a rychlejší vyhledávání ve velkém množství zvuků.
+* Podporuje chytré hodinky s Wear OS od Googlu.
+* Bez reklam a sledovacích prvků.
+
+Web: <a href="https://omgsoundboard.audio/">https://omgsoundboard.audio/</a>  
+Přeložte ji na Hosted Weblate: <a href="https://hosted.weblate.org/engage/omgsoundboard/">https://hosted.weblate.org/engage/omgsoundboard/</a>  
+Svobodný software na GitHubu: <a href="https://github.com/OMGSoundboard/android-app/">https://github.com/OMGSoundboard/android-app/</a>

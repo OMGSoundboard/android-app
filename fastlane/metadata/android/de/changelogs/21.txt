@@ -1,0 +1,8 @@
+- 👷‍♀️ Reproduzierbare Builds gehen jetzt wieder (hoffentlich)
+- 🐛 Fehlerkorrekturen
+- ⚙️ Abhängigkeitsaktualisierungen
+- 🗺️ Übersetzungsaktualisierungen
+
+Danke an alle Mitwirkenden, Übersetzer, IzzyOnDroid, das F-Droid-Team und @Rashxz! 😘
+Wenn du willst, kannst du uns mit den Übersetzungen auf https://hosted.weblate.org/engage/omgsoundboard/ helfen. 👍
+Lerne mehr über reproduzierbare Builds auf https://reproducible-builds.org/. 💌

@@ -1,0 +1,10 @@
+- 📁 Mehrere Dateien (oder einen Ordner) gleichzeitig importieren
+- 🎨 Kategorien bearbeiten und Sounds umbenennen (Dateiname ist standardmäßig der Name/Titel des Sounds)
+- 🚮 Melodien können jetzt gelöscht werden
+- 🤖 Ziel: Android 15
+- 🐛 Fehlerkorrekturen
+- ⚙️ Abhängigkeitsaktualisierungen
+- 🗺️ Übersetzungsaktualisierungen
+
+Danke an alle Mitwirkenden, IzzyOnDroid und das F-Droid-Team! 😘
+Du kannst uns mit den Übersetzungen auf https://hosted.weblate.org/engage/omgsoundboard/ helfen. 👍

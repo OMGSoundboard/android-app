@@ -1,0 +1,6 @@
+- 🗺️ Übersetzungsaktualisierungen
+- ⚙️ Build-Aktualisierungen (z.B. Gradle Wrapper für reproduzierbare Builds, `foss`-Flavor und benannte Outputs)
+- 🎨 UX-Verbesserungen für Wear OS by Google
+
+Danke an alle Mitwirkenden, Übersetzer, IzzyOnDroid, das F-Droid-Team und @Rashxz! 😘
+Wenn du willst, kannst du uns mit den Übersetzungen auf https://hosted.weblate.org/engage/omgsoundboard/ helfen. 👍

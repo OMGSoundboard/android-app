@@ -1,0 +1,2 @@
+- Ziel: Android 13 🤖
+- Abhängigkeitsaktualisierungen ⚙️
