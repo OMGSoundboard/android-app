@@ -2,9 +2,12 @@ package audio.omgsoundboard.presentation.ui.sounds
 
 import android.net.Uri
 import audio.omgsoundboard.core.domain.models.PlayableSound
+import audio.omgsoundboard.core.domain.models.SoundSortOrder
+import audio.omgsoundboard.core.utils.DEFAULT_AUDIO_EXTENSION
 import audio.omgsoundboard.presentation.theme.ThemeType
 
 
+/** Events emitted by the sounds screen UI. */
 sealed class SoundsEvents {
     data class OnRestoreBackup(val uri: Uri) : SoundsEvents()
     data class OnBackupFiles(val uri: Uri) : SoundsEvents()
@@ -20,15 +23,19 @@ sealed class SoundsEvents {
     data class OnSetAsNotification(val sound: PlayableSound) : SoundsEvents()
     object OnShowHideChangeCategoryDialog: SoundsEvents()
     data class OnConfirmSoundCategoryChange(val soundId: Int, val categoryId: Int): SoundsEvents()
+    /** Opens the add/rename dialog for a picked sound. */
     data class OnShowHideAddRenameSoundDialog(
         val initialText: String,
         val isRenaming: Boolean,
         val uri: Uri = Uri.EMPTY,
+        /** File extension without a leading dot. */
+        val extension: String = DEFAULT_AUDIO_EXTENSION,
     ) : SoundsEvents()
 
     data class OnTextFieldChange(val text: String) : SoundsEvents()
     data class OnConfirmRename(val sound: PlayableSound) : SoundsEvents()
     object OnConfirmAdd : SoundsEvents()
+    /** Imports multiple picked audio files at once. */
     data class OnAddMultipleSounds(val uris: List<Uri>) : SoundsEvents()
     object OnShowHideDeleteSoundDialog : SoundsEvents()
     data class OnConfirmDelete(val soundId: Int) : SoundsEvents()
@@ -40,4 +47,8 @@ sealed class SoundsEvents {
     object OnShowHidePlaybackBehaviorDialog : SoundsEvents()
     object OnToggleStopOnRetap : SoundsEvents()
     object OnToggleStopOnNewSound : SoundsEvents()
+    /** Opens or closes the sort picker dialog. */
+    object OnShowHideSortPicker : SoundsEvents()
+    /** Persists and applies a new sort order. */
+    data class OnChangeSortOrder(val sortOrder: SoundSortOrder) : SoundsEvents()
 }
